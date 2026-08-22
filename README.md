@@ -16,10 +16,11 @@ The minimum operating rhythm is one substantive essay, play study, or sourced an
 
 ## Indexing contract
 
-`PUBLIC_SITE_INDEXABLE` is the single environment gate.
+Indexing uses a two-key environment gate so that one accidental Vercel switch cannot expose the site.
 
-- Without `PUBLIC_SITE_INDEXABLE=true`, every page is `noindex, nofollow`, robots blocks crawling, and no sitemap is generated.
-- With `PUBLIC_SITE_INDEXABLE=true`, the seven routes derived from the canonical page registry in `src/data/indexable-routes.mjs` are indexable and emitted through `@astrojs/sitemap`.
+- Unless both `PUBLIC_SITE_INDEXABLE=true` and `PUBLIC_GSC_INDEX_GATE_CONFIRMED=manual-actions-security-removals-crawl-index-verified` are present, every page is `noindex, nofollow`, robots blocks crawling, and no sitemap is generated.
+- The GSC confirmation value is an intentional deployment lock, not evidence by itself. It may be set only after the authenticated evidence and owner review in `PROJECT_BRIEF.md` are recorded.
+- With both keys, the seven routes derived from the canonical page registry in `src/data/indexable-routes.mjs` are indexable and emitted through `@astrojs/sitemap`.
 - Legal, rights, utility, empty-section, 404, and legacy routes remain `noindex` and are excluded from the sitemap.
 - `src/data/legacy-url-actions.ts` is the authoritative reviewed action manifest for priority historical URLs.
 
@@ -46,6 +47,7 @@ Protected build:
 
 ```powershell
 Remove-Item Env:PUBLIC_SITE_INDEXABLE -ErrorAction SilentlyContinue
+Remove-Item Env:PUBLIC_GSC_INDEX_GATE_CONFIRMED -ErrorAction SilentlyContinue
 corepack pnpm build
 corepack pnpm qa:safeguards
 ```
@@ -54,6 +56,7 @@ Launch build:
 
 ```powershell
 $env:PUBLIC_SITE_INDEXABLE = "true"
+$env:PUBLIC_GSC_INDEX_GATE_CONFIRMED = "manual-actions-security-removals-crawl-index-verified"
 corepack pnpm build
 corepack pnpm qa:safeguards
 ```

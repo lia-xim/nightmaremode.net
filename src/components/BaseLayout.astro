@@ -1,6 +1,7 @@
 ---
 import Header from "@/components/Header.astro";
 import { siteConfig } from "@/config/site";
+import { isIndexingEnabled } from "@/config/indexing-gate.mjs";
 import "@/styles/global.css";
 import "@/styles/responsive-fixes.css";
 
@@ -22,7 +23,7 @@ const {
 
 const canonical = new URL(Astro.url.pathname, siteConfig.canonicalHost);
 const fullTitle = title.includes("Nightmare Mode") ? title : `${title} — Nightmare Mode`;
-const indexingEnabled = import.meta.env.PUBLIC_SITE_INDEXABLE === "true";
+const indexingEnabled = isIndexingEnabled(import.meta.env);
 const shouldNoindex = noindex || !indexingEnabled;
 const websiteId = new URL("/#website", siteConfig.canonicalHost).toString();
 const pageId = new URL(`${Astro.url.pathname}#webpage`, siteConfig.canonicalHost).toString();

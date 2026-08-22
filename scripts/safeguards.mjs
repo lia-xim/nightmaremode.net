@@ -1,10 +1,11 @@
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 import { indexableRoutes, pageRegistry } from "../src/data/indexable-routes.mjs";
+import { GSC_INDEX_GATE_CONFIRMATION, isIndexingEnabled } from "../src/config/indexing-gate.mjs";
 
 const root = process.cwd();
 const dist = join(root, "dist");
-const launch = process.env.PUBLIC_SITE_INDEXABLE === "true";
+const launch = isIndexingEnabled(process.env);
 const failures = [];
 const checks = [];
 const assert = (condition, label) => {
@@ -22,6 +23,8 @@ assert(existsSync(dist), "production build exists");
 assert(new Set(pageRegistry.map((page) => page.route)).size === pageRegistry.length, "page registry routes are unique");
 assert(pageRegistry.every((page) => page.primaryJob.trim().length >= 24), "every canonical page has one substantive primary user job");
 assert(JSON.stringify(pageRegistry.filter((page) => page.indexable).map((page) => page.route)) === JSON.stringify(indexableRoutes), "indexable routes derive from the page registry");
+assert(!isIndexingEnabled({ PUBLIC_SITE_INDEXABLE: "true" }), "PUBLIC_SITE_INDEXABLE alone cannot open indexing");
+assert(isIndexingEnabled({ PUBLIC_SITE_INDEXABLE: "true", PUBLIC_GSC_INDEX_GATE_CONFIRMED: GSC_INDEX_GATE_CONFIRMATION }), "the two-key index gate recognizes the reviewed confirmation token");
 
 if (existsSync(dist)) {
   const htmlFiles = walk(dist).filter((path) => path.endsWith(".html"));

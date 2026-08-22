@@ -1,7 +1,8 @@
 import type { APIRoute } from "astro";
+import { isIndexingEnabled } from "@/config/indexing-gate.mjs";
 
 export const GET: APIRoute = () => {
-  const indexable = import.meta.env.PUBLIC_SITE_INDEXABLE === "true";
+  const indexable = isIndexingEnabled(import.meta.env);
   const body = indexable
     ? "User-agent: *\nAllow: /\nSitemap: https://nightmaremode.net/sitemap-index.xml\n"
     : "User-agent: *\nDisallow: /\n";

@@ -159,3 +159,9 @@ The method page adapts ideas into a new editorial worksheet. It does not reprodu
 - Visual review: protocol hero, hierarchy, breadcrumb, byline and mobile reflow were inspected from rendered screenshots. The first scan found one low-contrast label; it was corrected and Axe passed on rerun.
 - In-app Browser initialization failed because its trusted Node process exited. The established Playwright/Axe fallback was used and documented rather than treating the browser failure as a page failure.
 - Search Console: NOT PROVEN. No authenticated Search Console connector or project-local reproducible connection was available.
+## Protected follow-up audit — 22 August 2026
+
+- Authenticated GSC remains **NOT PROVEN**. No direct connector exists, and the available browser connection failed before authentication or property access could be inspected because its Windows sandbox could not apply the required ACLs.
+- The repository had a P0 safeguard gap: `PUBLIC_SITE_INDEXABLE=true` alone could previously enable index metadata, crawling and the sitemap despite the controlling GSC gate.
+- Indexing now requires a two-key build condition. `PUBLIC_SITE_INDEXABLE=true` alone stays protected; the separate GSC confirmation lock is recognized only together with it and must not be set until the exact evidence checklist in `PROJECT_BRIEF.md` is complete.
+- This audit did not change editorial content, DNS, legacy actions, rights claims or the accepted Contextter portfolio assignment.

@@ -1,8 +1,9 @@
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import { indexableRoutes } from "./src/data/indexable-routes.mjs";
+import { isIndexingEnabled } from "./src/config/indexing-gate.mjs";
 
-const indexable = process.env.PUBLIC_SITE_INDEXABLE === "true";
+const indexable = isIndexingEnabled(process.env);
 
 export default defineConfig({
   site: "https://nightmaremode.net",
