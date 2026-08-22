@@ -20,12 +20,6 @@ const sources = [
     href: "https://www.loc.gov/preservation/resources/rfs/RFS%202025-2026.pdf",
   },
   {
-    title: "What is Emulation in Libraries, Archives, and Museums?",
-    publisher: "Software Preservation Network",
-    date: "accessed 22 August 2026",
-    href: "https://www.softwarepreservationnetwork.org/what-is-emulation-in-libraries-archives-and-museums/",
-  },
-  {
     title: "Introducing the Video Game Source Project",
     publisher: "Video Game History Foundation",
     date: "15 October 2020",
@@ -47,7 +41,7 @@ const articleSchema = {
 };
 ---
 
-<BaseLayout title={title} description={description} image="/og-default.jpg">
+<BaseLayout title={title} description={description} image="/og-default.jpg" ogType="article">
   <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(articleSchema)}></script>
   <article class="essay">
     <header class="essay-header shell">
@@ -78,7 +72,6 @@ const articleSchema = {
       <h2>Keeping the object means keeping a system</h2>
       <p>The Library of Congress treats software and video games as compound objects. Its 2025–2026 Recommended Formats Statement prefers human-readable source code and a gold-master build, while also asking for documentation, descriptive metadata and the operating environment needed to use the work. For console games, the statement notes that the proprietary platform—or an emulated version of it—may be required.</p>
       <p>This is more than a technical checklist. It changes what counts as the object. A video file can record one completed session, but it cannot expose every branch, timing window or response. Source code can reveal structures that a recording misses, but reading code is not the same act as negotiating those structures through controls. A build without its operating environment may be complete as data and inert as a game.</p>
-      <p>Emulation addresses part of this problem by allowing newer computers to imitate older hardware or software. The Software Preservation Network documents its use in libraries, archives and museums not only to run obsolete programs, but also to provide controlled access to software-dependent collections. Emulation therefore preserves an important verb: it lets a person operate something instead of merely inspecting a file.</p>
       <p>Even then, equivalence should not be assumed. Display latency, controller shape, network behavior, platform services and undocumented quirks can alter the encounter. An emulator may preserve enough of a system to support research without reproducing every material condition of the original release. That is not a failure. It is a boundary that good documentation should make visible.</p>
 
       <h2>Source materials preserve decisions, not just output</h2>
@@ -95,6 +88,7 @@ const articleSchema = {
       <p>The disappearance of commercial access is not just a problem for collectors. It narrows the evidence from which cultural memory is made. Preservation expands that evidence, but it does not flatten its differences. A manual, an executable, a source repository, a capture and a player's recollection each answer different questions.</p>
       <p>For this publication, that is the operating lesson. We will not turn availability into authority. If we have not played a version, we will not imply that we did. If an argument rests on public records, the records will be visible. If a preserved object cannot reproduce a social or technical condition, the gap belongs in the article—not in a footnote added after someone notices.</p>
       <p>A game is more than its files. The files still matter enormously. They are the part that can be stabilized, described, compared and passed on. The rest requires another kind of preservation: careful testimony, transparent method and criticism disciplined enough to say where its evidence ends.</p>
+      <p>Our <a href="/field-notes/play-study-protocol/">play-study protocol</a> turns that boundary into a reusable worksheet for future observation-led criticism.</p>
 
       <section class="evidence" aria-labelledby="evidence-title">
         <p class="mono signal">Evidence boundary</p>

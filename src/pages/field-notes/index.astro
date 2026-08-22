@@ -1,0 +1,84 @@
+---
+import BaseLayout from "@/components/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+---
+
+<BaseLayout title="Field Notes" description="Documented play-study methods and observation-led field notes with visible evidence boundaries.">
+  <section class="page-hero shell">
+    <div class="page-hero__rail mono">Field notes / play studies</div>
+    <div class="page-hero__copy">
+      <p class="mono signal">Observation before interpretation</p>
+      <h1 class="display">Field Notes</h1>
+      <p>Working records from close play: versions, conditions, captures, repeated tests and the limits around every conclusion.</p>
+    </div>
+  </section>
+
+  <section class="principle shell" aria-labelledby="principle-title">
+    <div>
+      <p class="mono signal">The standard</p>
+      <h2 id="principle-title" class="display">A claim should leave a trail.</h2>
+    </div>
+    <div>
+      <p>A field note is not a shorter review. It documents what was tested, what happened and which interpretation followed. If a result depends on a particular build, control method, network state or accessibility setting, that condition belongs beside the result.</p>
+      <p>The first published asset in this section is the protocol we will use to structure future play studies. Readers can use it as a worksheet, adapt it, or challenge the assumptions built into it.</p>
+    </div>
+  </section>
+
+  <section class="protocol shell" aria-labelledby="protocol-title">
+    <a class="protocol-card" href="/field-notes/play-study-protocol/">
+      <div>
+        <p class="mono signal">Method / version 1.0 / 22 August 2026</p>
+        <h2 id="protocol-title" class="display">A practical protocol for documenting play</h2>
+      </div>
+      <div>
+        <p>Record the build and conditions, define the question, log observable events, separate inference from evidence, and state what the session cannot establish.</p>
+        <span class="action">Open the protocol <span aria-hidden="true">→</span></span>
+      </div>
+    </a>
+  </section>
+
+  <section class="boundary shell" aria-labelledby="boundary-title">
+    <h2 id="boundary-title" class="display">What is not here yet</h2>
+    <p>No game-specific field study is published until a named researcher has completed the protocol, retained the supporting notes or captures, and recorded conflicts and correction ownership. The absence is intentional; the method does not stand in for a play session.</p>
+    <a class="action" href="/editorial-policy/">Read the editorial charter <span aria-hidden="true">→</span></a>
+  </section>
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .principle,
+  .boundary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(3rem, 8vw, 9rem);
+    padding-block: var(--section);
+  }
+  .principle h2,
+  .boundary h2 { max-width: 11ch; font-size: clamp(3.2rem, 6vw, 6rem); }
+  .principle p:not(.mono),
+  .boundary > p { max-width: 40rem; margin-top: 0; color: var(--ink-soft); font-size: clamp(1.05rem, 1.4vw, 1.22rem); }
+  .protocol { padding-bottom: var(--section); }
+  .protocol-card {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: clamp(3rem, 8vw, 9rem);
+    padding: clamp(2rem, 5vw, 5rem);
+    border: 1px solid var(--line);
+    background: var(--paper-soft);
+    transition: border-color 180ms ease;
+  }
+  .protocol-card:hover { border-color: var(--signal); }
+  .protocol-card h2 { max-width: 12ch; margin-top: 1rem; font-size: clamp(3rem, 5.3vw, 5.4rem); }
+  .protocol-card > div:last-child { align-self: end; }
+  .protocol-card > div:last-child > p { max-width: 36rem; margin: 0; color: var(--ink-soft); font-size: 1.12rem; }
+  .protocol-card .action,
+  .boundary .action { margin-top: 2rem; }
+  .boundary { border-top: 1px solid var(--line); }
+  .boundary .action { grid-column: 2; }
+  @media (max-width: 760px) {
+    .principle,
+    .boundary,
+    .protocol-card { grid-template-columns: 1fr; gap: 2rem; }
+    .boundary .action { grid-column: 1; }
+  }
+</style>

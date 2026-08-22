@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative, sep } from "node:path";
-import { indexableRoutes } from "../src/data/indexable-routes.mjs";
+import { indexableRoutes, pageRegistry } from "../src/data/indexable-routes.mjs";
 
 const root = process.cwd();
 const dist = join(root, "dist");
@@ -19,6 +19,9 @@ const fileForRoute = (route) => route === "/" ? join(dist, "index.html") : route
 const canonicalForRoute = (route) => `https://nightmaremode.net${route}`;
 
 assert(existsSync(dist), "production build exists");
+assert(new Set(pageRegistry.map((page) => page.route)).size === pageRegistry.length, "page registry routes are unique");
+assert(pageRegistry.every((page) => page.primaryJob.trim().length >= 24), "every canonical page has one substantive primary user job");
+assert(JSON.stringify(pageRegistry.filter((page) => page.indexable).map((page) => page.route)) === JSON.stringify(indexableRoutes), "indexable routes derive from the page registry");
 
 if (existsSync(dist)) {
   const htmlFiles = walk(dist).filter((path) => path.endsWith(".html"));
@@ -51,7 +54,7 @@ if (existsSync(dist)) {
 
     const excluded = [
       "/404/", "/archive/", "/contact/", "/conversations/", "/datenschutz/",
-      "/discovery/how-indie-games-get-discovered-in-2026/", "/field-notes/", "/history/",
+      "/discovery/how-indie-games-get-discovered-in-2026/", "/history/",
       "/impressum/", "/ownership/", "/rights-contact/", "/about/new-ownership/",
       "/2012/01/metal-gear-solids-postmodern-legacy-part-1-15146/",
       "/2012/03/unmanned-a-talk-with-molleindustria-about-the-politics-of-war-games-16946/",
@@ -89,6 +92,8 @@ if (existsSync(dist)) {
   for (const path of htmlFiles) {
     const html = readFileSync(path, "utf8");
     assert(/<link rel="canonical" href="https:\/\/nightmaremode\.net\//.test(html), `canonical present: ${relative(dist, path).split(sep).join("/")}`);
+    const expectedPageType = path === join(dist, "index.html") ? "WebSite" : "WebPage";
+    assert(html.includes(`"@type":"${expectedPageType}"`), `base schema type is correct: ${relative(dist, path).split(sep).join("/")}`);
   }
 }
 
@@ -103,6 +108,11 @@ assert(securityHeaders["x-frame-options"] === "DENY", "frame policy is exact");
 assert(securityHeaders["content-security-policy"]?.includes("frame-ancestors 'none'"), "CSP blocks framing");
 assert(securityHeaders["content-security-policy"]?.includes("object-src 'none'"), "CSP blocks plugins");
 assert(!securityHeaders["content-security-policy"]?.includes("http:"), "CSP does not allow insecure origins");
+
+const protocolSource = readFileSync(join(root, "src", "pages", "field-notes", "play-study-protocol", "index.astro"), "utf8");
+assert(protocolSource.includes("no play session claimed"), "play-study protocol states its experience boundary");
+assert((protocolSource.match(/href: "https:\/\//g) ?? []).length === 3, "play-study protocol cites exactly three public methodology sources");
+assert(protocolSource.includes("Copyable worksheet"), "play-study protocol exposes a reusable proof asset");
 
 const manifestSource = readFileSync(join(root, "src", "data", "legacy-url-actions.ts"), "utf8");
 assert((manifestSource.match(/normalizedPath:\s*"\//g) ?? []).length === 6, "six priority legacy URLs have explicit records");

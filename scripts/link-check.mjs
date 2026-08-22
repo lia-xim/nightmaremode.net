@@ -1,65 +1,96 @@
-import { request } from "playwright";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { join, relative, sep } from "node:path";
+import { pageRegistry } from "../src/data/indexable-routes.mjs";
 
-const baseUrl = process.env.QA_BASE_URL ?? "http://127.0.0.1:4321";
-const api = await request.newContext();
-const seen = new Set(["/"]);
-const queue = ["/"];
+const root = process.cwd();
+const dist = join(root, "dist");
+const canonicalOrigin = "https://nightmaremode.net";
+const failures = [];
 const checked = [];
-const bad = [];
 
-while (queue.length > 0) {
-  const path = queue.shift();
-  const response = await api.get(new URL(path, baseUrl).toString());
-  const result = { path, status: response.status() };
+if (!existsSync(dist)) {
+  console.error("dist is missing; run pnpm build before pnpm qa:links");
+  process.exit(1);
+}
 
-  checked.push(result);
+const walk = (directory) => readdirSync(directory).flatMap((name) => {
+  const path = join(directory, name);
+  return statSync(path).isDirectory() ? walk(path) : [path];
+});
 
-  if (!response.ok()) {
-    bad.push(result);
-  }
+const routeForFile = (file) => {
+  const output = relative(dist, file).split(sep).join("/");
+  if (output === "index.html") return "/";
+  if (output === "404.html") return "/404/";
+  return `/${output.replace(/\/index\.html$/, "")}/`;
+};
 
-  const contentType = response.headers()["content-type"] ?? "";
+const htmlFiles = walk(dist).filter((file) => file.endsWith(".html"));
+const documents = new Map(htmlFiles.map((file) => [routeForFile(file), readFileSync(file, "utf8")]));
+const registeredRoutes = new Set(pageRegistry.map((page) => page.route));
+const linkGraph = new Map();
 
-  if (!contentType.includes("text/html")) {
-    continue;
-  }
+for (const page of pageRegistry) {
+  if (!documents.has(page.route)) failures.push(`registered route has no built document: ${page.route}`);
+}
 
-  const html = await response.text();
-  const links = html.matchAll(/href="([^"]+)"/g);
+for (const [route, html] of documents) {
+  const links = [];
+  for (const match of html.matchAll(/<a\b[^>]*\bhref=(["'])(.*?)\1/gi)) {
+    const rawHref = match[2].trim();
+    if (!rawHref || rawHref.startsWith("#") || /^(mailto:|tel:|javascript:)/i.test(rawHref)) continue;
 
-  for (const match of links) {
-    const rawHref = match[1];
-
-    if (!rawHref.startsWith("/") || rawHref.startsWith("/_astro/")) {
+    let url;
+    try {
+      url = new URL(rawHref, `${canonicalOrigin}${route}`);
+    } catch {
+      failures.push(`invalid link on ${route}: ${rawHref}`);
       continue;
     }
 
-    const href = rawHref.split("#")[0].split("?")[0];
+    if (url.origin !== canonicalOrigin) continue;
+    const target = url.pathname.endsWith("/") || /\.[a-z0-9]+$/i.test(url.pathname)
+      ? url.pathname
+      : `${url.pathname}/`;
+    if (/\.[a-z0-9]+$/i.test(target)) continue;
 
-    if (/\.[a-z0-9]+$/i.test(href) || seen.has(href)) {
-      continue;
-    }
+    links.push(target);
+    checked.push({ from: route, to: target });
+    if (!documents.has(target)) failures.push(`broken internal link: ${route} -> ${target}`);
+  }
+  linkGraph.set(route, [...new Set(links)]);
+}
 
-    seen.add(href);
-    queue.push(href);
+const reachable = new Set(["/"]);
+const queue = ["/"];
+while (queue.length) {
+  const route = queue.shift();
+  for (const target of linkGraph.get(route) ?? []) {
+    if (reachable.has(target)) continue;
+    reachable.add(target);
+    queue.push(target);
   }
 }
 
-await api.dispose();
-
-console.log(
-  JSON.stringify(
-    {
-      baseUrl,
-      pagesChecked: checked.length,
-      bad,
-      checked,
-    },
-    null,
-    2,
-  ),
-);
-
-if (bad.length > 0) {
-  process.exitCode = 1;
+for (const page of pageRegistry.filter((entry) => entry.indexable)) {
+  if (!reachable.has(page.route)) failures.push(`indexable route is orphaned from the homepage graph: ${page.route}`);
 }
+
+for (const route of documents.keys()) {
+  if (!registeredRoutes.has(route)) failures.push(`built canonical page is missing from page registry: ${route}`);
+}
+
+const homepage = documents.get("/") ?? "";
+if (!/<title>[^<]*Nightmare Mode[^<]*<\/title>/i.test(homepage)) {
+  failures.push("built homepage identity check failed");
+}
+
+console.log(JSON.stringify({
+  mode: "static-dist",
+  pagesChecked: documents.size,
+  internalLinksChecked: checked.length,
+  indexableRoutes: pageRegistry.filter((page) => page.indexable).length,
+  failures,
+}, null, 2));
+
+if (failures.length) process.exitCode = 1;

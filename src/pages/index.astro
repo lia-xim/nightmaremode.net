@@ -8,7 +8,7 @@ import discovery from "@/assets/editorial-discovery.png";
 const formats = [
   { number: "01", name: "Essays", definition: "Sustained arguments", href: "/essays/" },
   { number: "02", name: "Field Notes", definition: "Evidence captured during play", href: "/field-notes/" },
-  { number: "03", name: "Conversations", definition: "Present-day exchanges, published with consent", href: "/conversations/" },
+  { number: "03", name: "Methods", definition: "Protocols readers can inspect and reuse", href: "/field-notes/play-study-protocol/" },
 ] as const;
 
 const methods = [
@@ -44,7 +44,7 @@ const methods = [
   <section id="publication" class="publication shell" aria-labelledby="publication-title">
     <div class="publication-intro">
       <h2 id="publication-title" class="display">A publication built for close attention.</h2>
-      <p>We take games seriously—as art, as systems, as cultural practice. Nightmare Mode publishes long-form essays, documented play studies and conversations that reward careful reading and curious minds.</p>
+      <p>We take games seriously—as art, as systems, as cultural practice. Nightmare Mode publishes long-form essays, documented play studies and methods that readers can inspect, reuse and challenge.</p>
     </div>
     <div class="format-list" aria-label="Editorial formats">
       {formats.map((format) => (

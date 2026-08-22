@@ -5,6 +5,8 @@ const base = process.env.QA_BASE_URL ?? "http://127.0.0.1:4321";
 const routes = [
   "/",
   "/essays/a-game-is-more-than-its-files/",
+  "/field-notes/",
+  "/field-notes/play-study-protocol/",
   "/about/new-ownership/",
   "/impressum/",
   "/rights-contact/",

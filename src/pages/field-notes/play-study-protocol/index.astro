@@ -1,0 +1,282 @@
+---
+import BaseLayout from "@/components/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+
+const title = "Play-study protocol for documenting gameplay";
+const description = "A practical, source-backed worksheet for recording play conditions, observations, inferences, counterexamples and evidence limits.";
+const canonical = "https://nightmaremode.net/field-notes/play-study-protocol/";
+const sources = [
+  {
+    title: "Game analysis: Developing a methodological toolkit for the qualitative study of games",
+    authors: "Mia Consalvo and Nathan Dutton",
+    publisher: "Game Studies 6(1)",
+    date: "December 2006",
+    href: "https://gamestudies.org/0601/articles/consalvo_dutton",
+  },
+  {
+    title: "The Digital Game Analysis Protocol (DiGAP): Introducing a Guide for Reflexive and Transparent Game Analyses",
+    authors: "Rowan Daneels, Maarten Denoo, Alexander Vandewalle, Bruno Dupont and Steven Malliet",
+    publisher: "Game Studies 22(2)",
+    date: "April 2022",
+    href: "https://gamestudies.org/2202/articles/gap_daneels_denoo_vandewalle_dupont_malliet",
+  },
+  {
+    title: "Recommended Formats Statement: Software and Video Games",
+    authors: "Library of Congress",
+    publisher: "Library of Congress",
+    date: "accessed 22 August 2026",
+    href: "https://www.loc.gov/preservation/resources/rfs/software-videogames.html",
+  },
+] as const;
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: title,
+  description,
+  datePublished: "2026-08-22",
+  dateModified: "2026-08-22",
+  mainEntityOfPage: canonical,
+  author: { "@type": "Organization", name: "Nightmare Mode Editorial Desk" },
+  editor: { "@type": "Person", name: "Matthias Ramahi" },
+  publisher: { "@type": "Organization", name: "Nightmare Mode", url: "https://nightmaremode.net/" },
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://nightmaremode.net/" },
+    { "@type": "ListItem", position: 2, name: "Field Notes", item: "https://nightmaremode.net/field-notes/" },
+    { "@type": "ListItem", position: 3, name: "Play-study protocol", item: canonical },
+  ],
+};
+---
+
+<BaseLayout title={title} description={description} ogType="article">
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(articleSchema)}></script>
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(breadcrumbSchema)}></script>
+
+  <article class="method">
+    <header class="method-header shell">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a><span aria-hidden="true">/</span>
+        <a href="/field-notes/">Field Notes</a><span aria-hidden="true">/</span>
+        <span aria-current="page">Play-study protocol</span>
+      </nav>
+      <p class="mono signal">Method / play studies / version 1.0</p>
+      <h1 class="display">A practical protocol for documenting play</h1>
+      <p class="dek">Use this worksheet before making a claim about what a game does. It keeps the tested conditions, observed events and later interpretation close enough to inspect.</p>
+      <dl class="byline">
+        <div><dt>By</dt><dd>Nightmare Mode Editorial Desk</dd></div>
+        <div><dt>Responsible editor</dt><dd>Matthias Ramahi</dd></div>
+        <div><dt>Published</dt><dd><time datetime="2026-08-22">22 August 2026</time></dd></div>
+        <div><dt>Scope</dt><dd>Reusable method; no play session claimed</dd></div>
+      </dl>
+    </header>
+
+    <div class="method-body shell">
+      <section class="answer" aria-labelledby="answer-title">
+        <p class="mono signal">The short version</p>
+        <h2 id="answer-title">Record conditions first. Keep observation and interpretation separate.</h2>
+        <p>A useful play study should let another reader see which version was tested, what the researcher tried, what happened, and where the conclusion becomes uncertain. The worksheet below is designed for criticism and small editorial investigations. It is not a universal academic standard, and completing it does not make a subjective interpretation objective.</p>
+      </section>
+
+      <nav class="contents" aria-label="On this page">
+        <p class="mono">On this page</p>
+        <a href="#question">1. Define the question</a>
+        <a href="#conditions">2. Fix the conditions</a>
+        <a href="#log">3. Keep an event log</a>
+        <a href="#separate">4. Separate claim types</a>
+        <a href="#challenge">5. Challenge the first reading</a>
+        <a href="#publish">6. Publish the boundary</a>
+        <a href="#worksheet">Copyable worksheet</a>
+      </nav>
+
+      <section id="question">
+        <p class="step mono signal">Step 01</p>
+        <h2>Define one question the session can answer</h2>
+        <p>“How does the game work?” is too broad. Choose a relationship that can be observed: how a warning changes player behaviour, whether an upgrade alters the dominant route through a level, or what information an interface withholds before a decision.</p>
+        <p>Write the question before play. Then list the evidence that would count against the initial expectation. This matters because a session can otherwise become a search for confirming moments.</p>
+        <div class="prompt"><strong>Record:</strong> research question, initial expectation, observable disconfirming evidence, and claims that this session cannot answer.</div>
+      </section>
+
+      <section id="conditions">
+        <p class="step mono signal">Step 02</p>
+        <h2>Fix the conditions around the game</h2>
+        <p>The object under study is more than a title. Record platform, region, version or build, patch state, storefront or media, input device, display mode, language, difficulty, accessibility settings, modifications, account state and network availability. If a detail cannot be verified, mark it unknown instead of guessing.</p>
+        <p>This metadata is not administrative decoration. A patch can change damage values; a controller can change what an input sequence demands; a missing online service can remove an entire system. The Library of Congress similarly treats software preservation as dependent on version, platform, technical environment and supporting documentation.</p>
+        <div class="prompt"><strong>Record:</strong> game and edition, platform, version/build, session date and duration, hardware, input, display, audio, network, language, difficulty, accessibility settings, modifications and unavailable features.</div>
+      </section>
+
+      <section id="log">
+        <p class="step mono signal">Step 03</p>
+        <h2>Keep a timed event log</h2>
+        <p>Write down what was attempted and what the software returned. Use timestamps that point into a retained capture when possible. A strong entry contains an action, the visible or audible response, the state before and after, and enough context to repeat the event.</p>
+        <p>Consalvo and Dutton's qualitative toolkit separates object inventory, interface study, interaction mapping and a gameplay log. Those categories are useful because they stop a dramatic moment from swallowing the system around it. A menu label, a repeated object, a blocked route and a character response may belong to different layers of the same claim.</p>
+        <div class="log-example" aria-label="Example event log">
+          <div><strong>Time</strong><span>00:18:42</span></div>
+          <div><strong>Action</strong><span>Returned to the locked gate after collecting the key item.</span></div>
+          <div><strong>Observed response</strong><span>Prompt changed; the gate remained closed; a new route marker appeared.</span></div>
+          <div><strong>Follow-up</strong><span>Reload and repeat before attributing the change to the item.</span></div>
+        </div>
+      </section>
+
+      <section id="separate">
+        <p class="step mono signal">Step 04</p>
+        <h2>Separate four kinds of statement</h2>
+        <p>Use labels in the working notes. <strong>Observation</strong> describes what the session directly exposed. <strong>Source</strong> records what documentation, code, patch notes or another person reports. <strong>Inference</strong> connects evidence to an interpretation. <strong>Unknown</strong> names the missing condition that prevents a stronger claim.</p>
+        <p>“The prompt appeared after the third failure” is an observation if the event was recorded. “The game detects frustration” is an inference about design intent or player state. The second sentence may become a defensible argument, but the first does not prove it by itself.</p>
+      </section>
+
+      <section id="challenge">
+        <p class="step mono signal">Step 05</p>
+        <h2>Try to break the first interpretation</h2>
+        <p>Repeat the event when repetition is possible. Change one relevant condition at a time. Test a plausible alternative explanation. Look for a negative case: the same cue without the expected response, or the response without the cue.</p>
+        <p>DiGAP argues for reflexive and transparent game analysis. It asks researchers to report their background and methodological choices, and it discusses diary methods for structuring qualitative notes over time. For an editorial play study, that means recording prior knowledge, familiarity with the genre, guide use, accessibility needs and any commercial or personal relationship that could shape attention.</p>
+        <div class="prompt"><strong>Record:</strong> repetitions, changed conditions, counterexamples, researcher position, outside guidance used, and unresolved alternative explanations.</div>
+      </section>
+
+      <section id="publish">
+        <p class="step mono signal">Step 06</p>
+        <h2>Publish the evidence boundary beside the conclusion</h2>
+        <p>A reader should not have to reach a footnote to discover that an online mode was unavailable or that only one platform was tested. State the version and central limitation early. Link sources at the claim they support. Describe captures without publishing material you do not have the right to distribute.</p>
+        <p>The final field note should also name its author, responsible editor, conflicts, AI assistance, correction route and last substantive update. Keep raw notes and captures for correction work, but review them for personal data and third-party rights before sharing them.</p>
+      </section>
+
+      <section id="worksheet" class="worksheet" aria-labelledby="worksheet-title">
+        <p class="mono signal">Copyable worksheet</p>
+        <h2 id="worksheet-title">Play-study record</h2>
+        <pre><code>STUDY
+Question:
+Initial expectation:
+Evidence that would challenge it:
+Out of scope:
+
+CONDITIONS
+Game / edition:
+Platform / region:
+Version or build:
+Date / duration:
+Hardware / input / display / audio:
+Network / account state:
+Language / difficulty:
+Accessibility settings:
+Mods or external tools:
+Unavailable features:
+Unknown conditions:
+
+RESEARCHER POSITION
+Prior play or genre familiarity:
+Guides, walkthroughs or outside sources:
+Relevant relationships or conflicts:
+Accessibility needs affecting the session:
+
+EVENT LOG
+Timestamp:
+Action or input:
+State before:
+Observed response:
+State after:
+Capture or note reference:
+Repeat result:
+Alternative explanation:
+
+CLAIM LEDGER
+Observation:
+External source:
+Inference:
+Unknown:
+Counterexample:
+
+PUBLICATION BOUNDARY
+What this session supports:
+What it cannot establish:
+Rights or privacy limits:
+AI assistance:
+Responsible editor:
+Correction contact:
+Last substantive update:</code></pre>
+      </section>
+
+      <section class="method-limits" aria-labelledby="limits-title">
+        <h2 id="limits-title">Where this protocol stops</h2>
+        <p>It is designed for small, inspectable editorial studies, not usability research with participants, clinical research, ethnography of player communities or statistical claims about a population. Those questions require different consent, sampling, privacy and analysis practices. The protocol can improve the trace from session to sentence; it cannot turn one researcher's encounter into a universal player experience.</p>
+      </section>
+
+      <section class="sources" aria-labelledby="sources-title">
+        <h2 id="sources-title">Sources and adaptation note</h2>
+        <p>This is an original Nightmare Mode operating protocol, informed by the public methods below. It condenses ideas for an editorial worksheet and does not reproduce either academic protocol.</p>
+        <ol>
+          {sources.map((source) => (
+            <li><a href={source.href} rel="external">{source.title}</a>. {source.authors}. {source.publisher}, {source.date}.</li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="disclosure" aria-labelledby="disclosure-title">
+        <h2 id="disclosure-title">Production disclosure</h2>
+        <p>Source discovery, research organization and drafting were assisted by OpenAI Codex. Matthias Ramahi is the responsible editor. The page makes no claim that the protocol has already been used for a published game-specific session; future field notes must show that evidence separately.</p>
+      </section>
+
+      <aside class="next-step" aria-labelledby="next-title">
+        <p class="mono signal">Next step</p>
+        <h2 id="next-title">See the method in context</h2>
+        <p>The launch essay explains why version, environment and unavailable social conditions change what preservation evidence can support.</p>
+        <a class="action" href="/essays/a-game-is-more-than-its-files/">Read “A game is more than its files” <span aria-hidden="true">→</span></a>
+      </aside>
+    </div>
+  </article>
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .method-header { padding-block: clamp(3rem, 7vw, 7rem) clamp(3rem, 5vw, 5rem); }
+  .breadcrumb { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-bottom: 3rem; color: var(--ink-soft); font-size: 0.86rem; }
+  .breadcrumb a { text-decoration: underline; text-underline-offset: 0.2em; }
+  h1 { max-width: 12ch; margin: 1rem 0 2rem; font-size: clamp(4rem, 8vw, 8rem); }
+  .dek { max-width: 52rem; color: var(--ink-soft); font-size: clamp(1.3rem, 2vw, 1.85rem); line-height: 1.4; }
+  .byline { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; margin-top: 3.5rem; border: 1px solid var(--line); background: var(--line); }
+  .byline div { padding: 1rem; background: var(--paper); }
+  dt { margin-bottom: 0.4rem; font-size: 0.68rem; text-transform: uppercase; }
+  dd { margin: 0; }
+  .method-body { max-width: 58rem; padding-bottom: var(--section); }
+  .method-body section { scroll-margin-top: 7rem; }
+  .method-body section > p { font-size: clamp(1.06rem, 1.35vw, 1.18rem); line-height: 1.76; }
+  .method-body h2 { margin: 0.7rem 0 1.5rem; font-family: var(--display); font-size: clamp(2.7rem, 4.8vw, 4.6rem); font-weight: 450; line-height: 1.05; letter-spacing: -0.03em; }
+  .answer { padding: clamp(2rem, 5vw, 4rem); border: 1px solid var(--line); background: var(--paper-soft); }
+  .answer h2 { max-width: 14ch; }
+  .contents { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.65rem 2rem; margin: 4rem 0 6rem; padding-block: 2rem; border-block: 1px solid var(--line); }
+  .contents p { grid-column: 1 / -1; margin: 0 0 0.5rem; }
+  .contents a { width: fit-content; color: var(--ink-soft); text-decoration: underline; text-underline-offset: 0.2em; }
+  .method-body > section:not(.answer) { margin-top: 6rem; }
+  .prompt { margin-top: 2rem; padding: 1.35rem 1.5rem; border-left: 3px solid var(--signal); background: var(--paper-soft); }
+  .log-example { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 2rem; border: 1px solid var(--line); }
+  .log-example div { display: grid; gap: 0.45rem; padding: 1.25rem; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .log-example div:nth-child(2n) { border-right: 0; }
+  .log-example div:nth-last-child(-n + 2) { border-bottom: 0; }
+  .log-example span { color: var(--ink-soft); }
+  .worksheet { padding: clamp(2rem, 5vw, 4rem); border: 1px solid var(--ink); }
+  pre { max-width: 100%; margin: 2rem 0 0; padding: 1.5rem; overflow-x: auto; background: var(--paper-soft); color: var(--ink); font-family: var(--mono); font-size: 0.82rem; line-height: 1.65; white-space: pre-wrap; }
+  .method-limits,
+  .sources,
+  .disclosure { padding-top: 2rem; border-top: 1px solid var(--line); }
+  .sources ol { padding-left: 1.4rem; }
+  .sources li { margin-block: 1rem; }
+  .sources a { text-decoration: underline; text-underline-offset: 0.2em; }
+  .next-step { margin-top: 6rem; padding: clamp(2rem, 5vw, 4rem); background: var(--ink); color: var(--paper); }
+  .next-step h2 { max-width: 13ch; }
+  .next-step p:not(.mono) { max-width: 39rem; color: #d8d8d2; }
+  .next-step .signal { color: #f2dce2; }
+  .next-step .action { margin-top: 1.5rem; color: var(--paper); }
+  @media (max-width: 760px) {
+    .byline,
+    .contents,
+    .log-example { grid-template-columns: 1fr; }
+    .log-example div,
+    .log-example div:nth-child(2n),
+    .log-example div:nth-last-child(-n + 2) { border-right: 0; border-bottom: 1px solid var(--line); }
+    .log-example div:last-child { border-bottom: 0; }
+  }
+  @media (max-width: 480px) { .byline { grid-template-columns: 1fr; } }
+</style>

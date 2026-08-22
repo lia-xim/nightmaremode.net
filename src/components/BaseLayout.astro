@@ -9,6 +9,7 @@ interface Props {
   description?: string;
   image?: string;
   noindex?: boolean;
+  ogType?: "website" | "article";
 }
 
 const {
@@ -16,20 +17,33 @@ const {
   description = siteConfig.description,
   image = "/og-default.jpg",
   noindex = false,
+  ogType = "website",
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, siteConfig.canonicalHost);
 const fullTitle = title.includes("Nightmare Mode") ? title : `${title} — Nightmare Mode`;
 const indexingEnabled = import.meta.env.PUBLIC_SITE_INDEXABLE === "true";
 const shouldNoindex = noindex || !indexingEnabled;
-const websiteSchema = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: siteConfig.name,
-  url: siteConfig.canonicalHost,
-  description,
-  dateCreated: "2026",
-};
+const websiteId = new URL("/#website", siteConfig.canonicalHost).toString();
+const pageId = new URL(`${Astro.url.pathname}#webpage`, siteConfig.canonicalHost).toString();
+const pageSchema = Astro.url.pathname === "/"
+  ? {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "@id": websiteId,
+      name: siteConfig.name,
+      url: siteConfig.canonicalHost,
+      description,
+    }
+  : {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "@id": pageId,
+      name: fullTitle,
+      url: canonical.toString(),
+      description,
+      isPartOf: { "@id": websiteId },
+    };
 ---
 
 <!doctype html>
@@ -42,13 +56,13 @@ const websiteSchema = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta name="robots" content={shouldNoindex ? "noindex, nofollow" : "index, follow"} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={new URL(image, siteConfig.canonicalHost)} />
     <meta name="twitter:card" content="summary_large_image" />
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema)}></script>
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(pageSchema)}></script>
     <slot name="head" />
   </head>
   <body>

@@ -19,7 +19,7 @@ The minimum operating rhythm is one substantive essay, play study, or sourced an
 `PUBLIC_SITE_INDEXABLE` is the single environment gate.
 
 - Without `PUBLIC_SITE_INDEXABLE=true`, every page is `noindex, nofollow`, robots blocks crawling, and no sitemap is generated.
-- With `PUBLIC_SITE_INDEXABLE=true`, the five routes in `src/data/indexable-routes.mjs` are indexable and emitted through `@astrojs/sitemap`.
+- With `PUBLIC_SITE_INDEXABLE=true`, the seven routes derived from the canonical page registry in `src/data/indexable-routes.mjs` are indexable and emitted through `@astrojs/sitemap`.
 - Legal, rights, utility, empty-section, 404, and legacy routes remain `noindex` and are excluded from the sitemap.
 - `src/data/legacy-url-actions.ts` is the authoritative reviewed action manifest for priority historical URLs.
 
