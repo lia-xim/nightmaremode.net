@@ -6,6 +6,7 @@ const routes = [
   "/",
   "/essays/a-game-is-more-than-its-files/",
   "/field-notes/",
+  "/field-notes/a-dark-room-first-four-minutes/",
   "/field-notes/play-study-protocol/",
   "/about/new-ownership/",
   "/impressum/",

@@ -1,0 +1,247 @@
+---
+import BaseLayout from "@/components/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import session from "@/data/studies/a-dark-room-session.json";
+
+const title = "Four minutes in A Dark Room: how one button becomes a system";
+const description = "A timed, reproducible browser observation of how A Dark Room reveals fire maintenance, gathering and its first branching choice.";
+const canonical = "https://nightmaremode.net/field-notes/a-dark-room-first-four-minutes/";
+const formatTime = (seconds: number) => `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
+const sources = [
+  {
+    title: "A Dark Room — official web build",
+    publisher: "Doublespeak Games",
+    date: "accessed 23 August 2026",
+    href: session.game.url,
+  },
+  {
+    title: "A Dark Room source repository at the tested main commit",
+    publisher: "Doublespeak Games on GitHub",
+    date: session.game.sourceCommit.slice(0, 7),
+    href: `https://github.com/doublespeakgames/adarkroom/commit/${session.game.sourceCommit}`,
+  },
+  {
+    title: "A Dark Room press kit",
+    publisher: "Doublespeak Games",
+    date: "accessed 23 August 2026",
+    href: "https://press.doublespeakgames.com/adr/index.html",
+  },
+] as const;
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: title,
+  description,
+  datePublished: "2026-08-23",
+  dateModified: "2026-08-23",
+  mainEntityOfPage: canonical,
+  author: { "@type": "Organization", name: "Nightmare Mode Editorial Desk" },
+  editor: { "@type": "Person", name: "Matthias Ramahi" },
+  publisher: { "@type": "Organization", name: "Nightmare Mode", url: "https://nightmaremode.net/" },
+  about: { "@type": "VideoGame", name: "A Dark Room", url: session.game.url },
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://nightmaremode.net/" },
+    { "@type": "ListItem", position: 2, name: "Field Notes", item: "https://nightmaremode.net/field-notes/" },
+    { "@type": "ListItem", position: 3, name: "Four minutes in A Dark Room", item: canonical },
+  ],
+};
+---
+
+<BaseLayout title={title} description={description} ogType="article">
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(articleSchema)}></script>
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(breadcrumbSchema)}></script>
+
+  <article class="study">
+    <header class="study-header shell">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a><span aria-hidden="true">/</span>
+        <a href="/field-notes/">Field Notes</a><span aria-hidden="true">/</span>
+        <span aria-current="page">A Dark Room</span>
+      </nav>
+      <p class="mono signal">Play study 01 / controlled browser observation</p>
+      <h1 class="display">Four minutes in <em>A Dark Room</em></h1>
+      <p class="dek">One button becomes fire maintenance, resource work and then a choice. The opening does not explain that structure in advance; it makes the interface arrive over time.</p>
+      <dl class="byline">
+        <div><dt>Session operator</dt><dd>OpenAI Codex</dd></div>
+        <div><dt>Responsible editor</dt><dd>Matthias Ramahi</dd></div>
+        <div><dt>Observed</dt><dd><time datetime="2026-08-23">23 August 2026</time></dd></div>
+        <div><dt>Duration</dt><dd>{formatTime(session.durationSeconds)}</dd></div>
+        <div><dt>Scope</dt><dd>Interface events; no human-experience claim</dd></div>
+      </dl>
+    </header>
+
+    <div class="study-body shell">
+      <section class="finding" aria-labelledby="finding-title">
+        <p class="mono signal">Finding</p>
+        <h2 id="finding-title">The opening teaches by changing what can be done.</h2>
+        <p>The tested web build began with one available action. Maintaining the fire followed. A stranger arrived. Gathering appeared later, and the first explicit branch did not surface until 03:02. In this single run, progression was delivered as a sequence of interface permissions rather than as an up-front rules explanation.</p>
+        <p>That sequence is directly observed. Its cause is not. This session cannot tell whether elapsed time, fire state, action count or a combination of conditions triggered each reveal.</p>
+      </section>
+
+      <section class="conditions" aria-labelledby="conditions-title">
+        <div>
+          <p class="mono signal">Conditions</p>
+          <h2 id="conditions-title">What was actually tested</h2>
+        </div>
+        <dl>
+          <div><dt>Build</dt><dd>Official English web build at repository main commit <code>{session.game.sourceCommit.slice(0, 7)}</code></dd></div>
+          <div><dt>Browser</dt><dd>{session.environment.browser}, Playwright {session.environment.playwrightVersion}</dd></div>
+          <div><dt>State</dt><dd>{session.environment.saveState}</dd></div>
+          <div><dt>Display</dt><dd>{session.environment.viewport}; audio not evaluated</dd></div>
+          <div><dt>Input</dt><dd>Fixed scripted pointer-click policy, not free human play</dd></div>
+          <div><dt>Stop rule</dt><dd>Do not choose an unplanned branch; stop after the first unresolved decision</dd></div>
+        </dl>
+      </section>
+
+      <section class="question" aria-labelledby="question-title">
+        <p class="mono signal">Question set before the session</p>
+        <h2 id="question-title">{session.question}</h2>
+        <p><strong>Initial expectation:</strong> {session.initialExpectation}</p>
+        <p>The policy allowed three routine actions—light, stoke and gather—but prohibited choosing a newly presented branch. This kept the end condition from being selected after the result was already visible.</p>
+      </section>
+
+      <section class="timeline" aria-labelledby="timeline-title">
+        <p class="mono signal">Timed event ledger</p>
+        <h2 id="timeline-title">From a single action to a decision</h2>
+        <ol>
+          {session.events.map((event) => (
+            <li class:list={[event.type === "action" && "is-action", event.type === "boundary" && "is-boundary"]}>
+              <time datetime={`PT${event.second}S`}>{formatTime(event.second)}</time>
+              <div>
+                <span class="event-type mono">{event.type}</span>
+                {event.action && <strong>{event.action}</strong>}
+                <p>{event.result}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="reading" aria-labelledby="reading-title">
+        <p class="mono signal">Interpretation</p>
+        <h2 id="reading-title">The menu is part of the world state</h2>
+        <p>At 00:01 the interface did not present a dormant resource system or a locked navigation tree. It presented one task. Later controls appeared beside changes in the notification log. The practical effect is that interface growth and world development are experienced as the same event: a new verb becomes visible when the room's situation changes.</p>
+        <p>The notification area also retained earlier statements while newer ones accumulated above them. Historical conditions therefore remained visible beside the current one. A reader of the interface has to understand the panel as a reverse-chronological record, not as a single clean status display.</p>
+        <p>The first branch sharpened the distinction. “Investigate” and “ignore them” arrived after several minutes of routine maintenance. The study stopped there. It can document when those options appeared in this run, but not their consequences or whether a different fire policy would have produced them sooner.</p>
+      </section>
+
+      <section class="claim-ledger" aria-labelledby="claims-title">
+        <p class="mono signal">Claim ledger</p>
+        <h2 id="claims-title">Observation, inference and unknown</h2>
+        <div class="claims">
+          <article>
+            <h3>Observed</h3>
+            <p>The available controls expanded from light fire, to stoke fire, to gather wood, and finally to a two-option branch during one fresh 257-second session.</p>
+          </article>
+          <article>
+            <h3>Inferred</h3>
+            <p>The opening uses progressive interface disclosure to make mechanical expansion feel like a change in the room rather than a tutorial menu.</p>
+          </article>
+          <article>
+            <h3>Unknown</h3>
+            <p>The trigger logic, alternate timing, human interpretation, audio contribution, later systems and consequences of the first branch were not established.</p>
+          </article>
+          <article>
+            <h3>Counter-test</h3>
+            <p>A second session should vary only the fire-maintenance policy, then compare reveal times. Source-code inspection should remain a separate evidence stream.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="limits" aria-labelledby="limits-title">
+        <p class="mono signal">Evidence boundary</p>
+        <h2 id="limits-title">What this study cannot say</h2>
+        <ul>
+          {session.limits.map((limit) => <li>{limit}</li>)}
+        </ul>
+        <p>This is a controlled software observation. It is not a review, usability study, speedrun, complete systems analysis or report of a human player's feelings. The observed button labels are necessary interface facts; no game code, screenshot, audio, logo or narrative body is republished.</p>
+      </section>
+
+      <section class="sources" aria-labelledby="sources-title">
+        <p class="mono signal">Sources and record</p>
+        <h2 id="sources-title">Reproduce or challenge the study</h2>
+        <ol>
+          {sources.map((source) => (
+            <li><a href={source.href} rel="external">{source.title}</a>. {source.publisher}, {source.date}.</li>
+          ))}
+        </ol>
+        <div class="record-links">
+          <a class="action" href="/field-notes/a-dark-room-first-four-minutes/session.json">Open the machine-readable session record <span aria-hidden="true">→</span></a>
+          <a class="action" href="/field-notes/play-study-protocol/">Read the play-study protocol <span aria-hidden="true">→</span></a>
+        </div>
+      </section>
+
+      <section class="disclosure" aria-labelledby="disclosure-title">
+        <h2 id="disclosure-title">Production disclosure</h2>
+        <p>The browser interaction, structured event log, source verification and first draft were produced with OpenAI Codex under the Nightmare Mode editorial workflow. Matthias Ramahi is the responsible editor and correction owner. No former Nightmare Mode text, identity or media was used, and no human play experience is claimed.</p>
+      </section>
+    </div>
+  </article>
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .study-header { padding-block: clamp(3rem, 7vw, 7rem) clamp(3rem, 5vw, 5rem); }
+  .breadcrumb { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-bottom: 3rem; color: var(--ink-soft); font-size: 0.86rem; }
+  .breadcrumb a { text-decoration: underline; text-underline-offset: 0.2em; }
+  h1 { max-width: 12ch; margin: 1rem 0 2rem; font-size: clamp(4rem, 8vw, 8rem); }
+  h1 em { color: var(--signal); font-weight: inherit; }
+  .dek { max-width: 54rem; color: var(--ink-soft); font-size: clamp(1.3rem, 2vw, 1.9rem); line-height: 1.4; }
+  .byline { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1px; margin-top: 3.5rem; border: 1px solid var(--line); background: var(--line); }
+  .byline div { padding: 1rem; background: var(--paper); }
+  dt { margin-bottom: 0.4rem; font-size: 0.68rem; text-transform: uppercase; }
+  dd { margin: 0; }
+  .study-body { max-width: 62rem; padding-bottom: var(--section); }
+  .study-body section { margin-top: clamp(4.5rem, 8vw, 7rem); }
+  .study-body h2 { max-width: 15ch; margin: 0.7rem 0 1.5rem; font-family: var(--display); font-size: clamp(2.8rem, 5vw, 4.8rem); font-weight: 450; line-height: 1.04; letter-spacing: -0.03em; }
+  .study-body p, .study-body li { font-size: clamp(1.05rem, 1.3vw, 1.17rem); line-height: 1.75; }
+  .finding { padding: clamp(2rem, 5vw, 4rem); border: 1px solid var(--line); background: var(--paper-soft); }
+  .conditions { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(2rem, 7vw, 6rem); }
+  .conditions dl { margin: 0; border-top: 1px solid var(--line); }
+  .conditions dl div { padding: 1rem 0; border-bottom: 1px solid var(--line); }
+  .conditions dt { color: var(--signal); }
+  .conditions dd { color: var(--ink-soft); }
+  code { padding: 0.1em 0.3em; background: var(--paper-soft); font-size: 0.88em; }
+  .timeline ol { padding: 0; list-style: none; border-top: 1px solid var(--line); }
+  .timeline li { display: grid; grid-template-columns: 5rem 1fr; gap: 1.5rem; padding: 1.5rem 0; border-bottom: 1px solid var(--line); }
+  .timeline time { color: var(--signal); font-variant-numeric: tabular-nums; }
+  .timeline strong { display: block; margin-top: 0.25rem; font-family: var(--display); font-size: 1.75rem; font-weight: 500; }
+  .timeline p { margin: 0.35rem 0 0; color: var(--ink-soft); }
+  .event-type { color: var(--ink-soft); }
+  .is-action { padding-left: 1rem !important; border-left: 3px solid var(--signal); }
+  .is-boundary { background: var(--paper-soft); }
+  .claims { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid var(--line); }
+  .claims article { padding: clamp(1.5rem, 3vw, 2.5rem); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .claims article:nth-child(2n) { border-right: 0; }
+  .claims article:nth-last-child(-n + 2) { border-bottom: 0; }
+  .claims h3 { margin: 0; font-family: var(--display); font-size: 2rem; font-weight: 500; }
+  .claims p { margin-bottom: 0; color: var(--ink-soft); }
+  .limits { padding: clamp(2rem, 5vw, 4rem); border-left: 3px solid var(--signal); background: var(--paper-soft); }
+  .limits ul { padding-left: 1.4rem; }
+  .limits li { margin-block: 0.9rem; }
+  .sources { padding-top: 2rem; border-top: 1px solid var(--line); }
+  .sources ol { padding-left: 1.4rem; }
+  .sources li { margin-block: 1rem; }
+  .sources a:not(.action) { text-decoration: underline; text-underline-offset: 0.2em; }
+  .record-links { display: flex; flex-wrap: wrap; gap: 1.25rem 2rem; margin-top: 2rem; }
+  .disclosure { padding: clamp(2rem, 5vw, 4rem); background: var(--ink); color: var(--paper); }
+  .disclosure h2 { margin-top: 0; }
+  .disclosure p { color: #d8d8d2; }
+  @media (max-width: 850px) {
+    .byline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .conditions { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 620px) {
+    .byline, .claims { grid-template-columns: 1fr; }
+    .claims article, .claims article:nth-child(2n), .claims article:nth-last-child(-n + 2) { border-right: 0; border-bottom: 1px solid var(--line); }
+    .claims article:last-child { border-bottom: 0; }
+    .timeline li { grid-template-columns: 3.5rem 1fr; gap: 0.8rem; }
+    .record-links { align-items: flex-start; flex-direction: column; }
+  }
+</style>

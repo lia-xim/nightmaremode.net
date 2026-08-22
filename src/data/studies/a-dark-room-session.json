@@ -1,0 +1,58 @@
+{
+  "studyId": "adr-web-2026-08-23-01",
+  "title": "A Dark Room: first four minutes",
+  "sessionDate": "2026-08-23",
+  "durationSeconds": 257,
+  "game": {
+    "title": "A Dark Room",
+    "edition": "Official English web build",
+    "url": "https://doublespeakgames.github.io/adarkroom/",
+    "sourceRepository": "https://github.com/doublespeakgames/adarkroom",
+    "sourceCommit": "1fada4620b6c66bd07bf15a3f1eb8223df8bc1d7",
+    "license": "Mozilla Public License 2.0"
+  },
+  "environment": {
+    "browser": "Playwright Chromium",
+    "playwrightVersion": "1.62.1",
+    "viewport": "1280x900",
+    "language": "English",
+    "saveState": "Fresh isolated browser context; no prior save",
+    "network": "Online official GitHub Pages build",
+    "audio": "Not evaluated",
+    "input": "Scripted pointer clicks using a fixed action policy"
+  },
+  "question": "How does the opening interface expand from one available action into resource work and a branching decision?",
+  "initialExpectation": "The game would reveal new actions through elapsed time and repeated fire maintenance while leaving some causal relationships unstated.",
+  "actionPolicy": [
+    "Click light fire once.",
+    "Click stoke fire only when visible and enabled, with at least 30 seconds since the previous stoke attempt.",
+    "Click gather wood when visible and enabled, with at least 10 seconds since the previous gather attempt.",
+    "Do not choose an unplanned branching option."
+  ],
+  "events": [
+    {"second":1,"type":"observation","action":null,"result":"The initial interface exposed one available action: light fire. Notifications stated that the fire was dead and the room was freezing."},
+    {"second":1,"type":"action","action":"light fire","result":"The fixed action policy began."},
+    {"second":6,"type":"observation","action":null,"result":"The notification log added that light spilled from the windows and that the fire was burning. Stoke fire was visible but disabled."},
+    {"second":11,"type":"action","action":"stoke fire","result":"The control had become enabled and was clicked."},
+    {"second":16,"type":"observation","action":null,"result":"The log added that the fire was roaring. Stoke fire was temporarily disabled."},
+    {"second":31,"type":"observation","action":null,"result":"A ragged stranger entered and collapsed in the corner. No choice was presented at this point."},
+    {"second":46,"type":"observation","action":null,"result":"Gather wood appeared as a second available action after the stranger event."},
+    {"second":46,"type":"action","action":"gather wood","result":"The new action was clicked and then became disabled."},
+    {"second":106,"type":"action","action":"gather wood","result":"Gather wood became available again and was clicked a second time."},
+    {"second":167,"type":"action","action":"gather wood","result":"Gather wood became available again and was clicked a third time."},
+    {"second":182,"type":"observation","action":null,"result":"A branching prompt exposed investigate and ignore them. The policy did not authorize either choice, so the branch was left unresolved."},
+    {"second":257,"type":"boundary","action":null,"result":"The session was stopped manually. No branching option was selected."}
+  ],
+  "limits": [
+    "One session cannot separate elapsed-time triggers from fire-state or action-count triggers.",
+    "The session used scripted clicks and cannot support claims about emotion, confusion, comfort or any other human response.",
+    "No audio, mobile layout, alternate language, save reload, source-code control flow or later game layer was evaluated.",
+    "After the branching prompt appeared, the overlay interfered with background click timing; later timestamps are unsuitable for precise cooldown measurement."
+  ],
+  "production": {
+    "sessionOperator": "OpenAI Codex under the Nightmare Mode editorial workflow",
+    "responsibleEditor": "Matthias Ramahi",
+    "aiAssistance": "The interaction, structured log, source verification and first draft were produced with OpenAI Codex. No human play experience is claimed.",
+    "correctionRoute": "https://nightmaremode.net/rights-contact/"
+  }
+}

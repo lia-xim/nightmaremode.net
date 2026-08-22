@@ -28,7 +28,7 @@ Public indexing remains blocked. Search Console manual actions, security issues 
 | Supported | A useful play-study method should preserve build/environment metadata and separate observed events from interpretation. | Consalvo and Dutton; DiGAP; Library of Congress software/game format guidance. | Publish an original adapted worksheet with citations and limits. |
 | Supported | A small publication benefits more from one reusable proof asset than several thin topical pages. | Current content inventory, monthly cadence and maintenance contract. | Implement one method asset in this phase. |
 | Hypothesis | Readers who enter through the preservation essay will use a concrete documentation worksheet as a next step. | The essay already argues for version and environment disclosure; no behavioural data exists yet. | Measure internal clicks after indexing and analytics consent review. |
-| Hypothesis | Field Notes can become the strongest differentiating cluster if future studies publish retained observations and counterexamples. | Editorial positioning and new protocol; no game-specific field note exists yet. | Validate through two completed studies before expanding the taxonomy. |
+| Hypothesis | Field Notes can become the strongest differentiating cluster if studies publish retained observations and counterexamples. | Editorial positioning, protocol and one completed controlled browser observation; no reader-demand data or second study exists yet. | Validate through a second completed study before expanding the taxonomy. |
 | Experiment | Use the protocol for two original play studies, then revise fields that produced ambiguous or unused evidence. | Version 1.0 is explicitly an operating method, not a universal standard. | Review after the second completed study. |
 | Experiment | Test whether the methods link from the homepage and preservation essay earns meaningful navigation. | No production click data is available. | Define events only after privacy and analytics decisions are documented. |
 | Rejected | Scaled keyword, PAA, city, franchise or templated fan-out pages. | No evidence, maintenance capacity or first-hand material supports them. | Do not build. |
@@ -53,7 +53,7 @@ Public indexing remains blocked. Search Console manual actions, security issues 
 
 ### P2 — Remaining editorial work
 
-- No game-specific play study exists yet. The protocol is a method asset, not evidence of completed gameplay research.
+- One game-specific controlled browser study now exists. It is evidence of observed software behaviour, not human play experience; a varied-condition repeat and a human-led study remain open.
 - Conversations remains a noindex hold page and has been removed from primary navigation until a consented interview exists.
 - `/ownership/` overlaps `/about/new-ownership/`. Keep it noindex until demand/backlink evidence supports a safe merge or exact redirect.
 - The discovery preparation note remains noindex; it has no findings and must not be presented as research.
@@ -74,7 +74,8 @@ The machine-readable source is `src/data/indexable-routes.mjs`. Each emitted can
 | `/editorial-policy/` | Yes | Governance | Keep | Verify evidence, AI-use and correction rules. |
 | `/essays/` | Yes | Essays | Strengthen | Browse substantive current essays. |
 | `/essays/a-game-is-more-than-its-files/` | Yes | Essays | Strengthen | Read the preservation evidence argument. |
-| `/field-notes/` | Yes | Play studies | Strengthen | Find documented methods and future observation-led studies. |
+| `/field-notes/` | Yes | Play studies | Strengthen | Find documented methods and observation-led studies. |
+| `/field-notes/a-dark-room-first-four-minutes/` | Yes | Play studies | Create | Inspect the timed A Dark Room opening study and its evidence limits. |
 | `/field-notes/play-study-protocol/` | Yes | Play studies | Create | Use a reproducible play documentation worksheet. |
 | `/404/` | No | Utility | Keep noindex | Recover from a genuinely missing URL. |
 | `/about/new-ownership/` | No | Governance | Keep noindex | Verify the 2026 ownership and rights boundary. |
@@ -101,6 +102,7 @@ Home — publication orientation
 │   └── A game is more than its files — preservation and evidence limits
 │       └── Play-study protocol — practical next step
 ├── Field Notes — documented observation hub
+│   ├── A Dark Room: first four minutes — controlled observation and timed record
 │   └── Play-study protocol — reusable method and worksheet
 ├── Editorial policy — evidence, AI, corrections and cadence
 └── About — operator, purpose and independence
@@ -128,13 +130,13 @@ The method page adapts ideas into a new editorial worksheet. It does not reprodu
 ### 0–30 days
 
 - Establish authenticated Search Console access and record manual actions, security issues, removals, ownership and URL-inspection evidence.
-- Use protocol version 1.0 for one original game-specific study; retain session log, conditions, captures and counterexamples.
+- Review the completed A Dark Room study against protocol version 1.0, then repeat one condition to challenge the timing interpretation.
 - Resolve whether privacy-safe first-party measurement is needed before adding any analytics.
 - Re-run protected and launch-mode gates after any content change; keep production protected until every launch gate passes.
 
 ### 31–60 days
 
-- Publish the first completed play study only if its evidence bundle, rights review, named author and correction owner pass.
+- Add a human-led or meaningfully varied second study only if its evidence bundle, rights review, named author and correction owner pass.
 - Review protocol fields against the real study: remove unused ceremony and add any missing condition that changed a claim.
 - Decide `/ownership/` using GSC/backlink/referrer evidence; merge only to the exact equivalent page.
 - Review external source links and update dates.
@@ -165,3 +167,16 @@ The method page adapts ideas into a new editorial worksheet. It does not reprodu
 - The repository had a P0 safeguard gap: `PUBLIC_SITE_INDEXABLE=true` alone could previously enable index metadata, crawling and the sitemap despite the controlling GSC gate.
 - Indexing now requires a two-key build condition. `PUBLIC_SITE_INDEXABLE=true` alone stays protected; the separate GSC confirmation lock is recognized only together with it and must not be set until the exact evidence checklist in `PROJECT_BRIEF.md` is complete.
 - This audit did not change editorial content, DNS, legacy actions, rights claims or the accepted Contextter portfolio assignment.
+## First field-study expansion — 23 August 2026
+
+- Added `/field-notes/a-dark-room-first-four-minutes/` as the first game-specific field note and `/field-notes/a-dark-room-first-four-minutes/session.json` as its machine-readable evidence record.
+- The session used a fresh isolated Playwright Chromium context, a fixed action policy and a 257-second stop boundary. It reports observed interface events, inference and unknowns separately; it makes no human-experience claim.
+- The source state is pinned to the official Doublespeak Games repository commit `1fada4620b6c66bd07bf15a3f1eb8223df8bc1d7`. The official game, commit and press-kit URLs all returned HTTP 200 on 23 August 2026.
+- No former Nightmare Mode text, author identity, logo, screenshot, audio, code or narrative body was used. The accepted Contextter portfolio assignment remains unchanged and is not promoted to readers.
+- Protected build: 22 pages, Astro check with 0 errors, 0 warnings and 0 hints; 96 safeguard checks passed. Robots remains `Disallow: /`, pages remain `noindex, nofollow`, and no sitemap is emitted.
+- Simulated launch build: 165 safeguard checks passed; the automatic sitemap exactly matched eight canonical indexable 200 pages. The final local build was returned to protected mode.
+- Static graph: 22 documents and 274 internal links checked; no broken link or indexable orphan.
+- Browser QA: homepage-to-study navigation, 12 rendered timeline events, Article schema and the JSON evidence endpoint passed with no console errors, failed requests, broken images or horizontal overflow.
+- Accessibility: 18 desktop/mobile route scans returned no Axe violations; skip link, mobile-menu keyboard activation, Escape close and focus return passed.
+- Performance remains a local unthrottled lab signal, not field CWV: homepage LCP measured 84 ms desktop and 60 ms mobile; CLS measured 0.0041 desktop and 0 mobile.
+- Authenticated Search Console remains **NOT PROVEN**. The two-key index gate therefore remains closed; no DNS change or index launch was performed.

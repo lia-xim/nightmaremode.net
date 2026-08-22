@@ -6,7 +6,7 @@ const output = process.env.QA_OUTPUT_DIR ?? "design/qa";
 mkdirSync(output, { recursive: true });
 
 const browser = await chromium.launch({ headless: true });
-const results = { desktop: {}, mobile: {}, article: {}, errors: [], failedRequests: [] };
+const results = { desktop: {}, mobile: {}, article: {}, fieldStudy: {}, errors: [], failedRequests: [] };
 
 const attachDiagnostics = (page, prefix = "") => {
   page.on("console", (message) => {
@@ -68,7 +68,28 @@ results.article = await article.evaluate(() => ({
   robots: document.querySelector("meta[name='robots']")?.getAttribute("content"),
 }));
 await article.screenshot({ path: `${output}/essay-desktop-full.png`, fullPage: true });
+const fieldStudy = await browser.newPage({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1 });
+attachDiagnostics(fieldStudy, "field-study: ");
+await fieldStudy.goto(base, { waitUntil: "networkidle" });
+await fieldStudy.locator('a[href="/field-notes/a-dark-room-first-four-minutes/"]').first().click();
+await fieldStudy.waitForURL(`${base}/field-notes/a-dark-room-first-four-minutes/`);
+const sessionResponse = await fieldStudy.context().request.get(`${base}/field-notes/a-dark-room-first-four-minutes/session.json`);
+const sessionRecord = await sessionResponse.json();
+results.fieldStudy = await fieldStudy.evaluate(() => ({
+  title: document.title,
+  h1: document.querySelector("h1")?.textContent?.trim(),
+  timelineEvents: document.querySelectorAll(".timeline li").length,
+  schemaType: [...document.querySelectorAll('script[type="application/ld+json"]')].map((node) => node.textContent).find((value) => value?.includes('"Article"')) ? "Article" : null,
+  sessionHref: document.querySelector('a[href$="/session.json"]')?.getAttribute("href"),
+  brokenImages: [...document.images].filter((image) => image.currentSrc && image.complete && image.naturalWidth === 0).length,
+  scrollWidth: document.documentElement.scrollWidth,
+  clientWidth: document.documentElement.clientWidth,
+  robots: document.querySelector("meta[name='robots']")?.getAttribute("content"),
+}));
+results.fieldStudy.sessionStatus = sessionResponse.status();
+results.fieldStudy.sessionId = sessionRecord.studyId;
+await fieldStudy.screenshot({ path: `${output}/field-study-desktop-full.png`, fullPage: true });
 await browser.close();
 console.log(JSON.stringify(results, null, 2));
 
-if (results.errors.length || results.failedRequests.length || results.desktop.brokenImages || results.mobile.brokenImages || results.desktop.scrollWidth !== results.desktop.clientWidth || results.mobile.scrollWidth !== results.mobile.clientWidth || results.desktop.h1 !== "Games, examined closely." || !results.mobile.navVisible || results.article.h1 !== "A game is more than its files" || results.article.sources !== 3 || results.article.schemaType !== "Article" || results.article.brokenImages || results.article.scrollWidth !== results.article.clientWidth) process.exitCode = 1;
+if (results.errors.length || results.failedRequests.length || results.desktop.brokenImages || results.mobile.brokenImages || results.desktop.scrollWidth !== results.desktop.clientWidth || results.mobile.scrollWidth !== results.mobile.clientWidth || results.desktop.h1 !== "Games, examined closely." || !results.mobile.navVisible || results.article.h1 !== "A game is more than its files" || results.article.sources !== 3 || results.article.schemaType !== "Article" || results.article.brokenImages || results.article.scrollWidth !== results.article.clientWidth || results.fieldStudy.h1 !== "Four minutes in A Dark Room" || results.fieldStudy.timelineEvents !== 12 || results.fieldStudy.schemaType !== "Article" || results.fieldStudy.sessionStatus !== 200 || results.fieldStudy.sessionId !== "adr-web-2026-08-23-01" || results.fieldStudy.brokenImages || results.fieldStudy.scrollWidth !== results.fieldStudy.clientWidth) process.exitCode = 1;

@@ -59,6 +59,22 @@ export const sourceEvidence: SourceEvidence[] = [
     note: "Nightmare Mode Editorial Desk byline with Matthias Ramahi as operator and responsible editor; AI-assisted drafting is disclosed on the article.",
   },
   {
+    id: "a-dark-room-official-source",
+    subject: "A Dark Room official web build and source state used for the first controlled field study",
+    source: "Doublespeak Games GitHub Pages build and repository main commit 1fada4620b6c66bd07bf15a3f1eb8223df8bc1d7, verified 23 August 2026",
+    status: "verified",
+    rights: "public-fact",
+    note: "The study links to the official game, repository, press kit and MPL-2.0 license; it republishes no game code, screenshots, audio, logos or narrative body.",
+  },
+  {
+    id: "a-dark-room-session-2026-08-23",
+    subject: "Controlled opening-session observations for A Dark Room",
+    source: "Structured session record adr-web-2026-08-23-01 in src/data/studies/a-dark-room-session.json",
+    status: "verified",
+    rights: "owned",
+    note: "A fresh Playwright Chromium context executed a fixed click policy for 257 seconds. The record makes no human-experience claim and preserves limitations around causality, audio, later play and overlay timing.",
+  },
+  {
     id: "legacy-article-rights",
     subject: "Former article bodies and contributor media",
     source: "No license or article-level permission recorded",

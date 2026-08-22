@@ -117,6 +117,17 @@ assert(protocolSource.includes("no play session claimed"), "play-study protocol 
 assert((protocolSource.match(/href: "https:\/\//g) ?? []).length === 3, "play-study protocol cites exactly three public methodology sources");
 assert(protocolSource.includes("Copyable worksheet"), "play-study protocol exposes a reusable proof asset");
 
+const studyRecord = JSON.parse(readFileSync(join(root, "src", "data", "studies", "a-dark-room-session.json"), "utf8"));
+assert(studyRecord.studyId === "adr-web-2026-08-23-01", "play-study record has a stable public identifier");
+assert(studyRecord.durationSeconds === 257, "play-study duration matches the recorded stop boundary");
+assert(studyRecord.game.sourceCommit === "1fada4620b6c66bd07bf15a3f1eb8223df8bc1d7", "play-study pins the observed official source state");
+assert(studyRecord.events.some((event) => event.second === 182 && event.result.includes("investigate and ignore them")), "play-study preserves the first unresolved branch observation");
+assert(studyRecord.production.aiAssistance.includes("No human play experience is claimed"), "play-study discloses automation and rejects a human-experience claim");
+
+const studySource = readFileSync(join(root, "src", "pages", "field-notes", "a-dark-room-first-four-minutes", "index.astro"), "utf8");
+assert(studySource.includes("controlled browser observation"), "play-study states its controlled-observation scope");
+assert(studySource.includes("No former Nightmare Mode text, identity or media was used"), "play-study states its legacy-rights boundary");
+assert(!/\b(?:I|we) played\b/i.test(studySource), "play-study does not invent a human play session");
 const manifestSource = readFileSync(join(root, "src", "data", "legacy-url-actions.ts"), "utf8");
 assert((manifestSource.match(/normalizedPath:\s*"\//g) ?? []).length === 6, "six priority legacy URLs have explicit records");
 assert(!/action:\s*"hold"/.test(manifestSource), "priority legacy manifest contains no unresolved hold action");

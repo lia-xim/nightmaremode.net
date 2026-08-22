@@ -20,8 +20,21 @@ import SiteFooter from "@/components/SiteFooter.astro";
     </div>
     <div>
       <p>A field note is not a shorter review. It documents what was tested, what happened and which interpretation followed. If a result depends on a particular build, control method, network state or accessibility setting, that condition belongs beside the result.</p>
-      <p>The first published asset in this section is the protocol we will use to structure future play studies. Readers can use it as a worksheet, adapt it, or challenge the assumptions built into it.</p>
+      <p>The first completed study follows one fresh web session in <em>A Dark Room</em>. It publishes the conditions, timed events, fixed action policy and unresolved questions beside the interpretation. The protocol remains available as a worksheet readers can reuse or challenge.</p>
     </div>
+  </section>
+
+  <section class="featured-study shell" aria-labelledby="first-study-title">
+    <a class="study-card" href="/field-notes/a-dark-room-first-four-minutes/">
+      <div>
+        <p class="mono signal">Play study 01 / 23 August 2026</p>
+        <h2 id="first-study-title" class="display">Four minutes in <em>A Dark Room</em></h2>
+      </div>
+      <div>
+        <p>A controlled browser observation of how one available action becomes fire maintenance, gathering and an unresolved branching choice.</p>
+        <span class="action">Read the study <span aria-hidden="true">→</span></span>
+      </div>
+    </a>
   </section>
 
   <section class="protocol shell" aria-labelledby="protocol-title">
@@ -38,8 +51,8 @@ import SiteFooter from "@/components/SiteFooter.astro";
   </section>
 
   <section class="boundary shell" aria-labelledby="boundary-title">
-    <h2 id="boundary-title" class="display">What is not here yet</h2>
-    <p>No game-specific field study is published until a named researcher has completed the protocol, retained the supporting notes or captures, and recorded conflicts and correction ownership. The absence is intentional; the method does not stand in for a play session.</p>
+    <h2 id="boundary-title" class="display">What comes next</h2>
+    <p>One controlled session establishes a traceable starting point, not a house style built on quantity. The next study should change one condition, examine a different kind of system, or add a human researcher whose situated experience can be reported directly.</p>
     <a class="action" href="/editorial-policy/">Read the editorial charter <span aria-hidden="true">→</span></a>
   </section>
   <SiteFooter />
@@ -57,7 +70,9 @@ import SiteFooter from "@/components/SiteFooter.astro";
   .boundary h2 { max-width: 11ch; font-size: clamp(3.2rem, 6vw, 6rem); }
   .principle p:not(.mono),
   .boundary > p { max-width: 40rem; margin-top: 0; color: var(--ink-soft); font-size: clamp(1.05rem, 1.4vw, 1.22rem); }
-  .protocol { padding-bottom: var(--section); }
+  .featured-study { padding-top: var(--section); }
+  .protocol { padding-block: clamp(2rem, 4vw, 4rem) var(--section); }
+  .study-card,
   .protocol-card {
     display: grid;
     grid-template-columns: 1.1fr 0.9fr;
@@ -67,10 +82,19 @@ import SiteFooter from "@/components/SiteFooter.astro";
     background: var(--paper-soft);
     transition: border-color 180ms ease;
   }
+  .study-card { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+  .study-card:hover,
   .protocol-card:hover { border-color: var(--signal); }
+  .study-card h2,
   .protocol-card h2 { max-width: 12ch; margin-top: 1rem; font-size: clamp(3rem, 5.3vw, 5.4rem); }
+  .study-card > div:last-child,
   .protocol-card > div:last-child { align-self: end; }
+  .study-card > div:last-child > p,
   .protocol-card > div:last-child > p { max-width: 36rem; margin: 0; color: var(--ink-soft); font-size: 1.12rem; }
+  .study-card > div:last-child > p { color: #d8d8d2; }
+  .study-card .signal,
+  .study-card .action { color: #f2dce2; }
+  .study-card .action,
   .protocol-card .action,
   .boundary .action { margin-top: 2rem; }
   .boundary { border-top: 1px solid var(--line); }
@@ -78,6 +102,7 @@ import SiteFooter from "@/components/SiteFooter.astro";
   @media (max-width: 760px) {
     .principle,
     .boundary,
+    .study-card,
     .protocol-card { grid-template-columns: 1fr; gap: 2rem; }
     .boundary .action { grid-column: 1; }
   }

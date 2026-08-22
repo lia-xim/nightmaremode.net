@@ -3,7 +3,7 @@ import { Image } from "astro:assets";
 import BaseLayout from "@/components/BaseLayout.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
 import crossroads from "@/assets/editorial-crossroads.png";
-import discovery from "@/assets/editorial-discovery.png";
+import fieldStudy from "@/assets/nightmare-field-study.png";
 
 const formats = [
   { number: "01", name: "Essays", definition: "Sustained arguments", href: "/essays/" },
@@ -24,7 +24,7 @@ const methods = [
       <h1 id="hero-title" class="display">Games, examined closely.</h1>
       <p>Independent criticism and documented play studies about the systems, stories and cultures games create.</p>
       <div class="hero-actions">
-        <a class="action" href="#current-study">Read the launch essay <span aria-hidden="true">→</span></a>
+        <a class="action" href="#current-study">Read the first play study <span aria-hidden="true">→</span></a>
         <a class="action action--quiet" href="#publication">How we work <span aria-hidden="true">→</span></a>
       </div>
     </div>
@@ -61,18 +61,21 @@ const methods = [
   <section id="current-study" class="current-study shell" aria-labelledby="study-title">
     <div class="study-image">
       <Image
-        src={discovery}
-        alt="Original monochrome editorial study of layered architectural paths and thresholds"
+        src={fieldStudy}
+        alt="Original monochrome editorial study of layered rooms, interfaces and observation paths"
         widths={[720, 1080, 1440]}
         sizes="(max-width: 760px) 100vw, 54vw"
         format="webp"
       />
     </div>
     <div class="study-copy">
-      <p class="study-state">Essay / published 22 August 2026</p>
-      <h2 id="study-title" class="display">A game is more than its files</h2>
-      <p>What preservation can keep, what it cannot reproduce, and why criticism needs to state the difference.</p>
-      <a class="action" href="/essays/a-game-is-more-than-its-files/">Read the essay <span aria-hidden="true">→</span></a>
+      <p class="study-state">Play study 01 / published 23 August 2026</p>
+      <h2 id="study-title" class="display">Four minutes in <em>A Dark Room</em></h2>
+      <p>A timed, reproducible observation of how the opening interface expands from one action into maintenance, gathering and a decision.</p>
+      <div class="study-actions">
+        <a class="action" href="/field-notes/a-dark-room-first-four-minutes/">Read the study <span aria-hidden="true">→</span></a>
+        <a class="action action--quiet" href="/essays/a-game-is-more-than-its-files/">Read the preservation essay <span aria-hidden="true">→</span></a>
+      </div>
     </div>
   </section>
 
@@ -172,7 +175,8 @@ const methods = [
   .study-state { margin: 0 0 1.5rem; color: var(--signal); font-size: 0.86rem; font-weight: 520; }
   .study-copy h2 { font-size: clamp(3.3rem, 5.4vw, 5.6rem); }
   .study-copy > p:not(.study-state) { margin: 1.75rem 0 0; color: var(--ink-soft); font-size: clamp(1.05rem, 1.4vw, 1.2rem); }
-  .study-copy .action { margin-top: 2.15rem; }
+  .study-actions { display: flex; flex-wrap: wrap; gap: 1rem 2rem; margin-top: 2.15rem; }
+  .study-copy .action { margin-top: 0; }
 
   .methods { border-block: 1px solid var(--line); background: var(--paper-soft); }
   .methods-inner { padding-block: var(--section); }
