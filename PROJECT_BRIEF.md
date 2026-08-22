@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Nightmare Mode is a proposed new, independent publication for games and interactive culture. Its value must come from original essays, documented play studies, present-day conversations, and transparent methods—not from inherited rankings, former identities, or a portfolio link.
+Nightmare Mode is a new, independent publication for games and interactive culture. Its value comes from original essays, documented play studies, present-day conversations, and transparent methods—not from inherited rankings, former identities, or a portfolio link.
 
 ## Audience
 

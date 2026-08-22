@@ -92,6 +92,18 @@ if (existsSync(dist)) {
   }
 }
 
+const vercelConfig = JSON.parse(readFileSync(join(root, "vercel.json"), "utf8"));
+const securityHeaders = Object.fromEntries(vercelConfig.headers?.[0]?.headers?.map(({ key, value }) => [key.toLowerCase(), value]) ?? []);
+assert(vercelConfig.headers?.[0]?.source === "/(.*)", "security headers apply to every route");
+for (const header of ["content-security-policy", "x-content-type-options", "referrer-policy", "permissions-policy", "x-frame-options", "cross-origin-opener-policy", "cross-origin-resource-policy"]) {
+  assert(Boolean(securityHeaders[header]), `security header configured: ${header}`);
+}
+assert(securityHeaders["x-content-type-options"] === "nosniff", "nosniff policy is exact");
+assert(securityHeaders["x-frame-options"] === "DENY", "frame policy is exact");
+assert(securityHeaders["content-security-policy"]?.includes("frame-ancestors 'none'"), "CSP blocks framing");
+assert(securityHeaders["content-security-policy"]?.includes("object-src 'none'"), "CSP blocks plugins");
+assert(!securityHeaders["content-security-policy"]?.includes("http:"), "CSP does not allow insecure origins");
+
 const manifestSource = readFileSync(join(root, "src", "data", "legacy-url-actions.ts"), "utf8");
 assert((manifestSource.match(/normalizedPath:\s*"\//g) ?? []).length === 6, "six priority legacy URLs have explicit records");
 assert(!/action:\s*"hold"/.test(manifestSource), "priority legacy manifest contains no unresolved hold action");

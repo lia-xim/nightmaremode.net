@@ -31,6 +31,12 @@ const path = Astro.url.pathname;
 
   toggle?.addEventListener("click", () => setOpen(toggle.getAttribute("aria-expanded") !== "true"));
   nav?.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => setOpen(false)));
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && toggle?.getAttribute("aria-expanded") === "true") {
+      setOpen(false);
+      toggle.focus();
+    }
+  });
 </script>
 
 <style>
