@@ -4,7 +4,7 @@ Before planning, editing, reviewing, or publishing this site, read these authori
 
 - Domain dossier: `C:\Users\matth\Documents\DomainPortfolio\strategy\domains\nightmaremode.net.md`
 - Recovery handoff: `C:\Users\matth\Documents\DomainPortfolio\reports\owned-domain-rebuild\domains\nightmaremode.net.md`
-- Raw recovery evidence: `C:\Users\matth\Documents\DomainPortfolio\reports\owned-domain-rebuild\evidence-2026-08-22.json`
+- Raw recovery evidence: `C:\Users\matth\Documents\DomainPortfolio\reports\owned-domain-rebuild\evidence\nightmaremode.net-2026-08-22.json`
 
 The local repository is a protected, non-indexable prototype until the launch gates in `PROJECT_BRIEF.md` are satisfied. Domain ownership does not transfer former articles, artwork, logos, comments, contributor identities, endorsements, or publication rights.
 
