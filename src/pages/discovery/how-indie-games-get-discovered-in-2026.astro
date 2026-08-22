@@ -1,0 +1,28 @@
+---
+import { Image } from "astro:assets";
+import BaseLayout from "@/components/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import fieldStudy from "@/assets/nightmare-field-study.png";
+---
+
+<BaseLayout title="How indie games get discovered — preparation note" noindex>
+  <article class="case shell">
+    <header><p class="mono signal">Current case / in preparation</p><h1 class="display">How indie games get discovered</h1><p>Method and evidence will be published before conclusions.</p></header>
+    <Image src={fieldStudy} alt="Original one-bit study of an impossible architectural landscape" widths={[720, 1080, 1440]} sizes="100vw" format="webp" />
+    <section><h2 class="display">What exists now</h2><p>A question and a publication contract. The sample, method, sources, findings, limitations, author, editor, and conflict disclosures have not yet been accepted. This page therefore makes no discovery claims.</p></section>
+    <section><h2 class="display">Publication gate</h2><p>The case can move from preparation to publication only when the underlying work is reproducible, rights-safe, reader-serving, and independently useful.</p><a class="action" href="/editorial-policy/">Read the editorial charter</a></section>
+  </article>
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .case { padding: var(--section) clamp(1rem, 5vw, 5rem); border-inline: 1px solid var(--line); }
+  h1 { max-width: 11ch; margin-block: 1rem 2rem; font-size: clamp(4rem, 10vw, 10rem); }
+  header > p:last-child { max-width: 42rem; font-family: var(--mono); }
+  .case :global(img) { width: 100%; margin-block: 4rem; border: 1px solid var(--line); }
+  section { display: grid; grid-template-columns: minmax(14rem, 0.55fr) 1fr; gap: 3rem; padding-block: 2rem; border-top: 1px solid var(--line); }
+  section h2 { font-size: clamp(2.5rem, 5vw, 5rem); }
+  section p { max-width: 48rem; }
+  section .action { grid-column: 2; justify-self: start; }
+  @media (max-width: 720px) { section { grid-template-columns: 1fr; } section .action { grid-column: 1; } }
+</style>

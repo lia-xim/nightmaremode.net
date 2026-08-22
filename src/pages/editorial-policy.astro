@@ -1,0 +1,40 @@
+---
+import BaseLayout from "@/components/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+
+const rules = [
+  ["Responsibility", "Matthias Ramahi is the operator, responsible publisher, editor and correction owner. Each article also names its byline and material production assistance."],
+  ["Evidence", "Sources, build details, captures, methods and limitations stay visible beside the claim they support. We do not invent play experience, interviews or expertise."],
+  ["Cadence", "The minimum rhythm is one substantive essay, play study or sourced analysis per month. Nightmare Mode is not a daily news operation."],
+  ["Rights", "Domain ownership did not transfer former article bodies, media, comments, contributor identities, logos or endorsements. Former work requires article-level permission or another documented basis."],
+  ["Corrections", "Factual correction requests are acknowledged within seven calendar days when delivery succeeds. Material changes are dated in the article; minor spelling or layout fixes may be made silently."],
+  ["Conflicts", "Relevant commercial relationships and substantial AI assistance are disclosed. Shared ownership is never presented as independent corroboration."],
+  ["Links", "Links must serve the reader or document a source. There are no partner-network quotas, reciprocal portfolio links or inherited-ranking funnels."],
+] as const;
+---
+
+<BaseLayout title="Editorial charter" description="Nightmare Mode's authorship, evidence, cadence, rights, correction and conflict rules.">
+  <section class="page-hero shell">
+    <div class="page-hero__rail mono">Charter / version 1.0 / 22 August 2026</div>
+    <div class="page-hero__copy"><p class="mono signal">Rules in force</p><h1 class="display">A point of view needs visible constraints.</h1><p>This charter governs the independent publication launched in 2026. If two consecutive monthly releases are missed or correction ownership lapses, publication pauses until the operating gap is resolved.</p></div>
+  </section>
+  <section class="rules shell">
+    {rules.map(([title, copy], index) => <article><span class="mono signal">{String(index + 1).padStart(2, "0")}</span><h2 class="display">{title}</h2><p>{copy}</p></article>)}
+  </section>
+  <section class="process shell">
+    <div><p class="mono signal">Correction route</p><h2 class="display">Make the record better.</h2></div>
+    <div><p>Send factual, attribution or rights concerns through the dedicated route. Include the page URL, the disputed passage and supporting evidence where possible.</p><a class="action" href="/rights-contact/">Rights and corrections <span aria-hidden="true">→</span></a></div>
+  </section>
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .rules { border-inline: 1px solid var(--line); }
+  .rules article { display: grid; grid-template-columns: 4rem minmax(12rem, 0.5fr) 1fr; gap: 2rem; align-items: center; padding: 1.5rem clamp(1rem, 4vw, 4rem); border-bottom: 1px solid var(--line); }
+  h2 { font-size: clamp(2.3rem, 4vw, 4rem); }
+  article p { max-width: 50rem; }
+  .process { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 7vw, 7rem); padding-block: var(--section); }
+  .process h2 { font-size: clamp(3.5rem, 6vw, 6rem); }
+  .process .action { margin-top: 1.5rem; }
+  @media (max-width: 700px) { .rules article { grid-template-columns: 2rem 1fr; } .rules article p { grid-column: 2; } .process { grid-template-columns: 1fr; } }
+</style>

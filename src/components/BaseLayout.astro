@@ -1,0 +1,61 @@
+---
+import Header from "@/components/Header.astro";
+import { siteConfig } from "@/config/site";
+import "@/styles/global.css";
+import "@/styles/responsive-fixes.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+}
+
+const {
+  title = "Nightmare Mode — Games, examined closely",
+  description = siteConfig.description,
+  image = "/og-default.jpg",
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, siteConfig.canonicalHost);
+const fullTitle = title.includes("Nightmare Mode") ? title : `${title} — Nightmare Mode`;
+const indexingEnabled = import.meta.env.PUBLIC_SITE_INDEXABLE === "true";
+const shouldNoindex = noindex || !indexingEnabled;
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: siteConfig.name,
+  url: siteConfig.canonicalHost,
+  description,
+  dateCreated: "2026",
+};
+---
+
+<!doctype html>
+<html lang={siteConfig.language} data-indexing={shouldNoindex ? "blocked" : "enabled"}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content={shouldNoindex ? "noindex, nofollow" : "index, follow"} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(image, siteConfig.canonicalHost)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema)}></script>
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <Header />
+    <main id="main-content">
+      <slot />
+    </main>
+  </body>
+</html>

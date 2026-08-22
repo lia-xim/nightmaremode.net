@@ -1,0 +1,21 @@
+---
+interface Props {
+  direction?: "right" | "down";
+}
+
+const { direction = "right" } = Astro.props;
+---
+
+<svg
+  class:list={["arrow", { "arrow--down": direction === "down" }]}
+  viewBox="0 0 42 12"
+  aria-hidden="true"
+>
+  <path d="M0 6h39M33 1l6 5-6 5" fill="none" stroke="currentColor" stroke-width="1.4" />
+</svg>
+
+<style>
+  .arrow--down {
+    transform: rotate(90deg);
+  }
+</style>

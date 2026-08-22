@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+*.log
+.env
+.env.*
+!.env.example
+
+.vercel
+design/
+src/assets/discovery-map.png
+src/assets/hero-world.png
+src/assets/sound-strings.png
+src/assets/visuals-aperture.png

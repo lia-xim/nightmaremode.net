@@ -1,0 +1,36 @@
+---
+import BaseLayout from "@/components/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+---
+
+<BaseLayout title="About" description="Nightmare Mode is an independent games and culture publication operated by Matthias Ramahi under new ownership in 2026.">
+  <section class="page-hero shell">
+    <div class="page-hero__rail mono">Purpose / scope</div>
+    <div class="page-hero__copy">
+      <p class="mono signal">An independent publication / established 2026</p>
+      <h1 class="display">A field laboratory for difficult play.</h1>
+      <p>Nightmare Mode publishes source-led criticism about games, their systems and the cultures around them. It is a new operation on a historically used domain.</p>
+    </div>
+  </section>
+  <section class="about-grid shell">
+    <div><h2 class="display">What it is for</h2><p>Arguments that remain inspectable: named responsibility, visible sources, explicit evidence limits and corrections beside the work.</p></div>
+    <div><h2 class="display">How often</h2><p>At least one substantive essay, play study or sourced analysis each month. We do not operate a daily news desk or promise artificial volume.</p></div>
+    <div><h2 class="display">Who is responsible</h2><p>Matthias Ramahi is the operator and responsible publisher. The current project is not the former newsroom and does not inherit its contributors, rights or endorsements.</p></div>
+  </section>
+  <section class="about-links shell">
+    <a class="action" href="/editorial-policy/">Editorial charter <span aria-hidden="true">→</span></a>
+    <a class="action" href="/about/new-ownership/">New ownership boundary <span aria-hidden="true">→</span></a>
+    <a class="action" href="/impressum/">Legal notice <span aria-hidden="true">→</span></a>
+  </section>
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .about-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-inline: 1px solid var(--line); }
+  .about-grid > div { min-height: 21rem; padding: clamp(1.5rem, 4vw, 4rem); border-right: 1px solid var(--line); }
+  .about-grid > div:last-child { border-right: 0; }
+  h2 { font-size: clamp(2.5rem, 4vw, 4.8rem); }
+  p { max-width: 40rem; }
+  .about-links { display: flex; flex-wrap: wrap; gap: 1rem 2.5rem; padding-block: 3rem var(--section); }
+  @media (max-width: 780px) { .about-grid { grid-template-columns: 1fr; } .about-grid > div { min-height: auto; border-right: 0; border-bottom: 1px solid var(--line); } }
+</style>

@@ -1,0 +1,17 @@
+---
+import EditorialPage from "@/components/EditorialPage.astro";
+import { sectionPages } from "@/data/site";
+
+export function getStaticPaths() {
+  return Object.entries(sectionPages).map(([section, page]) => ({
+    params: { section },
+    props: { ...page, section },
+  }));
+}
+
+type Section = keyof typeof sectionPages;
+
+const { title, intro, section } = Astro.props as { title: string; intro: string; section: Section };
+---
+
+<EditorialPage title={title} intro={intro} section={section} />

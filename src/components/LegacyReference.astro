@@ -1,0 +1,50 @@
+---
+import BaseLayout from "@/components/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+
+interface Props {
+  title: string;
+  originalDate: string;
+  originalAuthor?: string;
+  context?: string;
+  questions?: string[];
+}
+
+const { title, originalDate } = Astro.props;
+---
+
+<BaseLayout title={`Bibliographic record: ${title}`} description="Protected bibliographic record for a former Nightmare Mode URL." noindex>
+  <article class="record shell">
+    <aside class="record-rail mono">Legacy action / noindex 200</aside>
+    <div class="record-main">
+      <p class="mono signal">Bibliographic facts only / rights unresolved</p>
+      <h1 class="display">{title}</h1>
+      <dl>
+        <div><dt>Former publication date</dt><dd>{originalDate}</dd></div>
+        <div><dt>Current content status</dt><dd>Former body not reproduced</dd></div>
+        <div><dt>Indexing status</dt><dd>Noindex while rights remain unresolved</dd></div>
+      </dl>
+      <section>
+        <h2>Why this page is limited</h2>
+        <p>This URL is part of the former publication record. Domain ownership does not transfer the article text, images, comments, interviews, authorship, or endorsement. This page exists only to state that boundary and provide a route for rights information or corrections.</p>
+        <a class="action" href="/rights-contact/">Rights and corrections</a>
+      </section>
+    </div>
+  </article>
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .record { display: grid; grid-template-columns: 5rem minmax(0, 1fr); border-inline: 1px solid var(--line); }
+  .record-rail { display: flex; align-items: center; justify-content: center; border-right: 1px solid var(--line); writing-mode: vertical-rl; transform: rotate(180deg); }
+  .record-main { padding: clamp(2rem, 7vw, 7rem); }
+  h1 { max-width: 14ch; margin: 1rem 0 4rem; font-size: clamp(3.8rem, 8vw, 8rem); }
+  dl { border-top: 1px solid var(--line); }
+  dl div { display: grid; grid-template-columns: minmax(12rem, 0.5fr) 1fr; gap: 2rem; padding-block: 1rem; border-bottom: 1px solid var(--line); }
+  dt { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; }
+  dd { margin: 0; }
+  section { max-width: 50rem; margin-top: 4rem; }
+  h2 { font-family: var(--mono); font-size: 0.78rem; text-transform: uppercase; }
+  .action { margin-top: 1rem; }
+  @media (max-width: 680px) { .record { grid-template-columns: 2.5rem minmax(0, 1fr); } dl div { grid-template-columns: 1fr; gap: 0.35rem; } }
+</style>

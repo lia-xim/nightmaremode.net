@@ -1,0 +1,42 @@
+---
+import BaseLayout from "@/components/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  eyebrow: string;
+  intro: string;
+}
+
+const { title, description, eyebrow, intro } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} noindex>
+  <article class="legal shell" lang="de">
+    <header>
+      <p class="mono signal">{eyebrow}</p>
+      <h1 class="display">{title}</h1>
+      <p>{intro}</p>
+    </header>
+    <slot />
+  </article>
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .legal { max-width: 76rem; padding-block: clamp(4rem, 9vw, 9rem); }
+  header { max-width: 58rem; padding-bottom: clamp(3rem, 7vw, 6rem); }
+  h1 { margin-block: 0.75rem 1.5rem; font-size: clamp(4.5rem, 11vw, 10rem); }
+  header > p:last-child { max-width: 43rem; color: var(--ink-soft); font-size: clamp(1.1rem, 2vw, 1.35rem); }
+  :global(.legal section) { display: grid; grid-template-columns: minmax(14rem, 0.42fr) 1fr; gap: clamp(1.5rem, 6vw, 6rem); padding-block: clamp(2rem, 4vw, 3.5rem); border-top: 1px solid var(--line); }
+  :global(.legal h2) { font-family: var(--display); font-size: clamp(2rem, 4vw, 3.5rem); }
+  :global(.legal section > :not(h2)) { grid-column: 2; }
+  :global(.legal section p) { max-width: 52rem; margin-block: 0 1rem; }
+  :global(.legal a) { text-decoration: underline; text-decoration-color: var(--signal); text-underline-offset: 0.18em; }
+  :global(.legal .updated) { padding-top: 2rem; border-top: 1px solid var(--line); color: var(--ink-soft); }
+  @media (max-width: 720px) {
+    :global(.legal section) { grid-template-columns: 1fr; }
+    :global(.legal section > :not(h2)) { grid-column: 1; }
+  }
+</style>

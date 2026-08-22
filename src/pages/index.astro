@@ -1,0 +1,236 @@
+---
+import { Image } from "astro:assets";
+import BaseLayout from "@/components/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import crossroads from "@/assets/editorial-crossroads.png";
+import discovery from "@/assets/editorial-discovery.png";
+
+const formats = [
+  { number: "01", name: "Essays", definition: "Sustained arguments", href: "/essays/" },
+  { number: "02", name: "Field Notes", definition: "Evidence captured during play", href: "/field-notes/" },
+  { number: "03", name: "Conversations", definition: "Present-day exchanges, published with consent", href: "/conversations/" },
+] as const;
+
+const methods = [
+  { name: "Who", definition: "Author, editor and conflicts" },
+  { name: "How", definition: "Sources, captures and AI use" },
+  { name: "Why", definition: "The question the work serves" },
+] as const;
+---
+
+<BaseLayout>
+  <section class="hero shell" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <h1 id="hero-title" class="display">Games, examined closely.</h1>
+      <p>Independent criticism and documented play studies about the systems, stories and cultures games create.</p>
+      <div class="hero-actions">
+        <a class="action" href="#current-study">Read the launch essay <span aria-hidden="true">→</span></a>
+        <a class="action action--quiet" href="#publication">How we work <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <figure class="hero-image">
+      <Image
+        src={crossroads}
+        alt="Original monochrome editorial study of a figure navigating intersecting architectural paths"
+        widths={[720, 1080, 1440]}
+        sizes="(max-width: 760px) 100vw, 50vw"
+        format="webp"
+        loading="eager"
+        fetchpriority="high"
+      />
+    </figure>
+  </section>
+
+  <section id="publication" class="publication shell" aria-labelledby="publication-title">
+    <div class="publication-intro">
+      <h2 id="publication-title" class="display">A publication built for close attention.</h2>
+      <p>We take games seriously—as art, as systems, as cultural practice. Nightmare Mode publishes long-form essays, documented play studies and conversations that reward careful reading and curious minds.</p>
+    </div>
+    <div class="format-list" aria-label="Editorial formats">
+      {formats.map((format) => (
+        <a href={format.href}>
+          <span class="format-number">{format.number}</span>
+          <strong class="display">{format.name}</strong>
+          <span>{format.definition}</span>
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14M14 7l5 5-5 5" /></svg>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section id="current-study" class="current-study shell" aria-labelledby="study-title">
+    <div class="study-image">
+      <Image
+        src={discovery}
+        alt="Original monochrome editorial study of layered architectural paths and thresholds"
+        widths={[720, 1080, 1440]}
+        sizes="(max-width: 760px) 100vw, 54vw"
+        format="webp"
+      />
+    </div>
+    <div class="study-copy">
+      <p class="study-state">Essay / published 22 August 2026</p>
+      <h2 id="study-title" class="display">A game is more than its files</h2>
+      <p>What preservation can keep, what it cannot reproduce, and why criticism needs to state the difference.</p>
+      <a class="action" href="/essays/a-game-is-more-than-its-files/">Read the essay <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
+  <section class="methods" aria-labelledby="methods-title">
+    <div class="methods-inner shell">
+      <div class="methods-intro">
+        <h2 id="methods-title" class="display">Clear authorship. Visible methods.</h2>
+        <p>Every published piece names who made it, how the work was produced and why the question matters.</p>
+      </div>
+      <div class="method-list">
+        {methods.map((method) => (
+          <article>
+            <h3 class="display">{method.name}</h3>
+            <p>{method.definition}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="ownership shell" aria-labelledby="ownership-title">
+    <h2 id="ownership-title" class="display">A new publication on an old domain.</h2>
+    <div>
+      <p>Nightmare Mode launched under new ownership in 2026. Former contributors do not automatically participate in or endorse this publication.</p>
+      <div class="ownership-links">
+        <a class="action" href="/about/new-ownership/">New ownership <span aria-hidden="true">→</span></a>
+        <a class="action" href="/rights-contact/">Rights &amp; corrections <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: min(44rem, calc(100svh - 6.25rem));
+    border-bottom: 1px solid var(--line);
+  }
+
+  .hero-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(4rem, 7vw, 7.5rem) clamp(2rem, 5.5vw, 5.5rem) clamp(4rem, 7vw, 7.5rem) 0;
+  }
+
+  .hero h1 { max-width: 8.5ch; font-size: clamp(4.6rem, 6.5vw, 7rem); }
+  .hero-copy > p { max-width: 34rem; margin: 2.25rem 0 0; color: var(--ink-soft); font-size: clamp(1.08rem, 1.55vw, 1.35rem); line-height: 1.55; }
+  .hero-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 1.1rem; margin-top: 2.4rem; }
+  .action--quiet { color: var(--ink-soft); }
+
+  .hero-image { min-height: 0; margin: 0; border-left: 1px solid var(--line); overflow: hidden; }
+  .hero-image :global(picture),
+  .hero-image :global(img) { width: 100%; height: 100%; }
+  .hero-image :global(img) { object-fit: cover; object-position: 51% center; }
+
+  .publication { padding-block: var(--section); }
+  .publication-intro {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(3rem, 8vw, 9rem);
+    align-items: start;
+    margin-bottom: clamp(4rem, 7vw, 7rem);
+  }
+  .publication-intro h2 { max-width: 10ch; font-size: clamp(3.6rem, 6vw, 6.3rem); }
+  .publication-intro p { max-width: 38rem; margin: 0.6rem 0 0; color: var(--ink-soft); font-size: clamp(1.05rem, 1.5vw, 1.28rem); }
+
+  .format-list { border-top: 1px solid var(--line); }
+  .format-list a {
+    display: grid;
+    grid-template-columns: 5rem minmax(13rem, 0.65fr) 1fr 1.5rem;
+    gap: clamp(1rem, 3vw, 3rem);
+    align-items: center;
+    min-height: 7rem;
+    border-bottom: 1px solid var(--line);
+    transition: color 180ms ease, padding 180ms ease;
+  }
+  .format-list a:hover { padding-inline: 0.75rem; color: var(--signal); }
+  .format-number { color: var(--signal); font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+  .format-list strong { font-size: clamp(2.2rem, 3.5vw, 3.75rem); font-weight: 450; }
+  .format-list a > span:nth-child(3) { color: var(--ink-soft); }
+  .format-list svg { width: 1.25rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; }
+
+  .current-study {
+    display: grid;
+    grid-template-columns: minmax(0, 1.12fr) minmax(20rem, 0.88fr);
+    gap: clamp(3rem, 6vw, 7rem);
+    align-items: center;
+    padding-bottom: var(--section);
+  }
+  .study-image { overflow: hidden; }
+  .study-image :global(img) { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+  .study-copy { max-width: 34rem; }
+  .study-state { margin: 0 0 1.5rem; color: var(--signal); font-size: 0.86rem; font-weight: 520; }
+  .study-copy h2 { font-size: clamp(3.3rem, 5.4vw, 5.6rem); }
+  .study-copy > p:not(.study-state) { margin: 1.75rem 0 0; color: var(--ink-soft); font-size: clamp(1.05rem, 1.4vw, 1.2rem); }
+  .study-copy .action { margin-top: 2.15rem; }
+
+  .methods { border-block: 1px solid var(--line); background: var(--paper-soft); }
+  .methods-inner { padding-block: var(--section); }
+  .methods-intro {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(3rem, 8vw, 9rem);
+    align-items: start;
+    padding-bottom: clamp(4rem, 6vw, 6rem);
+    border-bottom: 1px solid var(--line);
+  }
+  .methods-intro h2 { max-width: 11ch; font-size: clamp(3.6rem, 6vw, 6.1rem); }
+  .methods-intro p { max-width: 35rem; margin: 0.6rem 0 0; color: var(--ink-soft); font-size: clamp(1.05rem, 1.5vw, 1.25rem); }
+  .method-list { display: grid; grid-template-columns: repeat(3, 1fr); padding-top: clamp(3rem, 5vw, 5rem); }
+  .method-list article { min-height: 8.5rem; padding-inline: clamp(1rem, 4vw, 4.5rem); border-left: 1px solid var(--line); }
+  .method-list article:first-child { padding-left: 0; border-left: 0; }
+  .method-list article:last-child { padding-right: 0; }
+  .method-list h3 { font-size: clamp(2.8rem, 4vw, 4.2rem); }
+  .method-list p { margin: 1rem 0 0; color: var(--ink-soft); }
+
+  .ownership {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: clamp(3rem, 8vw, 9rem);
+    padding-block: var(--section);
+  }
+  .ownership h2 { max-width: 14ch; font-size: clamp(3.2rem, 5.3vw, 5.5rem); }
+  .ownership > div > p { max-width: 38rem; margin: 0.5rem 0 0; color: var(--ink-soft); font-size: clamp(1.05rem, 1.45vw, 1.22rem); }
+  .ownership-links { display: flex; flex-wrap: wrap; gap: 1.25rem 2.5rem; margin-top: 2rem; }
+
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-copy { padding: clamp(4.5rem, 15vw, 7rem) 0 3.5rem; }
+    .hero h1 { font-size: clamp(3.8rem, 14vw, 6rem); }
+    .hero-image { min-height: 27rem; border-top: 1px solid var(--line); border-left: 0; }
+    .publication-intro,
+    .methods-intro,
+    .ownership { grid-template-columns: 1fr; gap: 2.5rem; }
+    .current-study { grid-template-columns: 1fr; }
+    .study-copy { max-width: 42rem; }
+  }
+
+  @media (max-width: 620px) {
+    .hero-copy { padding-top: 4.25rem; }
+    .hero h1 { max-width: 9ch; font-size: clamp(3.55rem, 15vw, 4.7rem); }
+    .hero-copy > p { margin-top: 1.75rem; font-size: 1.08rem; }
+    .hero-image { min-height: auto; }
+    .hero-image :global(img) { aspect-ratio: 4 / 3; }
+    .publication-intro h2,
+    .methods-intro h2 { font-size: clamp(3.1rem, 14vw, 4.4rem); }
+    .format-list a { grid-template-columns: 2.25rem minmax(0, 1fr) 1.2rem; gap: 0.85rem; min-height: 7.5rem; }
+    .format-list strong { font-size: 2.35rem; }
+    .format-list a > span:nth-child(3) { grid-column: 2 / -1; margin-top: -0.8rem; }
+    .format-list svg { grid-column: 3; grid-row: 1; }
+    .method-list { grid-template-columns: 1fr; padding-top: 1.5rem; }
+    .method-list article { min-height: auto; padding: 2rem 0; border-top: 1px solid var(--line); border-left: 0; }
+    .method-list article:first-child { border-top: 0; }
+    .ownership h2 { font-size: clamp(3rem, 13vw, 4.25rem); }
+    .ownership-links { align-items: flex-start; flex-direction: column; }
+  }
+</style>

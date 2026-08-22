@@ -1,0 +1,104 @@
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { join, relative, sep } from "node:path";
+import { indexableRoutes } from "../src/data/indexable-routes.mjs";
+
+const root = process.cwd();
+const dist = join(root, "dist");
+const launch = process.env.PUBLIC_SITE_INDEXABLE === "true";
+const failures = [];
+const checks = [];
+const assert = (condition, label) => {
+  checks.push({ label, pass: Boolean(condition) });
+  if (!condition) failures.push(label);
+};
+const walk = (directory) => readdirSync(directory).flatMap((name) => {
+  const path = join(directory, name);
+  return statSync(path).isDirectory() ? walk(path) : [path];
+});
+const fileForRoute = (route) => route === "/" ? join(dist, "index.html") : route === "/404/" ? join(dist, "404.html") : join(dist, ...route.split("/").filter(Boolean), "index.html");
+const canonicalForRoute = (route) => `https://nightmaremode.net${route}`;
+
+assert(existsSync(dist), "production build exists");
+
+if (existsSync(dist)) {
+  const htmlFiles = walk(dist).filter((path) => path.endsWith(".html"));
+  const index = readFileSync(join(dist, "index.html"), "utf8");
+  const robotsPath = join(dist, "robots.txt");
+  const robots = existsSync(robotsPath) ? readFileSync(robotsPath, "utf8") : "";
+  const combined = htmlFiles.map((path) => readFileSync(path, "utf8").toLowerCase()).join("\n");
+
+  if (launch) {
+    assert(/User-agent: \*\s+Allow: \//.test(robots), "launch robots.txt allows crawling");
+    assert(!/Disallow:\s*\//.test(robots), "launch robots.txt contains no global disallow");
+    assert(/Sitemap: https:\/\/nightmaremode\.net\/sitemap-index\.xml/.test(robots), "launch robots.txt references canonical sitemap");
+    assert(/<meta name="robots" content="index, follow"/.test(index), "launch homepage is index,follow");
+
+    const sitemapFiles = walk(dist).filter((path) => /sitemap(?:-index|-\d+)?\.xml$/.test(path));
+    assert(sitemapFiles.length >= 2, "automatic sitemap index and child sitemap exist");
+    const sitemapUrls = [...new Set(sitemapFiles.flatMap((path) => [...readFileSync(path, "utf8").matchAll(/<loc>(https:\/\/nightmaremode\.net[^<]+)<\/loc>/g)].map((match) => match[1])))]
+      .filter((url) => !url.endsWith(".xml"))
+      .sort();
+    const expectedUrls = indexableRoutes.map(canonicalForRoute).sort();
+    assert(JSON.stringify(sitemapUrls) === JSON.stringify(expectedUrls), "sitemap exactly matches the canonical indexable-route registry");
+
+    for (const route of indexableRoutes) {
+      const path = fileForRoute(route);
+      const html = existsSync(path) ? readFileSync(path, "utf8") : "";
+      assert(existsSync(path), `indexable route emits a 200 document: ${route}`);
+      assert(/<meta name="robots" content="index, follow"/.test(html), `indexable route is index,follow: ${route}`);
+      assert(html.includes(`<link rel="canonical" href="${canonicalForRoute(route)}"`), `indexable route has exact canonical: ${route}`);
+    }
+
+    const excluded = [
+      "/404/", "/archive/", "/contact/", "/conversations/", "/datenschutz/",
+      "/discovery/how-indie-games-get-discovered-in-2026/", "/field-notes/", "/history/",
+      "/impressum/", "/ownership/", "/rights-contact/", "/about/new-ownership/",
+      "/2012/01/metal-gear-solids-postmodern-legacy-part-1-15146/",
+      "/2012/03/unmanned-a-talk-with-molleindustria-about-the-politics-of-war-games-16946/",
+      "/2012/11/creation-under-capitalism-23422/",
+    ];
+    for (const route of excluded) {
+      const path = fileForRoute(route);
+      const html = existsSync(path) ? readFileSync(path, "utf8") : "";
+      assert(existsSync(path), `excluded route emits its intended document: ${route}`);
+      assert(/<meta name="robots" content="noindex, nofollow"/.test(html), `excluded route remains noindex: ${route}`);
+      assert(!sitemapUrls.includes(canonicalForRoute(route)), `excluded route is absent from sitemap: ${route}`);
+    }
+  } else {
+    assert(/<meta name="robots" content="noindex, nofollow"/.test(index), "protected homepage is noindex,nofollow");
+    assert(/Disallow: \/(?:\r?\n|$)/.test(robots), "protected robots.txt blocks crawling");
+    assert(!existsSync(join(dist, "sitemap-index.xml")) && !existsSync(join(dist, "sitemap-0.xml")), "protected build emits no sitemap");
+  }
+
+  const forbidden = ["contextter.com", "partner network", "meet the partners", "former newsroom continues"];
+  for (const phrase of forbidden) assert(!combined.includes(phrase), `built HTML excludes forbidden claim: ${phrase}`);
+
+  const legacyOutputs = [
+    "2012/11/creation-under-capitalism-23422/index.html",
+    "2012/01/metal-gear-solids-postmodern-legacy-part-1-15146/index.html",
+    "2012/03/unmanned-a-talk-with-molleindustria-about-the-politics-of-war-games-16946/index.html",
+  ];
+  for (const output of legacyOutputs) {
+    const path = join(dist, ...output.split("/"));
+    const html = existsSync(path) ? readFileSync(path, "utf8") : "";
+    assert(existsSync(path), `protected legacy route exists: ${output}`);
+    assert(/noindex, nofollow/.test(html), `protected legacy route is noindex: ${output}`);
+    assert(/Bibliographic facts only/i.test(html), `protected legacy route states its evidence boundary: ${output}`);
+  }
+
+  for (const path of htmlFiles) {
+    const html = readFileSync(path, "utf8");
+    assert(/<link rel="canonical" href="https:\/\/nightmaremode\.net\//.test(html), `canonical present: ${relative(dist, path).split(sep).join("/")}`);
+  }
+}
+
+const manifestSource = readFileSync(join(root, "src", "data", "legacy-url-actions.ts"), "utf8");
+assert((manifestSource.match(/normalizedPath:\s*"\//g) ?? []).length === 6, "six priority legacy URLs have explicit records");
+assert(!/action:\s*"hold"/.test(manifestSource), "priority legacy manifest contains no unresolved hold action");
+assert(!/action:\s*"redirect_(301|308)"[\s\S]{0,180}targetUrl:\s*"\/"/.test(manifestSource), "no legacy redirect targets the homepage");
+assert(!/rightsStatus:\s*"unresolved"[\s\S]{0,160}action:\s*"restore_200"/.test(manifestSource), "unresolved rights never restore a former body");
+assert((manifestSource.match(/reviewer:\s*"Matthias Ramahi"/g) ?? []).length === 6, "all priority legacy decisions have a named owner review");
+assert((manifestSource.match(/lastTestedAt:\s*"2026-08-22"/g) ?? []).length === 6, "all priority legacy decisions record a test date");
+
+console.log(JSON.stringify({ mode: launch ? "launch" : "protected", checks: checks.length, failures, results: checks }, null, 2));
+if (failures.length > 0) process.exitCode = 1;

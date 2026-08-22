@@ -1,0 +1,42 @@
+---
+import BaseLayout from "@/components/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+
+interface Props { title: string; intro: string; section: string; }
+const { title, intro, section } = Astro.props;
+---
+
+<BaseLayout title={title} description={intro} noindex>
+  <section class="page-hero shell">
+    <div class="page-hero__rail mono">{section}</div>
+    <div class="page-hero__copy">
+      <h1 class="display">{title}</h1>
+      <p>{intro}</p>
+    </div>
+  </section>
+  <section class="status shell">
+    <div>
+      <h2 class="display">Method before volume.</h2>
+    </div>
+    <div>
+      <p>No published entries yet. Work will appear only after authorship, evidence, conflicts, rights and correction ownership are recorded.</p>
+      <a class="action" href="/editorial-policy/">Read the editorial charter <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .status {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(3rem, 8vw, 9rem);
+    padding-block: var(--section);
+  }
+  .status h2 { max-width: 10ch; font-size: clamp(3.2rem, 6vw, 6rem); }
+  .status p { max-width: 37rem; margin: 0; color: var(--ink-soft); font-size: clamp(1.05rem, 1.5vw, 1.25rem); }
+  .status .action { margin-top: 2rem; }
+  @media (max-width: 700px) {
+    .status { grid-template-columns: 1fr; gap: 2rem; }
+  }
+</style>

@@ -1,0 +1,41 @@
+---
+const footerLinks = [
+  ["Editorial Charter", "/editorial-policy/"],
+  ["Archive", "/archive/"],
+  ["Rights & Corrections", "/rights-contact/"],
+  ["Imprint", "/impressum/"],
+  ["Privacy", "/datenschutz/"],
+] as const;
+---
+
+<footer class="site-footer">
+  <div class="site-footer__inner shell">
+    <div>
+      <a class="footer-brand" href="/">Nightmare Mode</a>
+      <p>Independent criticism for games and interactive culture.</p>
+    </div>
+    <nav aria-label="Footer navigation">
+      {footerLinks.map(([label, href]) => <a href={href}>{label}</a>)}
+    </nav>
+  </div>
+</footer>
+
+<style>
+  .site-footer { border-top: 1px solid var(--line); }
+  .site-footer__inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 3rem;
+    align-items: end;
+    padding-block: clamp(3.5rem, 6vw, 6rem);
+  }
+  .footer-brand { font-family: var(--display); font-size: clamp(2rem, 3vw, 2.75rem); letter-spacing: -0.035em; }
+  p { margin: 0.65rem 0 0; color: var(--ink-soft); font-size: 0.92rem; }
+  nav { display: flex; flex-wrap: wrap; gap: clamp(1.5rem, 3vw, 3.5rem); }
+  nav a { color: var(--ink-soft); font-size: 0.9rem; }
+  nav a:hover { color: var(--signal); }
+  @media (max-width: 700px) {
+    .site-footer__inner { grid-template-columns: 1fr; align-items: start; }
+    nav { gap: 1.5rem; }
+  }
+</style>

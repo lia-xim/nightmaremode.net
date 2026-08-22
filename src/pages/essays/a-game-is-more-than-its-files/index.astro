@@ -1,0 +1,144 @@
+---
+import { Image } from "astro:assets";
+import BaseLayout from "@/components/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import studyImage from "@/assets/nightmare-field-study.png";
+
+const title = "A game is more than its files";
+const description = "What game preservation can keep, what it cannot reproduce, and why criticism needs to state the difference.";
+const sources = [
+  {
+    title: "Survey of the Video Game Reissue Market in the United States, version 1.1",
+    publisher: "Video Game History Foundation and Software Preservation Network",
+    date: "19 July 2023",
+    href: "https://library.gamehistory.org/repositories/2/resources/248",
+  },
+  {
+    title: "Recommended Formats Statement 2025–2026: Software and Video Games",
+    publisher: "Library of Congress",
+    date: "2025",
+    href: "https://www.loc.gov/preservation/resources/rfs/RFS%202025-2026.pdf",
+  },
+  {
+    title: "What is Emulation in Libraries, Archives, and Museums?",
+    publisher: "Software Preservation Network",
+    date: "accessed 22 August 2026",
+    href: "https://www.softwarepreservationnetwork.org/what-is-emulation-in-libraries-archives-and-museums/",
+  },
+  {
+    title: "Introducing the Video Game Source Project",
+    publisher: "Video Game History Foundation",
+    date: "15 October 2020",
+    href: "https://gamehistory.org/source/",
+  },
+] as const;
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: title,
+  description,
+  datePublished: "2026-08-22",
+  dateModified: "2026-08-22",
+  mainEntityOfPage: "https://nightmaremode.net/essays/a-game-is-more-than-its-files/",
+  author: { "@type": "Organization", name: "Nightmare Mode Editorial Desk" },
+  editor: { "@type": "Person", name: "Matthias Ramahi" },
+  publisher: { "@type": "Organization", name: "Nightmare Mode", url: "https://nightmaremode.net/" },
+};
+---
+
+<BaseLayout title={title} description={description} image="/og-default.jpg">
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(articleSchema)}></script>
+  <article class="essay">
+    <header class="essay-header shell">
+      <p class="mono signal">Essay / preservation / evidence</p>
+      <h1 class="display">A game is more than its files</h1>
+      <p class="dek">Preservation can keep code, media and hardware within reach. It cannot, by itself, reproduce the conditions that once made a game playable.</p>
+      <dl class="byline">
+        <div><dt>By</dt><dd>Nightmare Mode Editorial Desk</dd></div>
+        <div><dt>Responsible editor</dt><dd>Matthias Ramahi</dd></div>
+        <div><dt>Published</dt><dd><time datetime="2026-08-22">22 August 2026</time></dd></div>
+        <div><dt>Method</dt><dd>Source-led analysis; no first-hand play claims</dd></div>
+      </dl>
+    </header>
+
+    <figure class="essay-image shell">
+      <Image src={studyImage} alt="Original monochrome study of layered screens, rooms and archival structures" widths={[760, 1200, 1600]} sizes="(max-width: 760px) 100vw, 78vw" format="webp" loading="eager" />
+      <figcaption>Original editorial artwork created for the independent 2026 publication.</figcaption>
+    </figure>
+
+    <div class="essay-body shell">
+      <p class="lead">A preserved game appears to make a simple promise: the work will still be there tomorrow. But games complicate the word <em>there</em>. A cartridge on a shelf is there. A disk image in an archive is there. Source code, design documents and an emulated operating system can all be there. None of them guarantees that the experience surrounding the game can be summoned intact.</p>
+
+      <h2>The availability problem comes first</h2>
+      <p>Before anyone can argue about an old game, someone must be able to encounter it. The most useful public measure of that basic access problem remains the 2023 Survey of the Video Game Reissue Market in the United States. Its authors drew a random sample of 1,500 games released in the United States before 2010 and found that 13 percent were still commercially available. The estimate carried a 95 percent confidence interval of plus or minus 2.5 percentage points.</p>
+      <p>That figure is specific. It describes commercial availability in one national market at the study's cutoff date, 15 April 2023. It does not prove that 87 percent of every game ever made has vanished, nor does it measure private collections, unofficial copies or the quality of later reissues. What it does establish is a severe access gap: the commercial market alone did not keep most of the sampled history in release.</p>
+      <p>For criticism, the consequence is immediate. The visible canon is partly a distribution artifact. Games that remain purchasable, streamable or easy to emulate are easier to teach and discuss. Games tied to failed storefronts, obsolete media, unusual controllers or disputed rights demand more labor before interpretation can even begin.</p>
+
+      <h2>Keeping the object means keeping a system</h2>
+      <p>The Library of Congress treats software and video games as compound objects. Its 2025–2026 Recommended Formats Statement prefers human-readable source code and a gold-master build, while also asking for documentation, descriptive metadata and the operating environment needed to use the work. For console games, the statement notes that the proprietary platform—or an emulated version of it—may be required.</p>
+      <p>This is more than a technical checklist. It changes what counts as the object. A video file can record one completed session, but it cannot expose every branch, timing window or response. Source code can reveal structures that a recording misses, but reading code is not the same act as negotiating those structures through controls. A build without its operating environment may be complete as data and inert as a game.</p>
+      <p>Emulation addresses part of this problem by allowing newer computers to imitate older hardware or software. The Software Preservation Network documents its use in libraries, archives and museums not only to run obsolete programs, but also to provide controlled access to software-dependent collections. Emulation therefore preserves an important verb: it lets a person operate something instead of merely inspecting a file.</p>
+      <p>Even then, equivalence should not be assumed. Display latency, controller shape, network behavior, platform services and undocumented quirks can alter the encounter. An emulator may preserve enough of a system to support research without reproducing every material condition of the original release. That is not a failure. It is a boundary that good documentation should make visible.</p>
+
+      <h2>Source materials preserve decisions, not just output</h2>
+      <p>The Video Game History Foundation defines game source broadly: code, art, documentation and correspondence are all production materials. That breadth matters because a shipped build records the final state, while source materials can expose alternatives, constraints and discarded directions. They help historians ask how the work was made, not only what the finished software does.</p>
+      <p>Those materials also create new responsibilities. Internal correspondence may contain personal information or material never cleared for publication. Source code can be protected even when the compiled game is unavailable. Preservation is not a blanket publication right. An archive can hold evidence whose public use still depends on law, donor agreements, privacy and access policy.</p>
+      <p>That distinction is especially relevant to criticism built around recovered websites or games. Finding an old file does not establish permission to republish it. A responsible account can identify the source, describe what was examined and state what could not be verified without turning the missing work into free raw material.</p>
+
+      <h2>The social layer cannot be packaged</h2>
+      <p>Some losses sit outside any executable. Matchmaking populations disappear. Fan-maintained knowledge moves or is deleted. Balance patches change what strategies are possible. Moderation norms, pricing models and platform rules reshape who enters a game and how long they stay. A restored build may reproduce mechanics while the culture that interpreted those mechanics remains only partially documented.</p>
+      <p>This is where criticism and preservation meet. A critic should not treat a contemporary emulation session as transparent access to the past. It is a new encounter with a preserved system, shaped by present hardware, present knowledge and whatever supporting evidence survived. The useful question is not whether the session is authentic in an absolute sense. It is which parts of the historical object it can support claims about.</p>
+      <p>That question leads to a practical method. Record the build and platform. Distinguish direct observation from documentation and later testimony. State whether networked or peripheral-dependent features were available. Keep uncertainty attached to the claim it limits. When a conclusion depends on a source rather than play, link the source. When experience is reconstructed, call it a reconstruction.</p>
+
+      <h2>Preservation should make criticism more precise</h2>
+      <p>The disappearance of commercial access is not just a problem for collectors. It narrows the evidence from which cultural memory is made. Preservation expands that evidence, but it does not flatten its differences. A manual, an executable, a source repository, a capture and a player's recollection each answer different questions.</p>
+      <p>For this publication, that is the operating lesson. We will not turn availability into authority. If we have not played a version, we will not imply that we did. If an argument rests on public records, the records will be visible. If a preserved object cannot reproduce a social or technical condition, the gap belongs in the article—not in a footnote added after someone notices.</p>
+      <p>A game is more than its files. The files still matter enormously. They are the part that can be stabilized, described, compared and passed on. The rest requires another kind of preservation: careful testimony, transparent method and criticism disciplined enough to say where its evidence ends.</p>
+
+      <section class="evidence" aria-labelledby="evidence-title">
+        <p class="mono signal">Evidence boundary</p>
+        <h2 id="evidence-title">What this essay can and cannot establish</h2>
+        <p>This analysis uses the four public sources below. It makes no claim to have tested a particular game, emulator, archive workflow or original hardware configuration. The 13 percent figure is reported only within the study's stated US-market sample and 2023 cutoff. Broader claims about social context are editorial analysis, not findings attributed to those institutions.</p>
+      </section>
+
+      <section class="sources" aria-labelledby="sources-title">
+        <h2 id="sources-title">Sources</h2>
+        <ol>
+          {sources.map((source) => (
+            <li><a href={source.href} rel="external">{source.title}</a>. {source.publisher}, {source.date}.</li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="disclosure" aria-labelledby="disclosure-title">
+        <h2 id="disclosure-title">Production disclosure</h2>
+        <p>Research organization and drafting were assisted by OpenAI Codex. The article was produced for the current independent Nightmare Mode operation from the linked sources; it does not reuse a former Nightmare Mode article or contributor identity. No personal play experience is asserted.</p>
+      </section>
+    </div>
+  </article>
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .essay-header { padding-block: clamp(4rem, 9vw, 8rem) clamp(3rem, 6vw, 5rem); }
+  h1 { max-width: 12ch; margin: 1rem 0 2rem; font-size: clamp(4.2rem, 9vw, 9rem); }
+  .dek { max-width: 49rem; color: var(--ink-soft); font-size: clamp(1.35rem, 2.2vw, 2rem); line-height: 1.35; }
+  .byline { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; margin-top: 3.5rem; background: var(--line); border: 1px solid var(--line); }
+  .byline div { padding: 1rem; background: var(--paper); }
+  dt { margin-bottom: 0.4rem; font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase; }
+  dd { margin: 0; }
+  .essay-image :global(img) { width: 100%; max-height: 52rem; object-fit: cover; }
+  figcaption { margin-top: 0.75rem; color: var(--ink-soft); font-family: var(--mono); font-size: 0.72rem; }
+  .essay-body { max-width: 54rem; padding-block: clamp(4rem, 8vw, 8rem); }
+  .essay-body > p { font-size: clamp(1.08rem, 1.45vw, 1.22rem); line-height: 1.75; }
+  .essay-body .lead { color: var(--ink); font-family: var(--display); font-size: clamp(1.8rem, 3vw, 2.65rem); line-height: 1.28; }
+  .essay-body h2 { margin-top: 4.5rem; font-size: clamp(2.8rem, 5vw, 4.8rem); }
+  .evidence, .sources, .disclosure { margin-top: 5rem; padding-top: 2rem; border-top: 1px solid var(--line); }
+  .evidence h2, .sources h2, .disclosure h2 { margin-top: 0.6rem; }
+  .sources ol { padding-left: 1.4rem; }
+  .sources li { margin-block: 1rem; }
+  .sources a { text-decoration: underline; text-underline-offset: 0.2em; }
+  @media (max-width: 760px) { .byline { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .byline { grid-template-columns: 1fr; } }
+</style>

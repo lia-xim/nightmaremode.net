@@ -1,0 +1,21 @@
+main,
+section,
+article,
+header,
+footer,
+nav,
+div,
+a { min-width: 0; }
+
+h1,
+h2,
+h3,
+p { overflow-wrap: break-word; }
+
+@media (max-width: 760px) {
+  .shell { width: min(calc(100% - 2.5rem), var(--max)); }
+}
+
+@media (max-width: 620px) {
+  .hero h1 { font-size: clamp(2.9rem, 12vw, 3.7rem) !important; }
+}
