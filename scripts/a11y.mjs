@@ -32,6 +32,7 @@ for (const viewport of viewports) {
     const response = await page.goto(`${base}${route}`, { waitUntil: "networkidle" });
     const scan = await new AxeBuilder({ page }).analyze();
     const serious = scan.violations.filter((violation) => ["serious", "critical"].includes(violation.impact ?? ""));
+    const actionableConsoleErrors = route === "/404/" ? consoleErrors.filter((message) => !message.includes("status of 404")) : consoleErrors;
     const record = {
       viewport: viewport.name,
       route,
@@ -39,10 +40,11 @@ for (const viewport of viewports) {
       violations: scan.violations.map((violation) => ({ id: violation.id, impact: violation.impact, nodes: violation.nodes.length })),
       serious,
       consoleErrors,
+      actionableConsoleErrors,
       failedRequests,
     };
     results.push(record);
-    if (serious.length || consoleErrors.length || failedRequests.length) failures.push(record);
+    if (serious.length || actionableConsoleErrors.length || failedRequests.length) failures.push(record);
     await context.close();
   }
 }

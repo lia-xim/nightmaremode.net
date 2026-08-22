@@ -11,6 +11,7 @@
     "qa": "node scripts/qa.mjs",
     "qa:a11y": "node scripts/a11y.mjs",
     "qa:links": "node scripts/link-check.mjs",
+    "qa:performance": "node scripts/performance.mjs",
     "qa:safeguards": "node scripts/safeguards.mjs",
     "qa:images": "node scripts/audit-images.mjs"
   },
