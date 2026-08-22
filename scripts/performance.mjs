@@ -12,14 +12,15 @@ const failures = [];
 for (const profile of profiles) {
   const context = await browser.newContext(profile.options);
   await context.addInitScript(() => {
-    window.__nmPerformance = { lcp: 0, cls: 0 };
+    sessionStorage.setItem("__nm_lcp", "0");
+    sessionStorage.setItem("__nm_cls", "0");
     new PerformanceObserver((list) => {
       const entries = list.getEntries();
-      window.__nmPerformance.lcp = entries.at(-1)?.startTime ?? 0;
+      sessionStorage.setItem("__nm_lcp", String(entries.at(-1)?.startTime ?? 0));
     }).observe({ type: "largest-contentful-paint", buffered: true });
     new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
-        if (!entry.hadRecentInput) window.__nmPerformance.cls += entry.value;
+        if (!entry.hadRecentInput) sessionStorage.setItem("__nm_cls", String(Number(sessionStorage.getItem("__nm_cls") ?? "0") + entry.value));
       }
     }).observe({ type: "layout-shift", buffered: true });
   });
@@ -36,8 +37,8 @@ for (const profile of profiles) {
     const fcp = performance.getEntriesByName("first-contentful-paint")[0]?.startTime ?? 0;
     return {
       fcpMs: Math.round(fcp),
-      lcpMs: Math.round(window.__nmPerformance.lcp),
-      cls: Number(window.__nmPerformance.cls.toFixed(4)),
+      lcpMs: Math.round(Number(sessionStorage.getItem("__nm_lcp") ?? "0")),
+      cls: Number(Number(sessionStorage.getItem("__nm_cls") ?? "0").toFixed(4)),
       responseMs: Math.round(navigation.responseStart),
       domContentLoadedMs: Math.round(navigation.domContentLoadedEventEnd),
       loadMs: Math.round(navigation.loadEventEnd),
