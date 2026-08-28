@@ -2,6 +2,7 @@
 import Header from "@/components/Header.astro";
 import { siteConfig } from "@/config/site";
 import { isIndexingEnabled } from "@/config/indexing-gate.mjs";
+import { alternatePath, localeFromPath, type Locale } from "@/i18n";
 import "@/styles/global.css";
 import "@/styles/responsive-fixes.css";
 
@@ -11,6 +12,7 @@ interface Props {
   image?: string;
   noindex?: boolean;
   ogType?: "website" | "article";
+  lang?: Locale;
 }
 
 const {
@@ -19,15 +21,19 @@ const {
   image = "/og-default.jpg",
   noindex = false,
   ogType = "website",
+  lang = localeFromPath(Astro.url.pathname),
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, siteConfig.canonicalHost);
 const fullTitle = title.includes("Nightmare Mode") ? title : `${title} — Nightmare Mode`;
 const indexingEnabled = isIndexingEnabled(import.meta.env);
 const shouldNoindex = noindex || !indexingEnabled;
+const languageAlternate = alternatePath(Astro.url.pathname);
+const englishPath = lang === "en" ? Astro.url.pathname : languageAlternate;
+const germanPath = lang === "de" ? Astro.url.pathname : languageAlternate;
 const websiteId = new URL("/#website", siteConfig.canonicalHost).toString();
 const pageId = new URL(`${Astro.url.pathname}#webpage`, siteConfig.canonicalHost).toString();
-const pageSchema = Astro.url.pathname === "/"
+const pageSchema = ["/", "/de/"].includes(Astro.url.pathname)
   ? {
       "@context": "https://schema.org",
       "@type": "WebSite",
@@ -48,7 +54,7 @@ const pageSchema = Astro.url.pathname === "/"
 ---
 
 <!doctype html>
-<html lang={siteConfig.language} data-indexing={shouldNoindex ? "blocked" : "enabled"}>
+<html lang={lang} data-indexing={shouldNoindex ? "blocked" : "enabled"}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -56,6 +62,9 @@ const pageSchema = Astro.url.pathname === "/"
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {englishPath && <link rel="alternate" hreflang="en" href={new URL(englishPath, siteConfig.canonicalHost)} />}
+    {germanPath && <link rel="alternate" hreflang="de" href={new URL(germanPath, siteConfig.canonicalHost)} />}
+    {englishPath && <link rel="alternate" hreflang="x-default" href={new URL(englishPath, siteConfig.canonicalHost)} />}
     <meta name="robots" content={shouldNoindex ? "noindex, nofollow" : "index, follow"} />
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={fullTitle} />
@@ -67,8 +76,8 @@ const pageSchema = Astro.url.pathname === "/"
     <slot name="head" />
   </head>
   <body>
-    <a class="skip-link" href="#main-content">Skip to content</a>
-    <Header />
+    <a class="skip-link" href="#main-content">{lang === "de" ? "Zum Inhalt" : "Skip to content"}</a>
+    <Header locale={lang} />
     <main id="main-content">
       <slot />
     </main>

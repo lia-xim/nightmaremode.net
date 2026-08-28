@@ -28,10 +28,18 @@ The website should feel credible beside a serious cultural or literary review. S
 
 - Generic gaming news, scores, listicles, affiliate pages, or trend-chasing output
 - A resurrection of the former newsroom or its visual identity
-- A Contextter case study, partner network, commercial funnel, or link source
+- A fabricated customer testimonial, partner network, commercial funnel, or link source. A same-owner Contextter operating record is allowed when it reports only performed work, discloses common ownership, states unproven results plainly, and uses no sitewide or reciprocal link pattern.
 - Bulk restoration, AI rewriting, or blanket redirection of historical URLs
 - Publishing conclusions, metrics, authors, testimonials, or research claims before the work exists
 - Industrial dashboards, pseudo-technical telemetry, oversized condensed typography, or decorative status UI
+
+## Language model
+
+English remains at the established canonical paths. Complete German counterparts use stable `/de/…` URLs. Each translated pair declares its own canonical plus reciprocal `hreflang="en"` and `hreflang="de"`; English is the `x-default`. A language control switches to the equivalent page rather than running client-side machine translation. Historical legacy URLs remain at their exact recorded paths and are not duplicated for language fan-out.
+
+## Same-owner operating record
+
+`/about/site-operations/` and `/de/ueber-uns/website-betrieb/` document how Contextter is actually used for Nightmare Mode research, page-role decisions, internal links, and technical checks. Matthias Ramahi operates both projects. The note is not a customer testimonial or independent recommendation, and it must not claim rankings, traffic, indexation, or growth while the site remains protected and Search Console evidence is not proven. Contextter may be linked once from the operating note and once from the homepage disclosure using a branded `nofollow` link; there is no footer, exact-match, reciprocal, or portfolio-network pattern.
 
 ## Evidence boundaries
 
@@ -72,4 +80,4 @@ The earlier post-launch Search Console wording is superseded. Production must re
 6. URL Inspection live tests for `/`, the launch essay, the first play study, and the play-study protocol;
 7. the evidence date, reviewer, screenshots or exports, and any limitations in the project evidence register and DomainPortfolio dossier.
 
-After that evidence exists, an owner-reviewed launch change must set both `PUBLIC_SITE_INDEXABLE=true` and `PUBLIC_GSC_INDEX_GATE_CONFIRMED=manual-actions-security-removals-crawl-index-verified` in Production. The second value is only a deployment lock; it is not a substitute for the evidence above. The same build must then pass protected-to-launch regression checks and live verification of meta robots, robots.txt, the exact eight-URL automatic sitemap, canonicals, apex/`www` redirects, real 404s, security headers, internal links, mobile, keyboard, console, and accessibility before sitemap submission. Preview and unconfigured environments remain protected by default.
+After that evidence exists, an owner-reviewed launch change must set both `PUBLIC_SITE_INDEXABLE=true` and `PUBLIC_GSC_INDEX_GATE_CONFIRMED=manual-actions-security-removals-crawl-index-verified` in Production. The second value is only a deployment lock; it is not a substitute for the evidence above. The same build must then pass protected-to-launch regression checks and live verification of meta robots, robots.txt, the exact bilingual automatic sitemap allowlist, reciprocal language alternates, canonicals, apex/`www` redirects, real 404s, security headers, internal links, mobile, keyboard, console, and accessibility before sitemap submission. Preview and unconfigured environments remain protected by default.

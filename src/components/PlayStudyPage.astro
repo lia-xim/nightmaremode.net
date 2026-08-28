@@ -1,0 +1,103 @@
+---
+import BaseLayout from "@/components/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import { pathFor, type Locale } from "@/i18n";
+import session from "@/data/studies/a-dark-room-session.json";
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const german = locale === "de";
+const formatTime = (seconds: number) => `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
+
+const eventDe = [
+  "Die Oberfläche zeigte zunächst eine einzige Aktion: Feuer entzünden. Im Protokoll stand, das Feuer sei erloschen und der Raum eiskalt.",
+  "Die festgelegte Aktionsregel begann.",
+  "Das Protokoll meldete Licht in den Fenstern und ein brennendes Feuer. Feuer schüren war sichtbar, aber noch deaktiviert.",
+  "Die Schaltfläche war aktiv geworden und wurde angeklickt.",
+  "Das Protokoll meldete ein loderndes Feuer. Feuer schüren war vorübergehend deaktiviert.",
+  "Eine zerlumpte Fremde trat ein und brach in einer Ecke zusammen. Zu diesem Zeitpunkt erschien noch keine Auswahl.",
+  "Holz sammeln erschien nach diesem Ereignis als zweite verfügbare Aktion.",
+  "Die neue Aktion wurde ausgeführt und danach deaktiviert.",
+  "Holz sammeln war wieder verfügbar und wurde ein zweites Mal ausgeführt.",
+  "Holz sammeln war erneut verfügbar und wurde ein drittes Mal ausgeführt.",
+  "Eine Auswahl mit Untersuchen und Ignorieren erschien. Die Aktionsregel erlaubte keine der beiden Optionen; die Entscheidung blieb offen.",
+  "Die Sitzung wurde manuell beendet. Es wurde keine Verzweigung gewählt.",
+];
+
+const copy = german ? {
+  title: "Vier Minuten in A Dark Room",
+  description: "Eine kontrollierte Browserbeobachtung: Wie A Dark Room Feuerpflege, Sammeln und die erste offene Entscheidung nach und nach sichtbar macht.",
+  label: "Play Study 01 · kontrollierte Browserbeobachtung",
+  dek: "Aus einer Schaltfläche werden Feuerpflege, Ressourcenarbeit und schließlich eine Wahl. Die Oberfläche erklärt diesen Aufbau nicht vorher; sie lässt ihn mit der Zeit erscheinen.",
+  finding: "Der Einstieg lehrt, indem er verändert, was möglich ist.",
+  findingBody: "Der getestete Web-Build begann mit einer verfügbaren Aktion. Danach folgten Feuerpflege, die Ankunft einer Fremden und später das Sammeln von Holz. Die erste offene Verzweigung erschien bei 03:02. In diesem Lauf wurde Fortschritt als Folge neuer Handlungsmöglichkeiten sichtbar, nicht als Regeltext am Anfang.",
+  cause: "Die Reihenfolge wurde beobachtet. Ihre Ursache ist damit nicht bewiesen. Die Sitzung trennt nicht zwischen abgelaufener Zeit, Feuerzustand, Zahl der Aktionen oder einer Kombination daraus.",
+  conditions: "Was tatsächlich getestet wurde",
+  question: "Frage vor Beginn der Sitzung",
+  ledger: "Vom ersten Klick bis zur Entscheidung",
+  limits: "Was diese Studie nicht sagen kann",
+  limitsList: ["Eine Sitzung trennt Zeit-Trigger nicht von Zustands- oder Aktions-Triggern.", "Skriptete Klicks belegen keine Gefühle, Verwirrung oder andere menschliche Reaktionen.", "Audio, mobile Ansicht, andere Sprachen, Speicherstände, Quellcode-Abläufe und spätere Spielphasen wurden nicht untersucht.", "Nach dem Erscheinen der Auswahl störte das Overlay weitere Klickzeiten; spätere Werte eignen sich nicht für genaue Cooldown-Messungen."],
+  disclosure: "Interaktion, strukturiertes Protokoll, Quellenprüfung und Erstentwurf wurden mit OpenAI Codex erstellt. Matthias Ramahi verantwortet die Redaktion. Es wird keine menschliche Spielerfahrung behauptet.",
+} : {
+  title: "Four minutes in A Dark Room",
+  description: "A controlled browser observation of how A Dark Room reveals fire maintenance, gathering and its first open decision.",
+  label: "Play study 01 · controlled browser observation",
+  dek: "One button becomes fire maintenance, resource work and then a choice. The opening does not explain that structure in advance; it lets the interface arrive over time.",
+  finding: "The opening teaches by changing what can be done.",
+  findingBody: "The tested web build began with one available action. Fire maintenance followed, then a stranger arrived, and gathering appeared later. The first open branch surfaced at 03:02. In this run, progression appeared as a sequence of new permissions rather than an up-front rules explanation.",
+  cause: "The sequence was observed. Its cause was not. This session cannot separate elapsed time, fire state, action count or a combination of those conditions.",
+  conditions: "What was actually tested",
+  question: "Question set before the session",
+  ledger: "From the first click to a decision",
+  limits: "What this study cannot say",
+  limitsList: session.limits,
+  disclosure: "The interaction, structured log, source verification and first draft were produced with OpenAI Codex. Matthias Ramahi is the responsible editor. No human play experience is claimed.",
+};
+
+const actionName = (action: string | null) => !german || !action ? action : ({ "light fire": "Feuer entzünden", "stoke fire": "Feuer schüren", "gather wood": "Holz sammeln" }[action] ?? action);
+const canonicalPath = pathFor(locale, "/field-notes/a-dark-room-first-four-minutes/");
+const schema = { "@context": "https://schema.org", "@type": "Article", inLanguage: locale, headline: copy.title, description: copy.description, datePublished: "2026-08-23", dateModified: "2026-08-28", mainEntityOfPage: `https://nightmaremode.net${canonicalPath}`, author: { "@type": "Organization", name: german ? "Nightmare Mode Redaktion" : "Nightmare Mode editorial desk" }, editor: { "@type": "Person", name: "Matthias Ramahi" }, about: { "@type": "VideoGame", name: "A Dark Room", url: session.game.url } };
+---
+
+<BaseLayout lang={locale} title={copy.title} description={copy.description} ogType="article">
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(schema)}></script>
+  <article>
+    <header class="study-header shell"><p class="label">{copy.label}</p><h1 class="display">{copy.title}</h1><p class="dek">{copy.dek}</p><p class="byline">{german ? "Sitzung" : "Session"}: OpenAI Codex · {german ? "Redaktion" : "Editor"}: Matthias Ramahi · <time datetime="2026-08-23">23 {german ? "August" : "August"} 2026</time> · {formatTime(session.durationSeconds)}</p></header>
+    <div class="study-body shell">
+      <section class="finding"><p class="label">{german ? "Befund" : "Finding"}</p><h2 class="display">{copy.finding}</h2><p>{copy.findingBody}</p><p>{copy.cause}</p></section>
+      <section class="conditions"><h2 class="display">{copy.conditions}</h2><dl><div><dt>Build</dt><dd>{german ? "Offizieller englischer Web-Build" : session.game.edition} · <code>{session.game.sourceCommit.slice(0, 7)}</code></dd></div><div><dt>Browser</dt><dd>{session.environment.browser}, Playwright {session.environment.playwrightVersion}</dd></div><div><dt>{german ? "Zustand" : "State"}</dt><dd>{german ? "Frischer isolierter Browserkontext; kein früherer Speicherstand" : session.environment.saveState}</dd></div><div><dt>{german ? "Eingabe" : "Input"}</dt><dd>{german ? "Skriptete Klicks nach einer vorher festgelegten Regel" : session.environment.input}</dd></div></dl></section>
+      <section><p class="label">{copy.question}</p><h2 class="display">{german ? "Wie wächst die Oberfläche von einer Aktion zur Ressourcenarbeit und zu einer Entscheidung?" : session.question}</h2><p><strong>{german ? "Erwartung vorab" : "Initial expectation"}:</strong> {german ? "Neue Aktionen würden durch Zeit und wiederholte Feuerpflege sichtbar, während ein Teil der Ursachen offen bleibt." : session.initialExpectation}</p></section>
+      <section class="timeline"><p class="label">{german ? "Zeitprotokoll" : "Timed event ledger"}</p><h2 class="display">{copy.ledger}</h2><ol>{session.events.map((event, index) => <li><time datetime={`PT${event.second}S`}>{formatTime(event.second)}</time><div><span>{german ? (event.type === "action" ? "Aktion" : event.type === "boundary" ? "Grenze" : "Beobachtung") : event.type}</span>{event.action && <strong>{actionName(event.action)}</strong>}<p>{german ? eventDe[index] : event.result}</p></div></li>)}</ol></section>
+      <section class="limits"><h2 class="display">{copy.limits}</h2><ul>{copy.limitsList.map((limit) => <li>{limit}</li>)}</ul></section>
+      <section class="sources"><h2 class="display">{german ? "Quellen und Reproduktion" : "Sources and reproduction"}</h2><p><a href={session.game.url} rel="external">A Dark Room — official web build</a></p><p><a href={`https://github.com/doublespeakgames/adarkroom/commit/${session.game.sourceCommit}`} rel="external">Source repository at tested commit</a></p><p><a href="/field-notes/a-dark-room-first-four-minutes/session.json" download>{german ? "Strukturierten Sitzungsdatensatz laden" : "Download the structured session record"}</a></p></section>
+      <section class="disclosure"><h2 class="display">{german ? "Produktionshinweis" : "Production note"}</h2><p>{copy.disclosure}</p></section>
+    </div>
+  </article>
+  <SiteFooter locale={locale} />
+</BaseLayout>
+
+<style>
+  .study-header { padding-block: clamp(3.5rem, 7vw, 6.5rem); border-bottom: 1px solid var(--line); }
+  .label { margin: 0 0 0.8rem; color: var(--signal); font-size: 0.84rem; }
+  h1 { max-width: 12ch; font-size: clamp(3.8rem, 7.5vw, 7.5rem); }
+  .dek { max-width: 52rem; color: var(--ink-soft); font-size: clamp(1.2rem, 2vw, 1.7rem); }
+  .byline { margin-top: 2rem; color: var(--ink-soft); font-size: 0.9rem; }
+  .study-body { max-width: 62rem; padding-block: clamp(4rem, 8vw, 8rem); }
+  .study-body section + section { margin-top: 5rem; }
+  .study-body h2 { margin: 0; font-size: clamp(2.5rem, 4.8vw, 4.7rem); }
+  .study-body section > p, .study-body li, dd { font-size: clamp(1rem, 1.25vw, 1.14rem); line-height: 1.75; }
+  .conditions dl { display: grid; grid-template-columns: 1fr 1fr; margin-top: 2rem; border-top: 1px solid var(--line); }
+  .conditions div { padding: 1.25rem 1.25rem 1.25rem 0; border-bottom: 1px solid var(--line); }
+  dt { color: var(--signal); font-size: 0.78rem; }
+  dd { margin: 0.35rem 0 0; }
+  .timeline ol { padding: 0; list-style: none; border-top: 1px solid var(--line); }
+  .timeline li { display: grid; grid-template-columns: 5rem 1fr; gap: 1.5rem; padding: 1.25rem 0; border-bottom: 1px solid var(--line); }
+  .timeline time { color: var(--signal); }
+  .timeline span { color: var(--ink-soft); font-size: 0.75rem; text-transform: uppercase; }
+  .timeline strong { display: block; font-family: var(--display); font-size: 1.6rem; font-weight: 500; }
+  .timeline p { margin: 0.3rem 0 0; color: var(--ink-soft); }
+  .limits, .disclosure { padding: clamp(2rem, 4vw, 3.5rem); background: var(--paper-soft); }
+  .sources { padding-top: 2rem; border-top: 1px solid var(--line); }
+  .sources a { text-decoration: underline; text-underline-offset: 0.2em; }
+  @media (max-width: 620px) { .conditions dl { grid-template-columns: 1fr; } .timeline li { grid-template-columns: 3.5rem 1fr; gap: 0.8rem; } }
+</style>

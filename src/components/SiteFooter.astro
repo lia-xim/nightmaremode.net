@@ -1,18 +1,16 @@
 ---
-const footerLinks = [
-  ["Editorial Charter", "/editorial-policy/"],
-  ["Archive", "/archive/"],
-  ["Rights & Corrections", "/rights-contact/"],
-  ["Imprint", "/impressum/"],
-  ["Privacy", "/datenschutz/"],
-] as const;
+import { footerNavigation, localeFromPath, type Locale } from "@/i18n";
+
+interface Props { locale?: Locale }
+const { locale = localeFromPath(Astro.url.pathname) } = Astro.props;
+const footerLinks = footerNavigation[locale];
 ---
 
 <footer class="site-footer">
   <div class="site-footer__inner shell">
     <div>
-      <a class="footer-brand" href="/">Nightmare Mode</a>
-      <p>Independent criticism for games and interactive culture.</p>
+      <a class="footer-brand" href={locale === "de" ? "/de/" : "/"}>Nightmare Mode</a>
+      <p>{locale === "de" ? "Essays und dokumentierte Play Studies über Spiele und interaktive Kultur." : "Essays and documented play studies about games and interactive culture."}</p>
     </div>
     <nav aria-label="Footer navigation">
       {footerLinks.map(([label, href]) => <a href={href}>{label}</a>)}

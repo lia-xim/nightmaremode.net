@@ -59,7 +59,7 @@ await article.goto(`${base}/essays/a-game-is-more-than-its-files/`, { waitUntil:
 results.article = await article.evaluate(() => ({
   title: document.title,
   h1: document.querySelector("h1")?.textContent?.trim(),
-  paragraphs: document.querySelectorAll(".essay-body > p").length,
+  paragraphs: document.querySelectorAll(".body section p").length,
   sources: document.querySelectorAll(".sources li").length,
   schemaType: [...document.querySelectorAll('script[type="application/ld+json"]')].map((node) => node.textContent).find((value) => value?.includes('"Article"')) ? "Article" : null,
   brokenImages: [...document.images].filter((image) => image.currentSrc && image.complete && image.naturalWidth === 0).length,
@@ -92,4 +92,4 @@ await fieldStudy.screenshot({ path: `${output}/field-study-desktop-full.png`, fu
 await browser.close();
 console.log(JSON.stringify(results, null, 2));
 
-if (results.errors.length || results.failedRequests.length || results.desktop.brokenImages || results.mobile.brokenImages || results.desktop.scrollWidth !== results.desktop.clientWidth || results.mobile.scrollWidth !== results.mobile.clientWidth || results.desktop.h1 !== "Games, examined closely." || !results.mobile.navVisible || results.article.h1 !== "A game is more than its files" || results.article.sources !== 3 || results.article.schemaType !== "Article" || results.article.brokenImages || results.article.scrollWidth !== results.article.clientWidth || results.fieldStudy.h1 !== "Four minutes in A Dark Room" || results.fieldStudy.timelineEvents !== 12 || results.fieldStudy.schemaType !== "Article" || results.fieldStudy.sessionStatus !== 200 || results.fieldStudy.sessionId !== "adr-web-2026-08-23-01" || results.fieldStudy.brokenImages || results.fieldStudy.scrollWidth !== results.fieldStudy.clientWidth) process.exitCode = 1;
+if (results.errors.length || results.failedRequests.length || results.desktop.brokenImages || results.mobile.brokenImages || results.desktop.scrollWidth !== results.desktop.clientWidth || results.mobile.scrollWidth !== results.mobile.clientWidth || results.desktop.h1 !== "Read games closely." || !results.mobile.navVisible || results.article.h1 !== "A game is more than its files" || results.article.sources !== 3 || results.article.schemaType !== "Article" || results.article.brokenImages || results.article.scrollWidth !== results.article.clientWidth || results.fieldStudy.h1 !== "Four minutes in A Dark Room" || results.fieldStudy.timelineEvents !== 12 || results.fieldStudy.schemaType !== "Article" || results.fieldStudy.sessionStatus !== 200 || results.fieldStudy.sessionId !== "adr-web-2026-08-23-01" || results.fieldStudy.brokenImages || results.fieldStudy.scrollWidth !== results.fieldStudy.clientWidth) process.exitCode = 1;

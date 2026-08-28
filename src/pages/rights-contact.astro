@@ -1,26 +1,4 @@
 ---
-import BaseLayout from "@/components/BaseLayout.astro";
-import SiteFooter from "@/components/SiteFooter.astro";
+import InfoPage from "@/components/InfoPage.astro";
 ---
-
-<BaseLayout title="Rights and corrections" noindex>
-  <section class="page-hero shell">
-    <div class="page-hero__rail mono">Direct contact route</div>
-    <div class="page-hero__copy"><p class="mono signal">Rights / corrections / cooperation</p><h1 class="display">A clear route for a disputed past.</h1><p>Nightmare Mode is operated independently by Matthias Ramahi. Rights holders, former contributors, and readers can contact the current operator directly.</p><a class="action action--solid" href="mailto:info@matthiasramahi.de?subject=Nightmare%20Mode%20rights%20or%20correction">Email the operator</a></div>
-  </section>
-  <section class="contact shell">
-    <div><h2 class="display">What to include</h2><ul><li>The URL or work concerned</li><li>Your relationship to the material</li><li>The correction, permission, or restriction requested</li><li>Evidence that helps verify the request</li></ul></div>
-    <aside><p class="mono signal">Delivery</p><strong>Email only</strong><p>There is no form or upload. Your email is processed only to answer and document the request.</p><a href="mailto:info@matthiasramahi.de">info@matthiasramahi.de</a></aside>
-  </section>
-  <SiteFooter />
-</BaseLayout>
-
-<style>
-  .contact { display: grid; grid-template-columns: 1fr minmax(18rem, 0.5fr); gap: 3rem; padding: var(--section) clamp(1.5rem, 6vw, 7rem); border-inline: 1px solid var(--line); }
-  h2 { font-size: clamp(3.2rem, 6vw, 6rem); }
-  ul { padding: 0; list-style: none; }
-  li { padding: 1rem 0; border-top: 1px solid var(--line); font-family: var(--mono); }
-  aside { align-self: start; padding: 1.5rem; border: 1px solid var(--line); }
-  aside strong { font-family: var(--display); font-size: 2.5rem; text-transform: uppercase; }
-  @media (max-width: 760px) { .contact { grid-template-columns: 1fr; } }
-</style>
+<InfoPage locale="en" page="rights" />

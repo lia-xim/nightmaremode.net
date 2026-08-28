@@ -1,19 +1,28 @@
 ---
-import { navItems } from "@/data/site";
+import { alternatePath, navigation, type Locale } from "@/i18n";
+
+interface Props { locale?: Locale }
+const { locale = "en" } = Astro.props;
 
 const path = Astro.url.pathname;
+const navItems = navigation[locale];
+const alternate = alternatePath(path);
 ---
 
 <header class="site-header">
   <div class="site-header__inner shell">
-    <a class="brand" href="/" aria-label="Nightmare Mode home">Nightmare Mode</a>
+    <a class="brand" href={locale === "de" ? "/de/" : "/"} aria-label={locale === "de" ? "Nightmare Mode Startseite" : "Nightmare Mode home"}>Nightmare Mode</a>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
-      <span>Menu</span>
+      <span>{locale === "de" ? "Menü" : "Menu"}</span>
     </button>
-    <nav id="site-nav" aria-label="Primary navigation">
+    <nav id="site-nav" aria-label={locale === "de" ? "Hauptnavigation" : "Primary navigation"}>
       {navItems.map((item) => (
         <a class:list={{ active: path.startsWith(item.href) }} href={item.href}>{item.label}</a>
       ))}
+      <span class="language-switch" aria-label={locale === "de" ? "Sprache" : "Language"}>
+        <a class:list={{ active: locale === "en" }} href={locale === "en" ? path : alternate ?? "/"} lang="en" hreflang="en">EN</a>
+        <a class:list={{ active: locale === "de" }} href={locale === "de" ? path : alternate ?? "/de/"} lang="de" hreflang="de">DE</a>
+      </span>
     </nav>
   </div>
 </header>
@@ -26,7 +35,10 @@ const path = Astro.url.pathname;
   const setOpen = (open: boolean) => {
     toggle?.setAttribute("aria-expanded", String(open));
     nav?.classList.toggle("open", open);
-    if (label) label.textContent = open ? "Close" : "Menu";
+    if (label) {
+      const german = document.documentElement.lang === "de";
+      label.textContent = open ? (german ? "Schließen" : "Close") : (german ? "Menü" : "Menu");
+    }
   };
 
   toggle?.addEventListener("click", () => setOpen(toggle.getAttribute("aria-expanded") !== "true"));
@@ -51,7 +63,7 @@ const path = Astro.url.pathname;
 
   .site-header__inner {
     display: flex;
-    min-height: 6.25rem;
+    min-height: 4.75rem;
     align-items: center;
     justify-content: space-between;
     gap: 2rem;
@@ -93,6 +105,10 @@ const path = Astro.url.pathname;
   nav a:hover::after,
   nav a.active::after { transform: scaleX(1); transform-origin: left; }
 
+  .language-switch { display: flex; gap: 0.75rem; margin-left: 1rem; padding-left: 1.5rem; border-left: 1px solid var(--line); }
+  .language-switch a { color: var(--ink-soft); font-size: 0.82rem; }
+  .language-switch a.active { color: var(--ink); }
+
   .menu-toggle {
     display: none;
     padding: 0.45rem 0;
@@ -106,7 +122,7 @@ const path = Astro.url.pathname;
   .menu-toggle:hover { border-color: var(--signal); color: var(--ink); }
 
   @media (max-width: 820px) {
-    .site-header__inner { min-height: 5.25rem; }
+    .site-header__inner { min-height: 4.5rem; }
     .menu-toggle { display: block; }
     nav {
       position: absolute;
@@ -120,5 +136,7 @@ const path = Astro.url.pathname;
     }
     nav.open { display: grid; gap: 0; }
     nav a { padding-block: 0.85rem; border-bottom: 1px solid var(--line); font-family: var(--display); font-size: 1.8rem; }
+    .language-switch { margin: 1rem 0 0; padding: 0; border: 0; }
+    .language-switch a { border: 0; font-family: var(--sans); font-size: 0.9rem; }
   }
 </style>

@@ -1,0 +1,89 @@
+---
+import BaseLayout from "@/components/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import { pathFor, type Locale } from "@/i18n";
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const german = locale === "de";
+
+const copy = german ? {
+  title: "Ein praktisches Protokoll für Play Studies",
+  description: "Ein quellenbasiertes Arbeitsblatt für Spielbedingungen, Beobachtungen, Interpretationen, Gegenbeispiele und Evidenzgrenzen.",
+  label: "Methode · Play Studies · Version 1.0",
+  dek: "Dieses Arbeitsblatt beginnt vor der ersten Aussage über ein Spiel. Es hält Bedingungen, beobachtete Ereignisse und spätere Deutung nahe genug beieinander, um sie prüfen zu können.",
+  short: "Zuerst die Bedingungen festhalten. Beobachtung und Interpretation getrennt lassen.",
+  shortBody: "Eine brauchbare Play Study zeigt, welche Version getestet wurde, was die untersuchende Person versuchte, was geschah und wo die Folgerung unsicher wird. Das macht eine subjektive Interpretation nicht objektiv. Es macht ihren Weg nachvollziehbar.",
+  steps: [
+    ["Eine Frage wählen, die diese Sitzung beantworten kann", "„Wie funktioniert das Spiel?“ ist zu groß. Besser ist eine beobachtbare Beziehung: Wie verändert ein Warnsignal die nächste Aktion? Welche Information fehlt vor einer Entscheidung? Die Frage und mögliches Gegenmaterial werden vor dem Spiel notiert."],
+    ["Bedingungen rund um das Spiel fixieren", "Festgehalten werden Plattform, Region, Version, Patchstand, Medium oder Store, Eingabegerät, Sprache, Schwierigkeit, Barrierefreiheit, Mods, Konto- und Netzwerkzustand. Unbekanntes wird als unbekannt markiert."],
+    ["Ein Zeitprotokoll führen", "Jeder Eintrag nennt Aktion, sichtbare oder hörbare Reaktion und den Zustand davor und danach. Zeitmarken sollten, wenn möglich, auf eine aufbewahrte Aufnahme verweisen."],
+    ["Vier Arten von Aussage trennen", "Beobachtung beschreibt, was die Sitzung direkt zeigte. Quelle hält fest, was Dokumentation, Code oder eine andere Person berichtet. Interpretation verbindet Material mit einer Lesart. Unbekannt benennt die Lücke, die eine stärkere Aussage verhindert."],
+    ["Die erste Deutung angreifen", "Das Ereignis wird wiederholt, wenn das möglich ist. Danach ändert sich jeweils nur eine relevante Bedingung. Gesucht werden Gegenbeispiele und plausible alternative Erklärungen."],
+    ["Die Evidenzgrenze neben dem Ergebnis veröffentlichen", "Version und zentrale Einschränkung gehören früh in den Beitrag. Quellen stehen an den Aussagen, die sie tragen. Autor, Redaktion, Konflikte, KI-Hilfe und Korrekturweg werden genannt."],
+  ],
+  worksheet: `STUDIE\nFrage:\nErwartung vorab:\nWas würde ihr widersprechen:\nAußerhalb des Umfangs:\n\nBEDINGUNGEN\nSpiel / Edition:\nPlattform / Region:\nVersion oder Build:\nDatum / Dauer:\nHardware / Eingabe / Bild / Ton:\nNetzwerk / Konto:\nSprache / Schwierigkeit:\nBarrierefreiheit:\nMods oder externe Werkzeuge:\nNicht verfügbare Funktionen:\nUnbekannte Bedingungen:\n\nZEITPROTOKOLL\nZeitmarke:\nAktion:\nZustand davor:\nBeobachtete Reaktion:\nZustand danach:\nAufnahme oder Notiz:\nWiederholung:\nAlternative Erklärung:\n\nAUSSAGEN\nBeobachtung:\nExterne Quelle:\nInterpretation:\nUnbekannt:\nGegenbeispiel:\n\nVERÖFFENTLICHUNGSGRENZE\nWas die Sitzung stützt:\nWas sie nicht belegt:\nRechte- oder Datenschutzgrenzen:\nKI-Hilfe:\nVerantwortliche Redaktion:\nKorrekturkontakt:`,
+  limits: "Das Protokoll ist für kleine, prüfbare redaktionelle Studien gedacht. Es ersetzt keine Forschung mit Teilnehmenden, keine Ethnografie und keine statistische Aussage über eine Population.",
+  sources: "Die Methode ist ein eigenes Nightmare-Mode-Arbeitsprotokoll. Sie ist unter anderem von Consalvo und Duttons qualitativer Methodik sowie dem Digital Game Analysis Protocol (DiGAP) angeregt; sie übernimmt keines der beiden Protokolle wörtlich.",
+  next: "Play Study in A Dark Room ansehen",
+} : {
+  title: "A practical protocol for documenting play",
+  description: "A source-backed worksheet for recording play conditions, observations, interpretations, counterexamples and evidence limits.",
+  label: "Method · play studies · version 1.0",
+  dek: "Use this worksheet before making a claim about what a game does. It keeps the tested conditions, observed events and later interpretation close enough to inspect.",
+  short: "Record conditions first. Keep observation and interpretation separate.",
+  shortBody: "A useful play study shows which version was tested, what the researcher tried, what happened and where the conclusion becomes uncertain. This does not make a subjective interpretation objective. It makes the route to it inspectable.",
+  steps: [
+    ["Choose one question the session can answer", "“How does the game work?” is too broad. Use an observable relationship: how a warning changes the next action, or which information is withheld before a decision. Write the question and possible counterevidence before play."],
+    ["Fix the conditions around the game", "Record platform, region, version, patch state, media or storefront, input, language, difficulty, accessibility settings, modifications, account state and network availability. Mark unknown details instead of guessing."],
+    ["Keep a timed event log", "Each entry names the action, visible or audible response, and the state before and after. When possible, timestamps should point into a retained capture."],
+    ["Separate four kinds of statement", "Observation describes what the session exposed. Source records what documentation, code or another person reports. Interpretation connects material to a reading. Unknown names the gap that blocks a stronger claim."],
+    ["Attack the first interpretation", "Repeat the event when possible, then change one relevant condition at a time. Look for counterexamples and plausible alternative explanations."],
+    ["Publish the evidence boundary beside the result", "Put the version and central limitation near the top. Link sources where they support a claim. Name the author, editor, conflicts, AI assistance and correction route."],
+  ],
+  worksheet: `STUDY\nQuestion:\nInitial expectation:\nEvidence that would challenge it:\nOut of scope:\n\nCONDITIONS\nGame / edition:\nPlatform / region:\nVersion or build:\nDate / duration:\nHardware / input / display / audio:\nNetwork / account state:\nLanguage / difficulty:\nAccessibility settings:\nMods or external tools:\nUnavailable features:\nUnknown conditions:\n\nEVENT LOG\nTimestamp:\nAction or input:\nState before:\nObserved response:\nState after:\nCapture or note reference:\nRepeat result:\nAlternative explanation:\n\nCLAIMS\nObservation:\nExternal source:\nInterpretation:\nUnknown:\nCounterexample:\n\nPUBLICATION BOUNDARY\nWhat this session supports:\nWhat it cannot establish:\nRights or privacy limits:\nAI assistance:\nResponsible editor:\nCorrection contact:`,
+  limits: "This protocol is for small, inspectable editorial studies. It does not replace participant research, ethnography or statistical claims about a population.",
+  sources: "This is an original Nightmare Mode working protocol. It draws on Consalvo and Dutton's qualitative toolkit and the Digital Game Analysis Protocol (DiGAP) without reproducing either protocol.",
+  next: "See the A Dark Room study",
+};
+
+const canonicalPath = pathFor(locale, "/field-notes/play-study-protocol/");
+const schema = { "@context": "https://schema.org", "@type": "Article", inLanguage: locale, headline: copy.title, description: copy.description, datePublished: "2026-08-22", dateModified: "2026-08-28", mainEntityOfPage: `https://nightmaremode.net${canonicalPath}`, author: { "@type": "Organization", name: german ? "Nightmare Mode Redaktion" : "Nightmare Mode editorial desk" }, editor: { "@type": "Person", name: "Matthias Ramahi" } };
+---
+
+<BaseLayout lang={locale} title={copy.title} description={copy.description} ogType="article">
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(schema)}></script>
+  <article>
+    <header class="method-header shell"><p class="label">{copy.label}</p><h1 class="display">{copy.title}</h1><p class="dek">{copy.dek}</p><p class="byline">Nightmare Mode {german ? "Redaktion" : "editorial desk"} · Matthias Ramahi · 22 August 2026</p></header>
+    <div class="method-body shell">
+      <section class="answer"><h2 class="display">{copy.short}</h2><p>{copy.shortBody}</p></section>
+      <ol class="steps">{copy.steps.map(([title, body], index) => <li><span>{String(index + 1).padStart(2, "0")}</span><div><h2 class="display">{title}</h2><p>{body}</p></div></li>)}</ol>
+      <section class="worksheet"><p class="label">{german ? "Kopierbares Arbeitsblatt" : "Copyable worksheet"}</p><h2 class="display">{german ? "Play-Study-Datensatz" : "Play-study record"}</h2><pre><code>{copy.worksheet}</code></pre></section>
+      <section><h2 class="display">{german ? "Wo die Methode endet" : "Where the method stops"}</h2><p>{copy.limits}</p></section>
+      <section class="sources"><h2 class="display">{german ? "Quellen und Anpassung" : "Sources and adaptation"}</h2><p>{copy.sources}</p><ul><li><a href="https://gamestudies.org/0601/articles/consalvo_dutton" rel="external">Consalvo &amp; Dutton: Game analysis</a></li><li><a href="https://gamestudies.org/2202/articles/gap_daneels_denoo_vandewalle_dupont_malliet" rel="external">Daneels et al.: DiGAP</a></li></ul></section>
+      <a class="next" href={pathFor(locale, "/field-notes/a-dark-room-first-four-minutes/")}>{copy.next} <span aria-hidden="true">→</span></a>
+    </div>
+  </article>
+  <SiteFooter locale={locale} />
+</BaseLayout>
+
+<style>
+  .method-header { padding-block: clamp(3.5rem, 7vw, 6.5rem); border-bottom: 1px solid var(--line); }
+  .label { margin: 0 0 0.8rem; color: var(--signal); font-size: 0.84rem; }
+  h1 { max-width: 13ch; font-size: clamp(3.7rem, 7.2vw, 7.2rem); }
+  .dek { max-width: 52rem; color: var(--ink-soft); font-size: clamp(1.2rem, 2vw, 1.65rem); }
+  .byline { margin-top: 2rem; color: var(--ink-soft); font-size: 0.9rem; }
+  .method-body { max-width: 62rem; padding-block: clamp(4rem, 8vw, 8rem); }
+  .answer { padding: clamp(2rem, 5vw, 4rem); background: var(--paper-soft); }
+  .method-body h2 { margin: 0; font-size: clamp(2.35rem, 4.5vw, 4.4rem); }
+  .method-body p { font-size: clamp(1rem, 1.25vw, 1.14rem); line-height: 1.75; }
+  .steps { margin: 5rem 0 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+  .steps li { display: grid; grid-template-columns: 4rem 1fr; gap: 1.5rem; padding-block: 2.5rem; border-bottom: 1px solid var(--line); }
+  .steps > li > span { color: var(--signal); }
+  .steps h2 { font-size: clamp(2rem, 3.4vw, 3.3rem); }
+  .worksheet, .method-body > section:not(.answer) { margin-top: 5rem; padding-top: 2rem; border-top: 1px solid var(--line); }
+  pre { max-width: 100%; padding: 1.5rem; overflow: auto; background: var(--paper-soft); font-size: 0.82rem; line-height: 1.65; white-space: pre-wrap; }
+  .sources a { text-decoration: underline; text-underline-offset: 0.2em; }
+  .next { display: block; margin-top: 5rem; padding-block: 1.5rem; border-block: 1px solid var(--line); color: var(--signal); }
+  @media (max-width: 560px) { .steps li { grid-template-columns: 2.5rem 1fr; gap: 0.75rem; } }
+</style>

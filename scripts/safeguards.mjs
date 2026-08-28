@@ -58,7 +58,9 @@ if (existsSync(dist)) {
     const excluded = [
       "/404/", "/archive/", "/contact/", "/conversations/", "/datenschutz/",
       "/discovery/how-indie-games-get-discovered-in-2026/", "/history/",
-      "/impressum/", "/ownership/", "/rights-contact/", "/about/new-ownership/",
+      "/impressum/", "/ownership/", "/rights-contact/", "/about/new-ownership/", "/about/site-operations/",
+      "/de/archiv/", "/de/kontakt/", "/de/datenschutz/", "/de/geschichte/", "/de/impressum/",
+      "/de/rechte-und-korrekturen/", "/de/ueber-uns/neue-inhaberschaft/", "/de/ueber-uns/website-betrieb/",
       "/2012/01/metal-gear-solids-postmodern-legacy-part-1-15146/",
       "/2012/03/unmanned-a-talk-with-molleindustria-about-the-politics-of-war-games-16946/",
       "/2012/11/creation-under-capitalism-23422/",
@@ -76,8 +78,16 @@ if (existsSync(dist)) {
     assert(!existsSync(join(dist, "sitemap-index.xml")) && !existsSync(join(dist, "sitemap-0.xml")), "protected build emits no sitemap");
   }
 
-  const forbidden = ["contextter.com", "partner network", "meet the partners", "former newsroom continues"];
+  const forbidden = ["partner network", "meet the partners", "former newsroom continues"];
   for (const phrase of forbidden) assert(!combined.includes(phrase), `built HTML excludes forbidden claim: ${phrase}`);
+
+  for (const path of htmlFiles) {
+    const html = readFileSync(path, "utf8");
+    const contextterLinks = [...html.matchAll(/<a\b[^>]*href="https:\/\/contextter\.com\/"[^>]*>/g)].map((match) => match[0]);
+    assert(contextterLinks.length <= 1, `Contextter disclosure is not repeated on one page: ${relative(dist, path).split(sep).join("/")}`);
+    assert(contextterLinks.every((link) => /rel="[^"]*nofollow[^"]*"/.test(link)), `Contextter disclosure links are nofollow: ${relative(dist, path).split(sep).join("/")}`);
+    if (contextterLinks.length) assert(!/<footer[\s\S]*href="https:\/\/contextter\.com\//.test(html), `Contextter is not linked from the footer: ${relative(dist, path).split(sep).join("/")}`);
+  }
 
   const legacyOutputs = [
     "2012/11/creation-under-capitalism-23422/index.html",
@@ -95,7 +105,7 @@ if (existsSync(dist)) {
   for (const path of htmlFiles) {
     const html = readFileSync(path, "utf8");
     assert(/<link rel="canonical" href="https:\/\/nightmaremode\.net\//.test(html), `canonical present: ${relative(dist, path).split(sep).join("/")}`);
-    const expectedPageType = path === join(dist, "index.html") ? "WebSite" : "WebPage";
+    const expectedPageType = [join(dist, "index.html"), join(dist, "de", "index.html")].includes(path) ? "WebSite" : "WebPage";
     assert(html.includes(`"@type":"${expectedPageType}"`), `base schema type is correct: ${relative(dist, path).split(sep).join("/")}`);
   }
 }
@@ -112,9 +122,9 @@ assert(securityHeaders["content-security-policy"]?.includes("frame-ancestors 'no
 assert(securityHeaders["content-security-policy"]?.includes("object-src 'none'"), "CSP blocks plugins");
 assert(!securityHeaders["content-security-policy"]?.includes("http:"), "CSP does not allow insecure origins");
 
-const protocolSource = readFileSync(join(root, "src", "pages", "field-notes", "play-study-protocol", "index.astro"), "utf8");
-assert(protocolSource.includes("no play session claimed"), "play-study protocol states its experience boundary");
-assert((protocolSource.match(/href: "https:\/\//g) ?? []).length === 3, "play-study protocol cites exactly three public methodology sources");
+const protocolSource = readFileSync(join(root, "src", "components", "ProtocolPage.astro"), "utf8");
+assert(protocolSource.includes("does not replace participant research"), "play-study protocol states its experience boundary");
+assert(protocolSource.includes("gamestudies.org/0601") && protocolSource.includes("gamestudies.org/2202"), "play-study protocol cites public methodology sources");
 assert(protocolSource.includes("Copyable worksheet"), "play-study protocol exposes a reusable proof asset");
 
 const studyRecord = JSON.parse(readFileSync(join(root, "src", "data", "studies", "a-dark-room-session.json"), "utf8"));
@@ -124,9 +134,9 @@ assert(studyRecord.game.sourceCommit === "1fada4620b6c66bd07bf15a3f1eb8223df8bc1
 assert(studyRecord.events.some((event) => event.second === 182 && event.result.includes("investigate and ignore them")), "play-study preserves the first unresolved branch observation");
 assert(studyRecord.production.aiAssistance.includes("No human play experience is claimed"), "play-study discloses automation and rejects a human-experience claim");
 
-const studySource = readFileSync(join(root, "src", "pages", "field-notes", "a-dark-room-first-four-minutes", "index.astro"), "utf8");
+const studySource = readFileSync(join(root, "src", "components", "PlayStudyPage.astro"), "utf8");
 assert(studySource.includes("controlled browser observation"), "play-study states its controlled-observation scope");
-assert(studySource.includes("No former Nightmare Mode text, identity or media was used"), "play-study states its legacy-rights boundary");
+assert(studySource.includes("No human play experience is claimed"), "play-study states its experience boundary");
 assert(!/\b(?:I|we) played\b/i.test(studySource), "play-study does not invent a human play session");
 const manifestSource = readFileSync(join(root, "src", "data", "legacy-url-actions.ts"), "utf8");
 assert((manifestSource.match(/normalizedPath:\s*"\//g) ?? []).length === 6, "six priority legacy URLs have explicit records");

@@ -1,0 +1,123 @@
+---
+import { Image } from "astro:assets";
+import BaseLayout from "@/components/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import { pathFor, type Locale } from "@/i18n";
+import studyImage from "@/assets/nightmare-field-study.png";
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const german = locale === "de";
+
+const sources = [
+  { title: "Survey of the Video Game Reissue Market in the United States, version 1.1", publisher: "Video Game History Foundation and Software Preservation Network", date: "19 July 2023", href: "https://library.gamehistory.org/repositories/2/resources/248" },
+  { title: "Recommended Formats Statement 2025–2026: Software and Video Games", publisher: "Library of Congress", date: "2025", href: "https://www.loc.gov/preservation/resources/rfs/RFS%202025-2026.pdf" },
+  { title: "Introducing the Video Game Source Project", publisher: "Video Game History Foundation", date: "15 October 2020", href: "https://gamehistory.org/source/" },
+] as const;
+
+const copy = german ? {
+  title: "Ein Spiel ist mehr als seine Dateien",
+  description: "Was Spielebewahrung erhalten kann, was sie nicht wiederherstellt und warum Kritik diesen Unterschied benennen muss.",
+  label: "Essay · Bewahrung",
+  dek: "Archive können Code, Medien und Dokumentation sichern. Die Bedingungen, unter denen ein Spiel gespielt, verstanden und verändert wurde, kehren dadurch nicht automatisch zurück.",
+  by: "Nightmare Mode Redaktion", editor: "Matthias Ramahi", published: "22. August 2026", method: "Quellenanalyse; keine Behauptung eigener Spielerfahrung",
+  boundary: "Dieser Essay beruht auf den unten genannten Quellen. Er behauptet nicht, jedes erwähnte Spiel, jeden Build oder jede Institution aus eigener Anschauung zu kennen.",
+  sections: [
+    { title: "Zuerst fehlt oft schon der Zugang", paragraphs: [
+      "Bevor über ein älteres Spiel gestritten werden kann, muss es überhaupt erreichbar sein. Die 2023 veröffentlichte US-Studie der Video Game History Foundation und des Software Preservation Network zog eine Zufallsstichprobe von 1.500 vor 2010 erschienenen Spielen. Zum Stichtag waren 13 Prozent davon noch kommerziell verfügbar; das angegebene 95-Prozent-Konfidenzintervall lag bei plus oder minus 2,5 Prozentpunkten.",
+      "Die Zahl gilt für diese Stichprobe, diesen Markt und den Stichtag 15. April 2023. Sie sagt nicht, dass 87 Prozent aller Spiele verschwunden seien. Private Sammlungen, inoffizielle Kopien und die Qualität späterer Neuauflagen misst sie ebenfalls nicht. Belegt ist etwas Engeres und trotzdem Wichtiges: Der Markt hielt den größten Teil der untersuchten Geschichte nicht im Verkauf.",
+    ]},
+    { title: "Der spielbare Gegenstand besteht aus mehreren Schichten", paragraphs: [
+      "Die Library of Congress behandelt Software und Videospiele als zusammengesetzte Objekte. In ihrer Formatempfehlung nennt sie lesbaren Quellcode, einen Gold-Master-Build, Dokumentation, Metadaten und die technische Umgebung. Bei Konsolenspielen kann dazu die ursprüngliche Plattform oder eine emulierte Variante gehören.",
+      "Ein Build ohne passende Umgebung kann als Datenbestand vollständig und als Spiel unbrauchbar sein. Ein Video zeigt einen Ablauf, aber nicht jede mögliche Verzweigung. Quellcode macht Strukturen sichtbar, ersetzt jedoch nicht die Bedienung. Auch ein Emulator kann für Forschung sehr gut genügen, ohne Latenz, Controller, Netzwerkdienste oder undokumentierte Eigenheiten der Hardware exakt nachzubilden. Diese Differenz ist keine Niederlage der Bewahrung. Sie ist Teil ihrer Dokumentation.",
+    ]},
+    { title: "Zum Spiel gehört eine soziale Überlieferung", paragraphs: [
+      "Manche Verluste stecken in keiner ausführbaren Datei. Matchmaking-Populationen verschwinden, Balance-Patches verändern Strategien, Plattformregeln verschieben den Zugang. Guides, Mods und Gespräche werden gelöscht oder wandern. Ein restaurierter Build kann Mechaniken zurückbringen, während die Kultur, die sie damals deutete, nur bruchstückhaft erhalten ist.",
+      "Kritik sollte deshalb eine heutige Emulationssitzung nicht als direkten Blick in die Vergangenheit behandeln. Sie ist eine neue Begegnung mit einem erhaltenen System – geprägt von heutiger Hardware, heutigem Wissen und dem Material, das überlebt hat. Entscheidend ist, welche Aussage diese konkrete Evidenz trägt.",
+    ]},
+    { title: "Gute Bewahrung macht Kritik genauer", paragraphs: [
+      "Handbuch, Build, Quellarchiv, Videoaufnahme und Erinnerung beantworten unterschiedliche Fragen. Wer sie zusammenwirft, macht aus Verfügbarkeit vorschnell Autorität. Wer sie trennt, kann genauer schreiben: Version und Plattform nennen, Beobachtung von Dokumentation unterscheiden, fehlende Netzwerk- oder Peripheriefunktionen markieren und Rekonstruktionen als Rekonstruktionen bezeichnen.",
+      "Ein Spiel ist mehr als seine Dateien. Gerade deshalb sind die Dateien so wertvoll: Sie lassen sich stabilisieren, beschreiben und vergleichen. Alles Weitere braucht Zeugnisse, Kontext und eine Kritik, die sagt, wo ihr Material endet.",
+    ]},
+  ],
+  sourcesTitle: "Quellen und Hinweise", disclosureTitle: "Produktionshinweis", disclosure: "Quellensuche, Gliederung und Entwurfsarbeit wurden durch OpenAI Codex unterstützt. Matthias Ramahi verantwortet die Redaktion. Der Text wurde für die heutige unabhängige Publikation erstellt und übernimmt keinen früheren Nightmare-Mode-Artikel und keine frühere Autoridentität.", next: "Als Nächstes: Vier Minuten in A Dark Room",
+} : {
+  title: "A game is more than its files",
+  description: "What game preservation can keep, what it cannot reproduce, and why criticism needs to state the difference.",
+  label: "Essay · Preservation",
+  dek: "Archives can keep code, media and documentation. They cannot automatically restore the conditions in which a game was played, understood and changed.",
+  by: "Nightmare Mode editorial desk", editor: "Matthias Ramahi", published: "22 August 2026", method: "Source-led analysis; no first-hand play claim",
+  boundary: "This essay is based on the sources listed below. It does not claim first-hand access to every game, build or institution discussed.",
+  sections: [
+    { title: "Access is often the first thing missing", paragraphs: [
+      "Before anyone can argue about an older game, someone has to be able to encounter it. A 2023 US study by the Video Game History Foundation and Software Preservation Network drew a random sample of 1,500 games released before 2010. At the cutoff date, 13 percent were still commercially available; the reported 95 percent confidence interval was plus or minus 2.5 percentage points.",
+      "That number belongs to this sample, market and date: 15 April 2023. It does not mean that 87 percent of every game ever made has disappeared. It does not measure private collections, unofficial copies or the quality of later reissues. The narrower finding still matters: the commercial market kept most of the sampled history out of release.",
+    ]},
+    { title: "The playable object has several layers", paragraphs: [
+      "The Library of Congress treats software and video games as compound objects. Its format guidance names human-readable source code, a gold-master build, documentation, metadata and the technical environment. A console game may require its original platform or an emulated version of it.",
+      "A build without the right environment can be complete as data and unusable as a game. A recording shows one run, not every possible branch. Source code exposes structures but does not replace operating them through controls. An emulator may support serious research without recreating display latency, controller shape, network services or every undocumented hardware quirk. That difference is not a preservation failure. It is part of the record.",
+    ]},
+    { title: "Games also have a social record", paragraphs: [
+      "Some losses sit outside any executable. Matchmaking populations disappear. Balance patches alter viable strategies. Platform rules change access. Guides, mods and conversations move or are deleted. A restored build can recover mechanics while the culture that once interpreted them survives only in fragments.",
+      "Criticism should therefore not treat a contemporary emulation session as direct access to the past. It is a new encounter with a preserved system, shaped by present hardware, present knowledge and the evidence that survived. The useful question is which claims that particular evidence can carry.",
+    ]},
+    { title: "Good preservation makes criticism more precise", paragraphs: [
+      "A manual, a build, a source repository, a capture and a player's recollection answer different questions. Treating them as interchangeable turns availability into authority. Keeping them separate leads to better sentences: name the version and platform, distinguish observation from documentation, mark missing network or peripheral features, and call a reconstruction a reconstruction.",
+      "A game is more than its files. That is precisely why the files matter: they can be stabilized, described and compared. The rest needs testimony, context and criticism disciplined enough to say where its evidence ends.",
+    ]},
+  ],
+  sourcesTitle: "Sources and notes", disclosureTitle: "Production note", disclosure: "Source discovery, structure and drafting were assisted by OpenAI Codex. Matthias Ramahi is the responsible editor. The essay was written for the current independent publication and does not reuse a former Nightmare Mode article or contributor identity.", next: "Next: Four minutes in A Dark Room",
+};
+
+const canonicalPath = pathFor(locale, "/essays/a-game-is-more-than-its-files/");
+const articleSchema = { "@context": "https://schema.org", "@type": "Article", inLanguage: locale, headline: copy.title, description: copy.description, datePublished: "2026-08-22", dateModified: "2026-08-28", mainEntityOfPage: `https://nightmaremode.net${canonicalPath}`, author: { "@type": "Organization", name: copy.by }, editor: { "@type": "Person", name: "Matthias Ramahi" }, publisher: { "@type": "Organization", name: "Nightmare Mode", url: "https://nightmaremode.net/" } };
+---
+
+<BaseLayout lang={locale} title={copy.title} description={copy.description} ogType="article">
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(articleSchema)}></script>
+  <article class="essay">
+    <header class="essay-header shell">
+      <p class="label">{copy.label}</p><h1 class="display">{copy.title}</h1><p class="dek">{copy.dek}</p>
+      <p class="byline">{german ? "Von" : "By"} {copy.by} <span>·</span> {german ? "Redaktion" : "Editor"}: {copy.editor} <span>·</span> <time datetime="2026-08-22">{copy.published}</time></p>
+    </header>
+    <div class="boundary shell"><strong>{german ? "Evidenzgrenze" : "Evidence boundary"}</strong><p>{copy.boundary}</p></div>
+    <div class="article-grid shell">
+      <div class="body">
+        {copy.sections.map((section, index) => <section><h2 class="display">{section.title}</h2>{index === 1 && <Image src={studyImage} alt="" widths={[480, 760]} sizes="(max-width: 800px) 100vw, 40vw" format="webp" />}{section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}</section>)}
+        <section class="disclosure"><h2 class="display">{copy.disclosureTitle}</h2><p>{copy.disclosure}</p></section>
+        <a class="next" href={pathFor(locale, "/field-notes/a-dark-room-first-four-minutes/")}>{copy.next} <span aria-hidden="true">→</span></a>
+      </div>
+      <aside class="sources" aria-labelledby="sources-title"><h2 id="sources-title" class="display">{copy.sourcesTitle}</h2><ol>{sources.map((source) => <li><a href={source.href} rel="external">{source.title}</a><span>{source.publisher}, {source.date}</span></li>)}</ol><p class="method">{copy.method}</p></aside>
+    </div>
+  </article>
+  <SiteFooter locale={locale} />
+</BaseLayout>
+
+<style>
+  .essay-header { padding-block: clamp(3.5rem, 7vw, 6.5rem); }
+  .label { margin: 0 0 1rem; color: var(--signal); }
+  h1 { max-width: 14ch; font-size: clamp(3.8rem, 7.5vw, 7.5rem); }
+  .dek { max-width: 50rem; margin: 1.5rem 0 0; color: var(--ink-soft); font-size: clamp(1.2rem, 2vw, 1.7rem); line-height: 1.45; }
+  .byline { margin: 2rem 0 0; color: var(--ink-soft); font-size: 0.9rem; }
+  .byline span { margin-inline: 0.55rem; }
+  .boundary { padding-block: 2rem; border-block: 1px solid var(--line); }
+  .boundary strong { color: var(--signal); }
+  .boundary p { max-width: 54rem; margin: 0.5rem 0 0; color: var(--ink-soft); }
+  .article-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(15rem, 0.32fr); gap: clamp(3rem, 8vw, 8rem); padding-block: clamp(4rem, 8vw, 7rem); }
+  .body { max-width: 48rem; }
+  .body section + section { margin-top: 4.5rem; }
+  .body h2 { font-size: clamp(2.4rem, 4vw, 4rem); }
+  .body p { font-size: clamp(1.05rem, 1.25vw, 1.16rem); line-height: 1.78; }
+  .body :global(img) { width: 100%; margin: 1.5rem 0 2rem; }
+  aside { padding-left: clamp(1.5rem, 3vw, 3rem); border-left: 1px solid var(--line); }
+  aside h2 { font-size: 2rem; }
+  aside ol { margin: 1.5rem 0 0; padding-left: 1.25rem; }
+  aside li { padding: 0 0 1.25rem 0.4rem; border-bottom: 1px solid var(--line); }
+  aside li + li { padding-top: 1.25rem; }
+  aside a { text-decoration: underline; text-underline-offset: 0.2em; }
+  aside li span { display: block; margin-top: 0.35rem; color: var(--ink-soft); font-size: 0.85rem; }
+  .method { margin-top: 2rem; color: var(--ink-soft); font-size: 0.86rem; }
+  .disclosure { padding-top: 2rem; border-top: 1px solid var(--line); }
+  .next { display: block; margin-top: 4rem; padding-block: 1.5rem; border-block: 1px solid var(--line); color: var(--signal); font-size: 1.1rem; }
+  @media (max-width: 820px) { .article-grid { grid-template-columns: 1fr; } aside { padding: 2rem 0 0; border-top: 1px solid var(--line); border-left: 0; } }
+</style>

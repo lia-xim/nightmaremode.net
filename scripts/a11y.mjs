@@ -11,6 +11,11 @@ const routes = [
   "/about/new-ownership/",
   "/impressum/",
   "/rights-contact/",
+  "/de/",
+  "/de/essays/ein-spiel-ist-mehr-als-seine-dateien/",
+  "/de/play-studies/a-dark-room-die-ersten-vier-minuten/",
+  "/de/play-studies/protokoll/",
+  "/de/impressum/",
   "/404/",
 ];
 const viewports = [

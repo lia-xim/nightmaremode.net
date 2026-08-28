@@ -1,19 +1,21 @@
 ---
 import BaseLayout from "@/components/BaseLayout.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
+import { type Locale } from "@/i18n";
 
 interface Props {
   title: string;
   description: string;
   eyebrow: string;
   intro: string;
+  locale?: Locale;
 }
 
-const { title, description, eyebrow, intro } = Astro.props;
+const { title, description, eyebrow, intro, locale = "de" } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description} noindex>
-  <article class="legal shell" lang="de">
+<BaseLayout lang={locale} title={title} description={description} noindex>
+  <article class="legal shell" lang={locale}>
     <header>
       <p class="mono signal">{eyebrow}</p>
       <h1 class="display">{title}</h1>
@@ -21,7 +23,7 @@ const { title, description, eyebrow, intro } = Astro.props;
     </header>
     <slot />
   </article>
-  <SiteFooter />
+  <SiteFooter locale={locale} />
 </BaseLayout>
 
 <style>

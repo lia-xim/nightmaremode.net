@@ -1,0 +1,140 @@
+---
+import { Image } from "astro:assets";
+import BaseLayout from "@/components/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import { pathFor, type Locale } from "@/i18n";
+import crossroads from "@/assets/editorial-crossroads.png";
+import fieldStudy from "@/assets/nightmare-field-study.png";
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+
+const copy = locale === "de" ? {
+  title: "Spiele genau lesen.",
+  description: "Essays und dokumentierte Play Studies darüber, wie Spiele funktionieren, was erhalten bleibt und was verloren geht.",
+  primary: "Vier Minuten in A Dark Room lesen",
+  secondary: "So funktionieren unsere Play Studies",
+  latest: "Neueste Play Study · 23. August 2026",
+  studyTitle: "Vier Minuten in A Dark Room",
+  studyText: "Eine kontrollierte Beobachtung: Wie aus einer einzelnen Aktion Feuerpflege, Sammeln und eine Entscheidung werden.",
+  readStudy: "Play Study lesen",
+  essayTitle: "Ein Spiel ist mehr als seine Dateien",
+  essayText: "Was Archive festhalten können – und wo die Überlieferung Lücken behält.",
+  readEssay: "Essay lesen",
+  formatsTitle: "Was wir veröffentlichen",
+  formats: [["01", "Essays", "Argumente auf Grundlage benannter Quellen."], ["02", "Play Studies", "Beobachtungen mit den jeweiligen Testbedingungen."], ["03", "Methoden", "Protokolle, die sich prüfen und wiederverwenden lassen."]],
+  ownershipTitle: "Neue Texte auf einer alten Domain.",
+  ownership: "Nightmare Mode wird seit 2026 unabhängig von Matthias Ramahi betrieben. Das Projekt setzt die frühere Redaktion nicht fort.",
+  ownershipLink: "Zur neuen Inhaberschaft",
+  operationsTitle: "So betreiben wir die Seite.",
+  operations: "Für Recherche, Suchanalyse und den technischen Betrieb nutzen wir Contextter, ein weiteres Projekt von Matthias Ramahi. Das ist keine unabhängige Empfehlung.",
+  contextter: "Mehr über Contextter",
+} : {
+  title: "Read games closely.",
+  description: "Essays and documented play studies about how games work, what they preserve, and what they leave out.",
+  primary: "Read Four minutes in A Dark Room",
+  secondary: "How our play studies work",
+  latest: "Latest play study · 23 August 2026",
+  studyTitle: "Four minutes in A Dark Room",
+  studyText: "A controlled observation of how one action becomes fire maintenance, gathering and a decision.",
+  readStudy: "Read the study",
+  essayTitle: "A game is more than its files",
+  essayText: "What preservation can document — and where the record still has gaps.",
+  readEssay: "Read the essay",
+  formatsTitle: "What we publish",
+  formats: [["01", "Essays", "Arguments built from named sources."], ["02", "Play studies", "Observations with the test conditions attached."], ["03", "Methods", "Protocols you can inspect and reuse."]],
+  ownershipTitle: "New work on an old domain.",
+  ownership: "Nightmare Mode has been independently operated by Matthias Ramahi since 2026. It is not a continuation of the former newsroom.",
+  ownershipLink: "Read the ownership note",
+  operationsTitle: "How the site is run.",
+  operations: "We use Contextter, another project operated by Matthias Ramahi, for research, search analysis and site operations. This is not an independent recommendation.",
+  contextter: "About Contextter",
+};
+---
+
+<BaseLayout lang={locale} title={copy.title} description={copy.description}>
+  <section class="hero shell" aria-labelledby="hero-title">
+    <div class="hero__copy">
+      <h1 id="hero-title" class="display">{copy.title}</h1>
+      <p>{copy.description}</p>
+      <div class="links">
+        <a class="action" href={pathFor(locale, "/field-notes/a-dark-room-first-four-minutes/")}>{copy.primary} <span aria-hidden="true">→</span></a>
+        <a class="action quiet" href={pathFor(locale, "/field-notes/play-study-protocol/")}>{copy.secondary}</a>
+      </div>
+    </div>
+    <figure>
+      <Image src={crossroads} alt={locale === "de" ? "Monochrome Illustration einer Figur zwischen sich kreuzenden Wegen" : "Monochrome illustration of a figure among intersecting paths"} widths={[720, 1080, 1440]} sizes="(max-width: 760px) 100vw, 50vw" format="webp" loading="eager" fetchpriority="high" />
+    </figure>
+  </section>
+
+  <section class="work shell" aria-label={locale === "de" ? "Aktuelle Texte" : "Current work"}>
+    <article class="feature feature--wide">
+      <Image src={fieldStudy} alt="" widths={[360, 620]} sizes="(max-width: 760px) 35vw, 18vw" format="webp" />
+      <div><p class="meta">{copy.latest}</p><h2 class="display"><em>{copy.studyTitle}</em></h2><p>{copy.studyText}</p><a class="action" href={pathFor(locale, "/field-notes/a-dark-room-first-four-minutes/")}>{copy.readStudy} <span aria-hidden="true">→</span></a></div>
+    </article>
+    <article class="feature"><div><p class="meta">Essay · Preservation</p><h2 class="display">{copy.essayTitle}</h2><p>{copy.essayText}</p><a class="action" href={pathFor(locale, "/essays/a-game-is-more-than-its-files/")}>{copy.readEssay} <span aria-hidden="true">→</span></a></div></article>
+  </section>
+
+  <section class="formats shell" aria-labelledby="formats-title">
+    <h2 id="formats-title" class="display">{copy.formatsTitle}</h2>
+    <ol>{copy.formats.map(([number, name, description]) => <li><span>{number}</span><strong class="display">{name}</strong><p>{description}</p></li>)}</ol>
+  </section>
+
+  <section class="disclosures shell">
+    <article><h2 class="display">{copy.ownershipTitle}</h2><p>{copy.ownership}</p><a class="action" href={pathFor(locale, "/about/new-ownership/")}>{copy.ownershipLink} <span aria-hidden="true">→</span></a></article>
+    <article><h2 class="display">{copy.operationsTitle}</h2><p>{copy.operations}</p><a class="action" href="https://contextter.com/" rel="external nofollow">{copy.contextter} <span aria-hidden="true">↗</span></a></article>
+  </section>
+
+  <SiteFooter locale={locale} />
+</BaseLayout>
+
+<style>
+  .hero { display: grid; grid-template-columns: 1fr 1fr; min-height: min(38rem, calc(100svh - 4.75rem)); border-bottom: 1px solid var(--line); }
+  .hero__copy { display: flex; flex-direction: column; justify-content: center; padding: clamp(3.5rem, 7vw, 6.5rem) clamp(2rem, 5vw, 5rem) clamp(3.5rem, 7vw, 6.5rem) 0; }
+  .hero h1 { max-width: 8ch; font-size: clamp(4.25rem, 7vw, 7.5rem); }
+  .hero__copy > p { max-width: 34rem; margin: 1.75rem 0 0; color: var(--ink-soft); font-size: clamp(1.05rem, 1.45vw, 1.25rem); }
+  .links { display: flex; flex-direction: column; align-items: flex-start; gap: 0.9rem; margin-top: 2rem; }
+  .quiet { color: var(--ink-soft); }
+  figure { min-width: 0; margin: 0; border-left: 1px solid var(--line); overflow: hidden; }
+  figure :global(picture), figure :global(img) { width: 100%; height: 100%; }
+  figure :global(img) { object-fit: cover; }
+  .work { display: grid; grid-template-columns: 1.25fr 0.75fr; border-bottom: 1px solid var(--line); }
+  .feature { min-width: 0; padding: clamp(2rem, 4vw, 4rem); border-left: 1px solid var(--line); }
+  .feature:first-child { padding-left: 0; border-left: 0; }
+  .feature--wide { display: grid; grid-template-columns: minmax(10rem, 0.42fr) 1fr; gap: clamp(1.5rem, 3vw, 3rem); }
+  .feature img { width: 100%; height: 100%; object-fit: cover; }
+  .feature .meta { margin: 0 0 0.8rem; color: var(--signal); font-size: 0.82rem; }
+  .feature h2 { margin: 0; font-size: clamp(2rem, 3.4vw, 3.5rem); }
+  .feature p:not(.meta) { max-width: 36rem; color: var(--ink-soft); }
+  .feature .action { margin-top: 0.65rem; }
+  .formats { display: grid; grid-template-columns: 0.42fr 1fr; gap: clamp(3rem, 7vw, 8rem); padding-block: clamp(3.25rem, 6vw, 6rem); border-bottom: 1px solid var(--line); }
+  .formats > h2 { font-size: clamp(2.5rem, 4vw, 4rem); }
+  .formats ol { display: grid; grid-template-columns: repeat(3, 1fr); margin: 0; padding: 0; list-style: none; }
+  .formats li { padding: 0 clamp(1.25rem, 3vw, 2.5rem); border-left: 1px solid var(--line); }
+  .formats li:first-child { padding-left: 0; border-left: 0; }
+  .formats li > span { color: var(--signal); font-size: 0.78rem; }
+  .formats strong { display: block; margin-top: 0.35rem; font-size: 1.65rem; font-weight: 500; }
+  .formats p { margin: 0.45rem 0 0; color: var(--ink-soft); font-size: 0.92rem; }
+  .disclosures { display: grid; grid-template-columns: 1fr 1fr; padding-block: clamp(3.25rem, 6vw, 6rem); }
+  .disclosures article { padding-right: clamp(2rem, 5vw, 5rem); }
+  .disclosures article + article { padding-left: clamp(2rem, 5vw, 5rem); border-left: 1px solid var(--line); }
+  .disclosures h2 { margin: 0; font-size: clamp(2.2rem, 3.7vw, 3.6rem); }
+  .disclosures p { max-width: 38rem; color: var(--ink-soft); }
+  .disclosures .action { margin-top: 0.6rem; }
+  @media (max-width: 840px) {
+    .hero, .work, .formats, .disclosures { grid-template-columns: 1fr; }
+    .hero { min-height: auto; }
+    .hero__copy { padding: 4.5rem 0 3.5rem; }
+    figure { min-height: 24rem; border-top: 1px solid var(--line); border-left: 0; }
+    .feature { padding-inline: 0; border-top: 1px solid var(--line); border-left: 0; }
+    .formats ol { grid-template-columns: 1fr; }
+    .formats li { padding: 1.25rem 0; border-top: 1px solid var(--line); border-left: 0; }
+    .disclosures article { padding: 0 0 3rem; }
+    .disclosures article + article { padding: 3rem 0 0; border-top: 1px solid var(--line); border-left: 0; }
+  }
+  @media (max-width: 560px) {
+    .hero h1 { font-size: clamp(3.7rem, 17vw, 5rem); }
+    .feature--wide { grid-template-columns: 1fr; }
+    .feature--wide :global(img) { aspect-ratio: 16 / 9; }
+  }
+</style>

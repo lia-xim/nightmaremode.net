@@ -1,0 +1,150 @@
+---
+import BaseLayout from "@/components/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import { pathFor, type Locale } from "@/i18n";
+
+type PageKey = "about" | "editorial" | "essays" | "studies" | "ownership" | "operations" | "rights" | "history" | "archive" | "contact";
+interface Props { locale: Locale; page: PageKey }
+const { locale, page } = Astro.props;
+
+type Section = { title: string; body: string; href?: string; link?: string; external?: boolean };
+type PageCopy = { label: string; title: string; intro: string; sections: Section[] };
+
+const en: Record<PageKey, PageCopy> = {
+  about: { label: "About", title: "Nightmare Mode publishes criticism with the working notes attached.", intro: "We write about games as software, designed systems and cultural records. Claims should show what they rest on.", sections: [
+    { title: "What appears here", body: "Source-led essays, controlled play studies and reusable methods. We publish one substantive piece a month rather than pretending to run a daily news desk.", href: "/essays/", link: "Browse the essays" },
+    { title: "Who is responsible", body: "Matthias Ramahi operates the site and is the responsible editor. Research assistance and automated observations are named beside the work; they are not presented as personal play experience.", href: "/editorial-policy/", link: "Read the editorial policy" },
+    { title: "Where the domain fits", body: "The domain changed hands in 2026. The current project did not acquire the former newsroom, its articles, contributors or endorsements.", href: "/about/new-ownership/", link: "Read the ownership note" },
+    { title: "Site operations", body: "Contextter supports parts of our research and search workflow. Both projects have the same operator, so this is an operating disclosure, not an independent recommendation.", href: "/about/site-operations/", link: "See the operating record" },
+  ]},
+  editorial: { label: "Editorial policy", title: "What a published claim must show.", intro: "These rules apply to every new Nightmare Mode article, play study and correction.", sections: [
+    { title: "Name the work", body: "Every piece names its author or production desk, responsible editor, publication date and relevant conflicts." },
+    { title: "Separate the evidence", body: "Direct observation, external sources, interpretation and unknowns are kept distinct. A source-led essay does not imply personal play." },
+    { title: "State AI use", body: "Research, drafting or automated browser work assisted by AI is disclosed in the article. An automated run is described as an automated run." },
+    { title: "Correct the record", body: "Substantive corrections stay with the article. Rights, attribution and factual concerns can be sent directly to the operator.", href: "/rights-contact/", link: "Rights and corrections" },
+    { title: "Publish at a sustainable pace", body: "The target is one substantive original release per month. If two releases are missed, publication pauses until responsibility and capacity are clear." },
+  ]},
+  essays: { label: "Essays", title: "Arguments built from named sources.", intro: "The essays connect games to preservation, systems and culture without borrowing the former publication's text or authority.", sections: [
+    { title: "A game is more than its files", body: "What game preservation can keep, what it cannot reproduce, and why criticism needs to state the difference.", href: "/essays/a-game-is-more-than-its-files/", link: "Read the essay" },
+    { title: "What comes next", body: "New essays appear only when the sources, author, editor and evidence boundary are ready. There is no filler schedule." },
+  ]},
+  studies: { label: "Play studies", title: "Observations with the conditions attached.", intro: "A play study records the tested build, session rules, events and limits before it turns them into an argument.", sections: [
+    { title: "Four minutes in A Dark Room", body: "A controlled browser observation of how the opening interface grows from one action into maintenance, gathering and a decision.", href: "/field-notes/a-dark-room-first-four-minutes/", link: "Read the study" },
+    { title: "Play-study protocol", body: "A worksheet for recording conditions, timed events, interpretations, counterexamples and unknowns.", href: "/field-notes/play-study-protocol/", link: "Use the protocol" },
+    { title: "Evidence boundary", body: "The first study is an automated controlled run. It supports interface observations, not a claim about a human player's feelings or a representative audience." },
+  ]},
+  ownership: { label: "New ownership", title: "The domain has a past. This publication is separate.", intro: "Nightmare Mode began its current operation in 2026 after the domain was legally acquired by a new owner.", sections: [
+    { title: "What changed", body: "Matthias Ramahi became the domain operator and started a new independent games-and-culture publication." },
+    { title: "What did not transfer", body: "Domain ownership did not transfer the former company, newsroom, article bodies, logos, contributor identities, contracts or endorsements." },
+    { title: "How old URLs are handled", body: "Reviewed historical URLs may retain a limited bibliographic record. Missing or rights-unclear work is not copied and is not redirected to unrelated new content.", href: "/archive/", link: "Open the archive ledger" },
+  ]},
+  operations: { label: "Operating record", title: "How Contextter is used on Nightmare Mode.", intro: "This is a same-owner project note, not a customer testimonial and not evidence of SEO growth.", sections: [
+    { title: "Work performed", body: "Contextter is used to organize search questions, page roles, internal-link decisions and technical checks. The rebuild also records legacy URL decisions and keeps the site behind an indexing gate while Search Console checks remain incomplete." },
+    { title: "What can be inspected", body: "The live site exposes its language URLs, canonicals, ownership boundary, source notes and editorial methods. Technical build and deployment checks are kept in the project repository." },
+    { title: "What is not proven", body: "Nightmare Mode is currently noindex. Search Console manual actions, security issues, removals and crawl state have not been authenticated in this project. There are therefore no ranking, traffic or growth results to claim." },
+    { title: "Shared ownership", body: "Nightmare Mode and Contextter are operated by Matthias Ramahi. The link below identifies the tool involved; it is not an independent recommendation.", href: "https://contextter.com/", link: "Visit Contextter", external: true },
+  ]},
+  rights: { label: "Rights and corrections", title: "A direct route for factual, attribution and rights concerns.", intro: "The current operator can correct new work and review claims concerning historical URLs.", sections: [
+    { title: "What to include", body: "Send the URL, your relationship to the material, the requested correction or restriction, and any evidence that helps verify it." },
+    { title: "Contact", body: "Email info@matthiasramahi.de with the subject “Nightmare Mode rights or correction”.", href: "mailto:info@matthiasramahi.de?subject=Nightmare%20Mode%20rights%20or%20correction", link: "Email the operator", external: true },
+    { title: "Scope", body: "A correction route is not a claim that the current operator owns or controls former contributors' work. Requests are reviewed against the evidence and applicable rights." },
+  ]},
+  history: { label: "History", title: "A limited record of the domain, not a borrowed identity.", intro: "The site acknowledges that Nightmare Mode existed before 2026 while keeping the current publication's authorship and rights separate.", sections: [
+    { title: "Then", body: "Historical page titles and URLs may be recorded as bibliographic facts when reliable evidence exists. Article bodies, comments, imagery and author identities are not republished without rights." },
+    { title: "Now", body: "The current publication produces new essays, play studies and methods under named responsibility." },
+    { title: "Questions", body: "Former contributors and rights holders can ask for correction, attribution or removal review.", href: "/rights-contact/", link: "Contact the current operator" },
+  ]},
+  archive: { label: "Archive ledger", title: "The archive records decisions, not old inventory.", intro: "Historical URLs are reviewed individually. A past URL is not automatically a page we can or should restore.", sections: [
+    { title: "Bibliographic record", body: "A limited record may name the historical title, date and URL without copying the article body or implying current ownership." },
+    { title: "404 or 410", body: "Unknown, spammed or rights-unclear paths remain genuinely unavailable. They are not sent to the homepage for the sake of link equity." },
+    { title: "New publication", body: "New articles have their own URLs and stand on their own evidence. They do not impersonate a historical continuation.", href: "/about/new-ownership/", link: "Read the ownership boundary" },
+  ]},
+  contact: { label: "Contact", title: "Contact the person responsible for the record.", intro: "Nightmare Mode does not currently accept unsolicited pitches or operate a newsletter.", sections: [
+    { title: "Rights and corrections", body: "Use the dedicated route for factual corrections, attribution questions and rights concerns.", href: "/rights-contact/", link: "Open the contact route" },
+    { title: "General enquiries", body: "Email info@matthiasramahi.de. Do not send confidential game builds or personal data without arranging a secure route first.", href: "mailto:info@matthiasramahi.de?subject=Nightmare%20Mode", link: "Email Nightmare Mode", external: true },
+  ]},
+};
+
+const de: Record<PageKey, PageCopy> = {
+  about: { label: "Über uns", title: "Nightmare Mode veröffentlicht Kritik mit offengelegten Arbeitsgrundlagen.", intro: "Wir behandeln Spiele als Software, gestaltete Systeme und kulturelle Zeugnisse. Aussagen sollen erkennen lassen, worauf sie beruhen.", sections: [
+    { title: "Was hier erscheint", body: "Quellenbasierte Essays, kontrollierte Play Studies und wiederverwendbare Methoden. Wir veröffentlichen einen substanziellen Beitrag pro Monat, statt eine tägliche Redaktion vorzutäuschen.", href: "/essays/", link: "Zu den Essays" },
+    { title: "Wer verantwortlich ist", body: "Matthias Ramahi betreibt die Seite und ist redaktionell verantwortlich. Recherchehilfe und automatisierte Beobachtungen werden am Beitrag genannt; sie werden nicht als persönliche Spielerfahrung ausgegeben.", href: "/editorial-policy/", link: "Redaktionsregeln lesen" },
+    { title: "Wie die Domain einzuordnen ist", body: "Die Domain wechselte 2026 den Inhaber. Das heutige Projekt hat weder die frühere Redaktion noch deren Texte, Mitwirkende oder Empfehlungen übernommen.", href: "/about/new-ownership/", link: "Hinweis zur Inhaberschaft" },
+    { title: "Website-Betrieb", body: "Contextter unterstützt Teile unserer Recherche- und Sucharbeit. Beide Projekte haben denselben Betreiber. Das ist eine Offenlegung, keine unabhängige Empfehlung.", href: "/about/site-operations/", link: "Betriebsnotiz lesen" },
+  ]},
+  editorial: { label: "Redaktionsregeln", title: "Was eine veröffentlichte Aussage zeigen muss.", intro: "Diese Regeln gelten für jeden neuen Text, jede Play Study und jede Korrektur auf Nightmare Mode.", sections: [
+    { title: "Verantwortung nennen", body: "Jeder Beitrag nennt Autor oder Produktionsdesk, redaktionell Verantwortlichen, Veröffentlichungsdatum und relevante Interessenkonflikte." },
+    { title: "Evidenz trennen", body: "Direkte Beobachtung, externe Quelle, Interpretation und Unbekanntes bleiben unterscheidbar. Ein quellenbasierter Essay behauptet keine persönliche Spielerfahrung." },
+    { title: "KI-Einsatz offenlegen", body: "KI-Hilfe bei Recherche, Entwurf oder automatisierter Browserarbeit wird am Beitrag benannt. Ein automatisierter Lauf wird als solcher beschrieben." },
+    { title: "Fehler korrigieren", body: "Substanzielle Korrekturen bleiben beim Beitrag dokumentiert. Rechte-, Zuordnungs- und Faktenfragen gehen direkt an den Betreiber.", href: "/rights-contact/", link: "Rechte und Korrekturen" },
+    { title: "Tragfähig veröffentlichen", body: "Ziel ist ein substanzieller Originalbeitrag pro Monat. Nach zwei ausgefallenen Veröffentlichungen pausiert das Projekt, bis Verantwortung und Kapazität geklärt sind." },
+  ]},
+  essays: { label: "Essays", title: "Argumente auf Grundlage benannter Quellen.", intro: "Die Essays verbinden Spiele mit Bewahrung, Systemen und Kultur, ohne Texte oder Autorität der früheren Publikation zu übernehmen.", sections: [
+    { title: "Ein Spiel ist mehr als seine Dateien", body: "Was Spielebewahrung erhalten kann, was sie nicht wiederherstellt und warum Kritik diesen Unterschied benennen muss.", href: "/essays/a-game-is-more-than-its-files/", link: "Essay lesen" },
+    { title: "Was als Nächstes kommt", body: "Neue Essays erscheinen erst, wenn Quellen, Autor, Redaktion und Evidenzgrenze geklärt sind. Es gibt keinen Füllplan." },
+  ]},
+  studies: { label: "Play Studies", title: "Beobachtungen mit den jeweiligen Bedingungen.", intro: "Eine Play Study hält Build, Sitzungsregeln, Ereignisse und Grenzen fest, bevor daraus ein Argument wird.", sections: [
+    { title: "Vier Minuten in A Dark Room", body: "Eine kontrollierte Browserbeobachtung: Wie die Oberfläche von einer Aktion zu Feuerpflege, Sammeln und einer Entscheidung wächst.", href: "/field-notes/a-dark-room-first-four-minutes/", link: "Play Study lesen" },
+    { title: "Play-Study-Protokoll", body: "Ein Arbeitsblatt für Bedingungen, Zeitprotokoll, Interpretation, Gegenbeispiele und Unbekanntes.", href: "/field-notes/play-study-protocol/", link: "Protokoll verwenden" },
+    { title: "Evidenzgrenze", body: "Die erste Studie ist ein automatisierter kontrollierter Lauf. Sie belegt Beobachtungen an der Oberfläche, nicht das Erleben eines Menschen oder einer repräsentativen Gruppe." },
+  ]},
+  ownership: { label: "Neue Inhaberschaft", title: "Die Domain hat eine Vergangenheit. Diese Publikation ist davon getrennt.", intro: "Der heutige Betrieb begann 2026, nachdem die Domain rechtmäßig von einem neuen Inhaber erworben wurde.", sections: [
+    { title: "Was sich geändert hat", body: "Matthias Ramahi übernahm den Betrieb der Domain und gründete eine neue unabhängige Games- und Kulturpublikation." },
+    { title: "Was nicht überging", body: "Mit der Domain gingen weder das frühere Unternehmen noch Redaktion, Artikeltexte, Logos, Autoridentitäten, Verträge oder Empfehlungen über." },
+    { title: "Umgang mit alten URLs", body: "Geprüfte historische URLs können einen knappen bibliografischen Datensatz behalten. Fehlende oder rechtlich unklare Inhalte werden nicht kopiert und nicht auf unpassende neue Seiten umgeleitet.", href: "/archive/", link: "Archiv-Ledger öffnen" },
+  ]},
+  operations: { label: "Betriebsnotiz", title: "Wie Contextter für Nightmare Mode eingesetzt wird.", intro: "Dies ist eine Fallnotiz zweier Projekte desselben Betreibers – kein Kunden-Testimonial und kein Beleg für SEO-Wachstum.", sections: [
+    { title: "Ausgeführte Arbeit", body: "Contextter wird genutzt, um Suchfragen, Seitenaufgaben, interne Links und technische Prüfungen zu ordnen. Der Neuaufbau dokumentiert außerdem Legacy-URL-Entscheidungen und hält die Seite hinter einem Indexierungs-Gate, solange Search-Console-Prüfungen fehlen." },
+    { title: "Was überprüfbar ist", body: "Die Live-Seite zeigt Sprach-URLs, Canonicals, die neue Inhaberschaft, Quellenhinweise und redaktionelle Methoden. Technische Build- und Deployment-Prüfungen liegen im Projekt-Repository." },
+    { title: "Was nicht belegt ist", body: "Nightmare Mode steht derzeit auf noindex. Manuelle Maßnahmen, Sicherheitsprobleme, Entfernungen und Crawl-Zustand wurden in diesem Projekt nicht authentifiziert geprüft. Rankings, Traffic oder Wachstum werden deshalb nicht behauptet." },
+    { title: "Gemeinsamer Betreiber", body: "Nightmare Mode und Contextter werden von Matthias Ramahi betrieben. Der folgende Link benennt das eingesetzte Werkzeug; er ist keine unabhängige Empfehlung.", href: "https://contextter.com/", link: "Contextter besuchen", external: true },
+  ]},
+  rights: { label: "Rechte und Korrekturen", title: "Ein direkter Weg für Fakten-, Zuordnungs- und Rechtefragen.", intro: "Der heutige Betreiber kann neue Beiträge korrigieren und Hinweise zu historischen URLs prüfen.", sections: [
+    { title: "Was in die Nachricht gehört", body: "Nennen Sie die URL, Ihre Beziehung zum Material, die gewünschte Korrektur oder Einschränkung und geeignete Nachweise." },
+    { title: "Kontakt", body: "Schreiben Sie an info@matthiasramahi.de mit dem Betreff „Nightmare Mode Rechte oder Korrektur“.", href: "mailto:info@matthiasramahi.de?subject=Nightmare%20Mode%20Rechte%20oder%20Korrektur", link: "Betreiber anschreiben", external: true },
+    { title: "Grenze", body: "Der Korrekturweg behauptet nicht, dass der heutige Betreiber frühere Arbeiten kontrolliert oder besitzt. Anfragen werden anhand der Nachweise und der geltenden Rechte geprüft." },
+  ]},
+  history: { label: "Geschichte", title: "Ein begrenzter Domain-Nachweis, keine geliehene Identität.", intro: "Die Seite erkennt an, dass Nightmare Mode vor 2026 existierte, trennt aber Urheberschaft und Rechte der heutigen Publikation davon.", sections: [
+    { title: "Damals", body: "Historische Titel und URLs können als bibliografische Fakten erfasst werden, wenn belastbare Belege vorliegen. Artikeltexte, Kommentare, Bilder und Autoridentitäten werden ohne Rechte nicht erneut veröffentlicht." },
+    { title: "Heute", body: "Die heutige Publikation erstellt neue Essays, Play Studies und Methoden unter namentlicher Verantwortung." },
+    { title: "Fragen", body: "Frühere Mitwirkende und Rechteinhaber können eine Prüfung von Korrektur, Zuordnung oder Entfernung anfragen.", href: "/rights-contact/", link: "Heutigen Betreiber kontaktieren" },
+  ]},
+  archive: { label: "Archiv-Ledger", title: "Das Archiv dokumentiert Entscheidungen, nicht alten Bestand.", intro: "Historische URLs werden einzeln geprüft. Eine frühere URL ist nicht automatisch eine Seite, die wir wiederherstellen dürfen oder sollten.", sections: [
+    { title: "Bibliografischer Datensatz", body: "Ein begrenzter Eintrag kann historischen Titel, Datum und URL nennen, ohne den Artikeltext zu kopieren oder heutiges Eigentum zu behaupten." },
+    { title: "404 oder 410", body: "Unbekannte, gespammte oder rechtlich unklare Pfade bleiben tatsächlich nicht verfügbar. Sie werden nicht wegen vermeintlicher Linkkraft auf die Startseite geschickt." },
+    { title: "Neue Publikation", body: "Neue Beiträge haben eigene URLs und eigene Belege. Sie geben sich nicht als historische Fortsetzung aus.", href: "/about/new-ownership/", link: "Abgrenzung lesen" },
+  ]},
+  contact: { label: "Kontakt", title: "Kontakt zur verantwortlichen Person.", intro: "Nightmare Mode nimmt derzeit keine unverlangten Pitches an und betreibt keinen Newsletter.", sections: [
+    { title: "Rechte und Korrekturen", body: "Für Faktenkorrekturen, Zuordnungsfragen und Rechtehinweise gibt es einen eigenen Weg.", href: "/rights-contact/", link: "Kontaktweg öffnen" },
+    { title: "Allgemeine Anfragen", body: "Schreiben Sie an info@matthiasramahi.de. Senden Sie keine vertraulichen Builds oder personenbezogenen Daten, bevor ein sicherer Übertragungsweg vereinbart wurde.", href: "mailto:info@matthiasramahi.de?subject=Nightmare%20Mode", link: "Nightmare Mode anschreiben", external: true },
+  ]},
+};
+
+const copy = (locale === "de" ? de : en)[page];
+const localHref = (section: Section) => section.href && !section.external ? pathFor(locale, section.href) : section.href;
+---
+
+<BaseLayout lang={locale} title={copy.title} description={copy.intro} noindex={!["about", "editorial", "essays", "studies"].includes(page)}>
+  <header class="info-header shell">
+    <p class="meta">{copy.label}</p>
+    <h1 class="display">{copy.title}</h1>
+    <p>{copy.intro}</p>
+  </header>
+  <div class="info-sections shell">
+    {copy.sections.map((section) => <section><h2 class="display">{section.title}</h2><div><p>{section.body}</p>{section.href && <a class="action" href={localHref(section)} rel={section.external ? "external nofollow" : undefined}>{section.link} <span aria-hidden="true">{section.external ? "↗" : "→"}</span></a>}</div></section>)}
+  </div>
+  <SiteFooter locale={locale} />
+</BaseLayout>
+
+<style>
+  .info-header { padding-block: clamp(4rem, 8vw, 7.5rem); border-bottom: 1px solid var(--line); }
+  .meta { margin: 0 0 1rem; color: var(--signal); font-size: 0.82rem; }
+  .info-header h1 { max-width: 14ch; font-size: clamp(3.6rem, 7vw, 7rem); }
+  .info-header > p:last-child { max-width: 48rem; margin: 1.5rem 0 0; color: var(--ink-soft); font-size: clamp(1.1rem, 1.8vw, 1.45rem); }
+  .info-sections { padding-bottom: clamp(4rem, 8vw, 8rem); }
+  section { display: grid; grid-template-columns: minmax(15rem, 0.42fr) 1fr; gap: clamp(2rem, 7vw, 8rem); padding-block: clamp(2.5rem, 5vw, 4.5rem); border-bottom: 1px solid var(--line); }
+  section h2 { margin: 0; font-size: clamp(2.15rem, 3.8vw, 3.8rem); }
+  section p { max-width: 48rem; margin: 0; color: var(--ink-soft); font-size: clamp(1rem, 1.25vw, 1.14rem); }
+  section .action { margin-top: 1.4rem; }
+  @media (max-width: 720px) { section { grid-template-columns: 1fr; gap: 1rem; } }
+</style>
