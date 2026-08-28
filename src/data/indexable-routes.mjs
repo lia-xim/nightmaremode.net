@@ -1,5 +1,6 @@
 export const pageRegistry = Object.freeze([
-  { route: "/", indexable: true, cluster: "publication", action: "strengthen", primaryJob: "Understand what Nightmare Mode publishes and reach the latest original work." },
+  { route: "/", indexable: true, cluster: "domain-rebuild", action: "strengthen", primaryJob: "Understand the open expired-domain rebuild and reach its case study and original proof." },
+  { route: "/case-study/rebuilding-nightmare-mode/", indexable: true, cluster: "domain-rebuild", action: "create", primaryJob: "Inspect the decisions, evidence, failures and reusable safeguards behind the Nightmare Mode rebuild." },
   { route: "/about/", indexable: true, cluster: "governance", action: "keep", primaryJob: "Verify the publication purpose, operator, cadence and independence boundary." },
   { route: "/editorial-policy/", indexable: true, cluster: "governance", action: "keep", primaryJob: "Understand the editorial, evidence, AI-use and correction rules behind published work." },
   { route: "/essays/", indexable: true, cluster: "essays", action: "strengthen", primaryJob: "Browse substantive source-led arguments published by the current operation." },
@@ -7,7 +8,8 @@ export const pageRegistry = Object.freeze([
   { route: "/field-notes/", indexable: true, cluster: "play-studies", action: "strengthen", primaryJob: "Find documented play-study methods and observation-led field notes." },
   { route: "/field-notes/a-dark-room-first-four-minutes/", indexable: true, cluster: "play-studies", action: "create", primaryJob: "Inspect a timed controlled study of how A Dark Room reveals its opening actions and uncertainty." },
   { route: "/field-notes/play-study-protocol/", indexable: true, cluster: "play-studies", action: "create", primaryJob: "Use a reproducible worksheet to separate gameplay observation, inference and evidence limits." },
-  { route: "/de/", indexable: true, cluster: "publication", action: "strengthen", primaryJob: "Verstehen, was Nightmare Mode veröffentlicht, und die neuesten Originalbeiträge erreichen." },
+  { route: "/de/", indexable: true, cluster: "domain-rebuild", action: "strengthen", primaryJob: "Den offenen Neuaufbau der Altdomain verstehen und Fallstudie sowie Originalbelege erreichen." },
+  { route: "/de/fallstudie/nightmare-mode-neuaufbau/", indexable: true, cluster: "domain-rebuild", action: "create", primaryJob: "Entscheidungen, Belege, Fehler und wiederverwendbare Schutzmaßnahmen des Neuaufbaus prüfen." },
   { route: "/de/ueber-uns/", indexable: true, cluster: "governance", action: "keep", primaryJob: "Zweck, Betreiber, Rhythmus und historische Abgrenzung der Publikation prüfen." },
   { route: "/de/redaktionsregeln/", indexable: true, cluster: "governance", action: "keep", primaryJob: "Redaktions-, Evidenz-, KI- und Korrekturregeln der Publikation verstehen." },
   { route: "/de/essays/", indexable: true, cluster: "essays", action: "strengthen", primaryJob: "Neue quellenbasierte Essays des heutigen Betriebs finden." },

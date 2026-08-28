@@ -5,6 +5,7 @@ const englishToGerman = new Map<string, string>([
   ["/about/", "/de/ueber-uns/"],
   ["/about/new-ownership/", "/de/ueber-uns/neue-inhaberschaft/"],
   ["/about/site-operations/", "/de/ueber-uns/website-betrieb/"],
+  ["/case-study/rebuilding-nightmare-mode/", "/de/fallstudie/nightmare-mode-neuaufbau/"],
   ["/archive/", "/de/archiv/"],
   ["/contact/", "/de/kontakt/"],
   ["/datenschutz/", "/de/datenschutz/"],
@@ -40,25 +41,27 @@ export function pathFor(locale: Locale, englishPath: string): string {
 
 export const navigation = {
   en: [
+    { label: "Case study", href: "/case-study/rebuilding-nightmare-mode/" },
     { label: "Essays", href: "/essays/" },
     { label: "Play studies", href: "/field-notes/" },
-    { label: "About", href: "/about/" },
   ],
   de: [
+    { label: "Fallstudie", href: "/de/fallstudie/nightmare-mode-neuaufbau/" },
     { label: "Essays", href: "/de/essays/" },
     { label: "Play Studies", href: "/de/play-studies/" },
-    { label: "Über uns", href: "/de/ueber-uns/" },
   ],
 } as const;
 
 export const footerNavigation = {
   en: [
+    ["About", "/about/"],
     ["Editorial policy", "/editorial-policy/"],
     ["Rights & corrections", "/rights-contact/"],
     ["Imprint", "/impressum/"],
     ["Privacy", "/datenschutz/"],
   ],
   de: [
+    ["Über uns", "/de/ueber-uns/"],
     ["Redaktionsregeln", "/de/redaktionsregeln/"],
     ["Rechte & Korrekturen", "/de/rechte-und-korrekturen/"],
     ["Impressum", "/de/impressum/"],

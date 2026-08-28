@@ -2,13 +2,14 @@
 
 ## Purpose
 
-Nightmare Mode is a new, independent publication for games and interactive culture. Its value comes from original essays, documented play studies, present-day conversations, and transparent methods—not from inherited rankings, former identities, or a portfolio link.
+Nightmare Mode is an open, bilingual case study of rebuilding an acquired former editorial domain without borrowing its former identity or pretending that domain history is authority. A small independent games-and-culture publication is the live test surface: original essays and documented play studies prove whether the rebuild can create something useful of its own.
 
 ## Audience
 
 - Readers of serious games criticism
 - Indie-game and game-design communities
 - Researchers of interactive narrative, audiovisual form, labor, platforms, and digital culture
+- Domain owners, editors and SEO practitioners who need an inspectable, rights-safe rebuild method rather than a promotional success story
 
 ## Visual thesis
 
@@ -18,6 +19,7 @@ The website should feel credible beside a serious cultural or literary review. S
 
 ## Product model
 
+- Rebuild case study: decisions, failures, evidence status, gates and reusable checklist
 - Essays: sustained arguments
 - Field notes: evidence captured during play
 - Conversations: present-day interviews and exchanges with consent
@@ -39,7 +41,7 @@ English remains at the established canonical paths. Complete German counterparts
 
 ## Same-owner operating record
 
-`/about/site-operations/` and `/de/ueber-uns/website-betrieb/` document how Contextter is actually used for Nightmare Mode research, page-role decisions, internal links, and technical checks. Matthias Ramahi operates both projects. The note is not a customer testimonial or independent recommendation, and it must not claim rankings, traffic, indexation, or growth while the site remains protected and Search Console evidence is not proven. Contextter may be linked once from the operating note and once from the homepage disclosure using a branded `nofollow` link; there is no footer, exact-match, reciprocal, or portfolio-network pattern.
+`/case-study/rebuilding-nightmare-mode/` and `/de/fallstudie/nightmare-mode-neuaufbau/` are the canonical same-owner operating record. They document how Contextter informs research organization, page-role decisions and technical checks, while explicitly separating that operating method from capabilities proven inside the customer-facing product. Matthias Ramahi operates both projects. The record is not a customer testimonial or independent recommendation and may not claim rankings, traffic, indexation or growth while the site remains protected and Search Console evidence is not proven. One branded `nofollow` link may appear on each localized case-study page; there is no footer, reciprocal, exact-match or portfolio-network pattern. The older operations routes remain concise supporting disclosures that point to the deeper record.
 
 ## Evidence boundaries
 

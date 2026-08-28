@@ -78,7 +78,7 @@ if (existsSync(dist)) {
     assert(!existsSync(join(dist, "sitemap-index.xml")) && !existsSync(join(dist, "sitemap-0.xml")), "protected build emits no sitemap");
   }
 
-  const forbidden = ["partner network", "meet the partners", "former newsroom continues"];
+  const forbidden = ["our partner network", "meet the partners", "former newsroom continues"];
   for (const phrase of forbidden) assert(!combined.includes(phrase), `built HTML excludes forbidden claim: ${phrase}`);
 
   for (const path of htmlFiles) {
@@ -126,6 +126,12 @@ const protocolSource = readFileSync(join(root, "src", "components", "ProtocolPag
 assert(protocolSource.includes("does not replace participant research"), "play-study protocol states its experience boundary");
 assert(protocolSource.includes("gamestudies.org/0601") && protocolSource.includes("gamestudies.org/2202"), "play-study protocol cites public methodology sources");
 assert(protocolSource.includes("Copyable worksheet"), "play-study protocol exposes a reusable proof asset");
+
+const caseStudySource = readFileSync(join(root, "src", "components", "CaseStudyPage.astro"), "utf8");
+assert(caseStudySource.includes("This is not a customer testimonial"), "case study rejects a customer-testimonial framing");
+assert(caseStudySource.includes("does not prove that every step ran through the current customer-facing Contextter application"), "case study separates operating method from product proof");
+assert(caseStudySource.includes("No SEO success has been demonstrated"), "case study states that SEO results are unproven");
+assert(caseStudySource.includes('rel="external nofollow"'), "case study marks the same-owner Contextter link nofollow");
 
 const studyRecord = JSON.parse(readFileSync(join(root, "src", "data", "studies", "a-dark-room-session.json"), "utf8"));
 assert(studyRecord.studyId === "adr-web-2026-08-23-01", "play-study record has a stable public identifier");

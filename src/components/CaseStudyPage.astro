@@ -1,0 +1,345 @@
+---
+import BaseLayout from "@/components/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import { pathFor, type Locale } from "@/i18n";
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+
+const copy = locale === "de" ? {
+  title: "Wie wir eine alte redaktionelle Domain neu aufbauen – ohne ihre Vergangenheit zu übernehmen.",
+  description: "Eine offene Fallstudie über Rechte, Legacy-URLs, Inhalte, Technik und die Grenzen einer Expired-Domain-Strategie.",
+  summary: "Nightmare Mode ist keine Erfolgsgeschichte mit nachträglich erfundenem Happy End. Die Domain wurde 2026 bei einer Auktion erworben. Sie hatte eine relevante Vergangenheit als Games-Publikation, später aber auch Parking-, Fremd- und Spam-Phasen. Unser Ziel ist ein neuer, eigenständiger Nutzen. Bis wir zeigen können, dass dieser Nutzen trägt, bleibt die Website bewusst von der Indexierung ausgeschlossen.",
+  facts: [
+    ["Projekt", "Neue Games- und Kulturpublikation plus offener Domain-Neuaufbau"],
+    ["Betreiber", "Matthias Ramahi – zugleich Betreiber von Contextter"],
+    ["Ausgangslage", "Frühere Redaktion 2010–2013; später wechselnde und teilweise belastete Nutzung"],
+    ["Rechte", "Keine Übernahme früherer Artikel, Logos, Autoridentitäten oder Empfehlungen"],
+    ["Aktueller Status", "Live, aber noindex; robots.txt blockiert Crawling; keine Sitemap"],
+    ["Was noch fehlt", "Authentifizierte GSC-Prüfung und belastbare Such-, Nutzungs- und Verweis-Daten"],
+  ],
+  foundTitle: "Was wir tatsächlich vorgefunden haben",
+  foundIntro: "Die Geschichte der Domain ist nicht geradlinig. Genau deshalb wäre eine einfache „Wir sind zurück“-Erzählung falsch gewesen.",
+  timeline: [
+    ["2010–2013", "Nightmare Mode war eine unabhängige, von mehreren Personen getragene Games-Publikation. Diese redaktionelle Arbeit gehört nicht dem heutigen Betreiber."],
+    ["2016–2025", "Archivbelege zeigen Parking, fachfremde Nutzung und später Spam- beziehungsweise Glücksspielspuren. Der kostenlose Wayback-Abruf erfasste 500 unterschiedliche erfolgreiche HTML-URLs; er ist eine begrenzte Stichprobe, kein vollständiger Backlink- oder Rechtebeleg."],
+    ["August 2026", "Matthias Ramahi erwarb die Domain über eine GoDaddy-Auktion. Mit der Domain wechselte die technische Kontrolle, nicht das Urheberrecht an der früheren Publikation."],
+    ["Seit dem Erwerb", "Mehrere Entwürfe wurden gebaut, verworfen und korrigiert. Der heutige Stand ist technisch live, bleibt aber hinter einem zweistufigen Indexierungs-Gate."],
+  ],
+  mistakeTitle: "Unser erster Fehler war nicht technisch",
+  mistake: [
+    "Wir haben zu früh versucht, eine fertige Publikation aussehen zu lassen. Das erste Konzept hatte viel Haltung, aber keinen belastbaren Grund, warum jemand wiederkommen sollte. Zeitweise wurde Contextter sogar wie ein Partnernetzwerk inszeniert. Das war weder redaktionell glaubwürdig noch als SEO-Beleg brauchbar.",
+    "Der zweite Versuch war sauberer, blieb aber an der Oberfläche: gute Typografie, korrekte Rechtstexte, ein Essay, eine Play Study und eine knappe Betriebsnotiz. All das war richtig. Es erklärte nur noch nicht, welche schwierigen Entscheidungen der Neuaufbau verlangt und was Contextter daran konkret zeigen kann.",
+    "Diese Fallstudie ist die Korrektur. Sie macht den Arbeitsprozess selbst zum überprüfbaren Inhalt und benennt auch das, was noch nicht funktioniert oder bewiesen ist.",
+  ],
+  decisionsTitle: "Sieben Entscheidungen, die den Neuaufbau bestimmen",
+  decisions: [
+    ["1. Die Domain ist nicht die Redaktion", "Wir nutzen den Namen der rechtmäßig erworbenen Domain für ein neues Projekt. Wir behaupten weder rechtliche noch redaktionelle Nachfolge. Frühere Mitwirkende werden nicht als heutige Autoren, Partner oder Unterstützer dargestellt."],
+    ["2. Alte Texte bleiben unangetastet", "Historische Titel und URLs dürfen als bibliografische Fakten erscheinen, wenn die Quelle stimmt. Artikeltexte, Bilder, Kommentare und Logos werden ohne dokumentierte Rechte weder kopiert noch von KI umgeschrieben."],
+    ["3. Jede wichtige Alt-URL bekommt eine eigene Entscheidung", "Sechs priorisierte Pfade wurden in einem versionierten Manifest geprüft. Drei zeigen nur knappe, nicht indexierbare bibliografische Datensätze; drei liefern echte 404. Es gibt keine pauschale Umleitung zur Startseite und keinen Redirect zu Contextter."],
+    ["4. Indexierung ist ein Gate, kein Schalter", "Die Produktion benötigt zwei getrennte Freigaben. Selbst PUBLIC_SITE_INDEXABLE=true reicht allein nicht. Solange GSC-Eigentum, manuelle Maßnahmen, Sicherheitsprobleme, Entfernungen, Crawl- und Indexzustand nicht authentifiziert geprüft sind, bleiben Meta-Robots, robots.txt und Sitemap gemeinsam geschlossen."],
+    ["5. Neue Autorität muss aus neuer Arbeit entstehen", "Ein quellenbasierter Essay und eine 257 Sekunden lange kontrollierte A-Dark-Room-Beobachtung bilden den ersten eigenen Bestand. Die Studie legt Aktionsregel, Zeitprotokoll, Quellstand und Grenzen offen. Sie behauptet keine menschliche Spielerfahrung."],
+    ["6. Deutsch und Englisch sind echte Seiten", "Englische Inhalte behalten ihre Pfade; vollständige deutsche Fassungen liegen unter /de/. Jede Sprachseite hat einen eigenen Canonical und verweist per hreflang auf ihr Gegenstück. Es gibt keine clientseitige Scheinübersetzung und keine vervielfachten historischen URLs."],
+    ["7. Gemeinsames Eigentum wird sichtbar gemacht", "Nightmare Mode ist Contextter als Förderdomain zugeordnet. Das macht Contextter weder zum früheren Betreiber noch zu einer unabhängigen Empfehlung. Die Beziehung wird dort genannt, wo sie für den Arbeitsprozess relevant ist, nicht in einem Linknetzwerk-Footer."],
+  ],
+  contextTitle: "Was Contextter hier wirklich leistet",
+  contextIntro: "Diese Fallstudie ist kein Kunden-Testimonial. Matthias Ramahi betreibt beide Projekte. Sie dokumentiert eine interne, reale SEO-Operation und trennt dabei die ausgeführte Arbeit von Produktbehauptungen.",
+  work: [
+    ["Recherche ordnen", "Domainhistorie, Rechtefragen, Spamphasen, offene Belege und priorisierte URLs wurden in einem zentralen Dossier statt in losen Notizen geführt."],
+    ["Seitenrollen entscheiden", "Jede geplante indexierbare URL erhielt einen primären Nutzerjob. Neue Seiten entstanden nur für einen eigenen Beleg- oder Entscheidungsbedarf – nicht für Keyword-Varianten."],
+    ["Risiken in Code übersetzen", "Noindex, Robots, Sitemap, Canonicals, Legacy-Aktionen und Contextter-Links werden automatisiert geprüft. Ein guter Vorsatz wurde damit zu einem fehlerschlagenden Build-Gate."],
+    ["Arbeit überprüfbar machen", "Repository, Commit, Deployment, Linkgraph, Browser-QA und die maschinenlesbare Play-Study-Datei liefern konkrete Prüfpfade."],
+  ],
+  productBoundary: "Wichtig: Der öffentliche Nachweis zeigt den Contextter-Arbeitsansatz rund um Recherche, Seitenentscheidungen und technische SEO. Er beweist nicht, dass jeder Schritt in der heutigen kundenorientierten Contextter-Oberfläche ausgeführt wurde. Wo Produktfunktion und operative Methode auseinanderfallen, sagen wir das ausdrücklich.",
+  evidenceTitle: "Evidenzregister – Stand 28. August 2026",
+  evidence: [
+    ["Verifiziert", "Die Live-Domain liefert selbstreferenzierende Canonicals, EN/DE-hreflang, echte 404, pfaderhaltende 308-Redirects, Security-Header sowie noindex,nofollow. robots.txt enthält Disallow: /; eine Sitemap wird nicht ausgegeben."],
+    ["Verifiziert", "Der geschützte Build vor dieser Vertiefung erzeugte 39 Seiten ohne Astro-Diagnosen. 211 Safeguards und ein Graph aus 476 internen Links liefen ohne Fehler; 28 Desktop-/Mobil-Axe-Scans meldeten keine Verstöße."],
+    ["Verifiziert", "Commit a456d10 wurde zu origin/main gepusht; Vercel-Deployment dpl_2tZo1oNKWZPyqU3NJkcxxQ4d1pwn wurde READY und auf nightmaremode.net aliasiert."],
+    ["Gestützt", "Die Domain hatte einen klaren Games-Kultur-Schwerpunkt und später belastete Phasen. Die Aussage stützt sich auf eine begrenzte 500-URL-Wayback-Stichprobe und manuell geprüfte Referenzen, nicht auf einen vollständigen Backlinkgraphen."],
+    ["Experiment", "Eine offene, bilinguale Neuaufbau-Fallstudie kann für Betreiber erworbener Domains nützlicher sein als eine dünne Themenpublikation. Ob daraus qualifizierte Nutzung oder externe Verweise entstehen, wird erst nach dem Index-Gate messbar."],
+    ["Nicht belegt", "GSC-Eigentum, manuelle Maßnahmen, Sicherheitsprobleme, Entfernungen, Crawlzustand, Indexierung, Rankings, Traffic, Leads und kommerzieller Nutzen."],
+    ["Verworfen", "Kopierte Altartikel, pauschale Homepage-Redirects, erfundene Kundenreferenz, Partnernetzwerk, Exact-Match-Linkmuster und künstliche Contentmasse."],
+  ],
+  resultsTitle: "Welche Ergebnisse wir heute behaupten dürfen",
+  results: [
+    "Wir haben eine rechtlich und redaktionell vorsichtigere Grundlage als im ersten Entwurf.",
+    "Der technische Schutz ist reproduzierbar und nicht von einer einzelnen Meta-Tag-Änderung abhängig.",
+    "Die ersten neuen Inhalte haben sichtbare Quellen-, Methoden- und Erfahrungsgrenzen.",
+    "Die deutsche und englische Architektur ist konsistent aufgebaut.",
+    "Wir haben noch keinen SEO-Erfolg nachgewiesen. Die Website ist absichtlich nicht indexierbar.",
+  ],
+  checklistTitle: "Eine wiederverwendbare Checkliste",
+  checklistIntro: "Wer eine frühere redaktionelle Domain übernimmt, sollte vor dem ersten indexierbaren Relaunch mindestens diese Fragen beantworten:",
+  checklist: [
+    "Welche Rechte wurden tatsächlich übertragen – und welche nur vermutet?",
+    "Welche früheren Personen, Marken und Inhalte dürfen nicht als heutige Identität erscheinen?",
+    "Welche historischen URL-Phasen gehören zum ursprünglichen Thema, welche zu Parking oder Spam?",
+    "Für welche Alt-URLs gibt es ein wirklich intent-gleiches, rechteklares Ziel?",
+    "Was ist der eigenständige Nutzerjob der neuen Website, wenn alle Portfolio-Links entfernt werden?",
+    "Welches neue Original-Asset beweist diesen Nutzerjob?",
+    "Welche Behauptungen sind verifiziert, gestützt, experimentell oder unbekannt?",
+    "Welche technischen Gates verhindern eine versehentliche Indexfreigabe?",
+    "Wer verantwortet Redaktion, Rechteanfragen, Korrekturen und den nächsten Beitrag?",
+    "Wann wird das Projekt pausiert oder beendet, wenn Nutzen und Pflege nicht tragfähig sind?",
+  ],
+  nextTitle: "Was als Nächstes passieren muss",
+  next: [
+    ["Vor Indexierung", "Authentifizierte Search-Console-Prüfung für Eigentum, Manual Actions, Security Issues, Removals, Page Indexing, Crawl Stats und URL Inspection. Erst danach ist eine separate Freigabe möglich."],
+    ["Redaktionell", "Eine zweite, menschlich geführte oder deutlich anders angelegte Play Study. Der erste automatisierte Lauf ist ein Methodenbeleg, aber noch keine tragfähige redaktionelle Serie."],
+    ["Nach Freigabe", "Baseline für Impressionen, Seiten-Query-Paare, externe Verweise und qualifizierte Übergänge. Gemessen wird, ob die Fallstudie genutzt wird – nicht, ob irgendein DR-Wert steigt."],
+    ["Stop-Regel", "Wenn zwei monatliche Originalbeiträge ausfallen oder die Fallstudie ohne Contextter-Link keinen eigenen Nutzen zeigt, wird die Publikation verkleinert oder pausiert."],
+  ],
+  proofTitle: "Prüfpfade",
+  proofIntro: "Die wichtigsten öffentlichen Artefakte liegen nicht hinter einem Formular.",
+  proofLinks: [
+    ["Öffentliches GitHub-Repository", "https://github.com/lia-xim/nightmaremode.net"],
+    ["Maschinenlesbares A-Dark-Room-Protokoll", "/field-notes/a-dark-room-first-four-minutes/session.json"],
+    ["Wiederverwendbares Play-Study-Protokoll", "/field-notes/play-study-protocol/"],
+    ["Abgrenzung der neuen Inhaberschaft", "/about/new-ownership/"],
+  ],
+  contextterLink: "Contextter ansehen",
+  disclosure: "Interessenkonflikt: Matthias Ramahi betreibt Nightmare Mode und Contextter. Der Link ist eine Betreiberangabe, keine unabhängige Empfehlung. Für dieses Projekt werden keine Ranking-, Traffic- oder Kundenerfolge behauptet.",
+} : {
+  title: "How we are rebuilding an old editorial domain without inheriting its past.",
+  description: "An open case study about rights, legacy URLs, content, engineering and the limits of an expired-domain strategy.",
+  summary: "Nightmare Mode is not a success story with a happy ending written in afterwards. The domain was acquired at auction in 2026. It had a meaningful past as a games publication, followed by parking, unrelated use and spam. The aim is to create new, independent value. Until that value and the domain's search state can be examined properly, the site remains deliberately excluded from indexing.",
+  facts: [
+    ["Project", "New games-and-culture publication and open domain-rebuild record"],
+    ["Operator", "Matthias Ramahi, who also operates Contextter"],
+    ["Starting point", "Former publication from 2010–2013; later mixed and partly contaminated use"],
+    ["Rights", "No transfer of former articles, logos, author identities or endorsements"],
+    ["Current state", "Live but noindex; robots.txt blocks crawling; no sitemap"],
+    ["Still missing", "Authenticated GSC review and meaningful search, usage and referral data"],
+  ],
+  foundTitle: "What was actually there",
+  foundIntro: "The domain's history is not one clean line. That is why a simple “we are back” story would have been false.",
+  timeline: [
+    ["2010–2013", "Nightmare Mode was an independent, multi-author games publication. That editorial work does not belong to the current operator."],
+    ["2016–2025", "Archive evidence shows parking, unrelated use and later gambling or spam traces. A free Wayback pull returned 500 distinct successful HTML URLs. It is a bounded sample, not a complete backlink or rights record."],
+    ["August 2026", "Matthias Ramahi acquired the domain through a GoDaddy auction. Technical control changed hands; copyright in the former publication did not."],
+    ["Since acquisition", "Several versions were built, rejected and corrected. The present site is technically live but remains behind a two-key indexing gate."],
+  ],
+  mistakeTitle: "Our first mistake was not technical",
+  mistake: [
+    "We tried to make a finished publication too early. The first concept had plenty of attitude and no solid reason for a reader to return. At one point, Contextter was presented like part of a partner network. That was neither credible editorially nor useful as SEO proof.",
+    "The next version was cleaner but still shallow: good typography, accurate legal pages, one essay, one play study and a short operating note. Those were sensible pieces. They did not yet explain the difficult decisions behind the rebuild or what Contextter could honestly demonstrate through it.",
+    "This case study is the correction. The work itself becomes the inspectable content, including the parts that remain unsuccessful or unproven.",
+  ],
+  decisionsTitle: "Seven decisions that define the rebuild",
+  decisions: [
+    ["1. The domain is not the newsroom", "We use the legally acquired domain for a new project. We do not claim legal or editorial succession. Former contributors are not presented as current authors, partners or supporters."],
+    ["2. Former work stays untouched", "Historical titles and URLs can appear as bibliographic facts when the source is sound. Article bodies, images, comments and logos are neither copied nor rewritten by AI without documented rights."],
+    ["3. Important legacy URLs get individual decisions", "Six priority paths were reviewed in a versioned manifest. Three retain limited noindex bibliographic records; three return real 404s. Nothing is blanket-redirected to the homepage or Contextter."],
+    ["4. Indexing is a gate, not a toggle", "Production requires two separate approvals. PUBLIC_SITE_INDEXABLE=true is not enough on its own. Meta robots, robots.txt and the sitemap stay closed together until GSC ownership, manual actions, security issues, removals, crawling and indexing have been authenticated."],
+    ["5. New authority must come from new work", "A source-led essay and a 257-second controlled A Dark Room observation form the first original body of work. The study publishes its action policy, event timing, source state and limitations. It does not claim a human play experience."],
+    ["6. English and German are real pages", "English keeps the established paths and complete German counterparts live under /de/. Each page has its own canonical and reciprocal hreflang. There is no client-side translation veneer and no multiplication of historical URLs."],
+    ["7. Common ownership is visible", "Nightmare Mode is assigned to Contextter as a supporting domain. That does not make Contextter the former operator or an independent recommendation. The relationship appears where it explains the work, not in a portfolio footer."],
+  ],
+  contextTitle: "What Contextter actually contributes",
+  contextIntro: "This is not a customer testimonial. Matthias Ramahi operates both projects. The record documents a real internal SEO operation and separates work performed from product claims.",
+  work: [
+    ["Organising research", "Domain history, rights questions, spam phases, evidence gaps and priority URLs were maintained in one dossier rather than scattered notes."],
+    ["Deciding page roles", "Every eventual indexable URL received one primary user job. New pages were added for distinct proof or decisions, not keyword variants."],
+    ["Turning risk into code", "Noindex, robots, sitemap, canonicals, legacy actions and Contextter links are checked automatically. A policy now fails the build instead of relying on memory."],
+    ["Making work inspectable", "The repository, commits, deployment record, link graph, browser QA and machine-readable play-study file provide concrete audit paths."],
+  ],
+  productBoundary: "One important boundary: the public evidence demonstrates the Contextter operating approach around research, page decisions and technical SEO. It does not prove that every step ran through the current customer-facing Contextter application. Where product capability and operating method differ, this record says so.",
+  evidenceTitle: "Evidence register — 28 August 2026",
+  evidence: [
+    ["Verified", "The live domain serves self-canonicals, EN/DE hreflang, real 404s, path-preserving 308 redirects, security headers and noindex,nofollow. robots.txt contains Disallow: / and no sitemap is emitted."],
+    ["Verified", "Before this deeper case-study pass, the protected build produced 39 pages with no Astro diagnostics. 211 safeguards and a 476-link internal graph passed; 28 desktop/mobile Axe scans reported no violations."],
+    ["Verified", "Commit a456d10 was pushed to origin/main; Vercel deployment dpl_2tZo1oNKWZPyqU3NJkcxxQ4d1pwn became READY and was aliased to nightmaremode.net."],
+    ["Supported", "The domain had a strong games-culture phase followed by contaminated phases. This is supported by a bounded 500-URL Wayback sample and manually checked references, not a complete backlink graph."],
+    ["Experiment", "An open bilingual rebuild case study may be more useful to expired-domain operators than a thin topical publication. Qualified use and independent references cannot be measured until the indexing gate opens."],
+    ["Not proven", "GSC ownership, manual actions, security issues, removals, crawl state, indexing, rankings, traffic, leads and commercial value."],
+    ["Rejected", "Copied legacy articles, blanket homepage redirects, a fabricated customer reference, a partner network, exact-match link patterns and synthetic content volume."],
+  ],
+  resultsTitle: "What results can be claimed today",
+  results: [
+    "The project has a safer legal and editorial foundation than the first concept.",
+    "The technical protection is reproducible and cannot be removed by changing one meta tag.",
+    "The first original pieces expose sources, methods and experience limits.",
+    "The English and German architecture is consistent.",
+    "No SEO success has been demonstrated. The site is deliberately not indexable.",
+  ],
+  checklistTitle: "A checklist you can reuse",
+  checklistIntro: "Before relaunching an acquired editorial domain as indexable, an operator should be able to answer at least these questions:",
+  checklist: [
+    "Which rights actually transferred, and which are merely assumed?",
+    "Which former people, brands and materials must not appear as the current identity?",
+    "Which URL periods belong to the original topic, and which belong to parking or spam?",
+    "Which legacy URLs have a genuinely equivalent, rights-cleared destination?",
+    "What is the new site's standalone user job after every portfolio link is removed?",
+    "Which original asset proves that job?",
+    "Which claims are verified, supported, experimental or unknown?",
+    "Which technical gates prevent accidental indexing?",
+    "Who owns editorial decisions, rights requests, corrections and the next release?",
+    "When will the project pause or stop if its value and maintenance do not hold up?",
+  ],
+  nextTitle: "What has to happen next",
+  next: [
+    ["Before indexing", "Authenticate Search Console ownership and review Manual Actions, Security Issues, Removals, Page Indexing, Crawl Stats and URL Inspection. Indexing requires a separate owner-reviewed release afterwards."],
+    ["Editorially", "Publish a second human-led or meaningfully varied play study. The first automated run proves a method; it is not yet a durable editorial series."],
+    ["After release", "Establish baselines for impressions, page-query pairs, external references and qualified transitions. The test is whether people use the case study, not whether a third-party authority score rises."],
+    ["Stop rule", "If two monthly original releases are missed, or the case study has no value without its Contextter link, the publication is reduced or paused."],
+  ],
+  proofTitle: "Audit paths",
+  proofIntro: "The most useful public artifacts are available without a form.",
+  proofLinks: [
+    ["Public GitHub repository", "https://github.com/lia-xim/nightmaremode.net"],
+    ["Machine-readable A Dark Room record", "/field-notes/a-dark-room-first-four-minutes/session.json"],
+    ["Reusable play-study protocol", "/field-notes/play-study-protocol/"],
+    ["New-ownership boundary", "/about/new-ownership/"],
+  ],
+  contextterLink: "Visit Contextter",
+  disclosure: "Conflict disclosure: Matthias Ramahi operates Nightmare Mode and Contextter. The link identifies the operator relationship; it is not an independent recommendation. No ranking, traffic or customer result is claimed for this project.",
+};
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: copy.title,
+  description: copy.description,
+  datePublished: "2026-08-28",
+  dateModified: "2026-08-28",
+  inLanguage: locale === "de" ? "de-DE" : "en",
+  author: { "@type": "Person", name: "Matthias Ramahi" },
+  editor: { "@type": "Person", name: "Matthias Ramahi" },
+  mainEntityOfPage: `https://nightmaremode.net${Astro.url.pathname}`,
+};
+const hrefFor = (href: string) => href.endsWith(".json") ? href : href.startsWith("/") ? pathFor(locale, href) : href;
+---
+
+<BaseLayout lang={locale} title={copy.title} description={copy.description} ogType="article">
+  <script slot="head" is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)}></script>
+
+  <header class="case-hero shell">
+    <div class="case-hero__meta">
+      <p class="mono">{locale === "de" ? "Offene Fallstudie · Stand 28. August 2026" : "Open case study · 28 August 2026"}</p>
+      <p>{locale === "de" ? "Verantwortlich: Matthias Ramahi" : "Responsible editor: Matthias Ramahi"}</p>
+    </div>
+    <div>
+      <h1 class="display">{copy.title}</h1>
+      <p class="dek">{copy.summary}</p>
+    </div>
+  </header>
+
+  <section class="fact-sheet shell" aria-label={locale === "de" ? "Projektüberblick" : "Project overview"}>
+    {copy.facts.map(([term, value]) => <div><p class="fact-term">{term}</p><p class="fact-value">{value}</p></div>)}
+  </section>
+
+  <article class="case-body shell">
+    <section class="chapter">
+      <div class="chapter__rail"><span>01</span><h2 class="display">{copy.foundTitle}</h2></div>
+      <div class="chapter__content"><p class="lead">{copy.foundIntro}</p><ol class="timeline">{copy.timeline.map(([date, text]) => <li><time>{date}</time><p>{text}</p></li>)}</ol></div>
+    </section>
+
+    <section class="chapter chapter--signal">
+      <div class="chapter__rail"><span>02</span><h2 class="display">{copy.mistakeTitle}</h2></div>
+      <div class="chapter__content prose">{copy.mistake.map((paragraph) => <p>{paragraph}</p>)}</div>
+    </section>
+
+    <section class="chapter">
+      <div class="chapter__rail"><span>03</span><h2 class="display">{copy.decisionsTitle}</h2></div>
+      <div class="chapter__content decision-list">{copy.decisions.map(([title, body]) => <section><h3 class="display">{title}</h3><p>{body}</p></section>)}</div>
+    </section>
+
+    <section class="chapter">
+      <div class="chapter__rail"><span>04</span><h2 class="display">{copy.contextTitle}</h2></div>
+      <div class="chapter__content"><p class="lead">{copy.contextIntro}</p><div class="work-list">{copy.work.map(([title, body]) => <section><h3>{title}</h3><p>{body}</p></section>)}</div><aside class="boundary"><p>{copy.productBoundary}</p></aside></div>
+    </section>
+
+    <section class="chapter evidence-chapter">
+      <div class="chapter__rail"><span>05</span><h2 class="display">{copy.evidenceTitle}</h2></div>
+      <div class="chapter__content evidence-list">{copy.evidence.map(([state, claim]) => <div><strong>{state}</strong><p>{claim}</p></div>)}</div>
+    </section>
+
+    <section class="chapter">
+      <div class="chapter__rail"><span>06</span><h2 class="display">{copy.resultsTitle}</h2></div>
+      <div class="chapter__content"><ul class="plain-list">{copy.results.map((item) => <li>{item}</li>)}</ul></div>
+    </section>
+
+    <section class="chapter checklist-chapter">
+      <div class="chapter__rail"><span>07</span><h2 class="display">{copy.checklistTitle}</h2></div>
+      <div class="chapter__content"><p class="lead">{copy.checklistIntro}</p><ol class="checklist">{copy.checklist.map((item, index) => <li><span>{String(index + 1).padStart(2, "0")}</span><p>{item}</p></li>)}</ol></div>
+    </section>
+
+    <section class="chapter">
+      <div class="chapter__rail"><span>08</span><h2 class="display">{copy.nextTitle}</h2></div>
+      <div class="chapter__content next-list">{copy.next.map(([title, body]) => <section><h3>{title}</h3><p>{body}</p></section>)}</div>
+    </section>
+
+    <section class="chapter proof-chapter">
+      <div class="chapter__rail"><span>09</span><h2 class="display">{copy.proofTitle}</h2></div>
+      <div class="chapter__content"><p class="lead">{copy.proofIntro}</p><ul class="proof-links">{copy.proofLinks.map(([label, href]) => <li><a href={hrefFor(href)} rel={href.startsWith("http") ? "external" : undefined}>{label} <span aria-hidden="true">↗</span></a></li>)}</ul><p class="disclosure">{copy.disclosure}</p><a class="action" href="https://contextter.com/" rel="external nofollow">{copy.contextterLink} <span aria-hidden="true">↗</span></a></div>
+    </section>
+  </article>
+
+  <SiteFooter locale={locale} />
+</BaseLayout>
+
+<style>
+  .case-hero { display: grid; grid-template-columns: minmax(13rem, 0.28fr) 1fr; gap: clamp(2rem, 7vw, 8rem); padding-block: clamp(4.5rem, 9vw, 9rem); border-bottom: 1px solid var(--line); }
+  .case-hero__meta { padding-top: 0.6rem; color: var(--ink-soft); font-size: 0.88rem; }
+  .case-hero__meta .mono { margin: 0 0 1rem; color: var(--signal); }
+  .case-hero h1 { max-width: 15ch; font-size: clamp(3.5rem, 6.8vw, 7rem); }
+  .dek { max-width: 54rem; margin: 2rem 0 0; color: var(--ink-soft); font-family: var(--display); font-size: clamp(1.35rem, 2.2vw, 2rem); line-height: 1.35; }
+  .fact-sheet { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--line); }
+  .fact-sheet div { padding: 1.7rem clamp(1.25rem, 2.5vw, 2.5rem); border-left: 1px solid var(--line); }
+  .fact-sheet div:nth-child(3n + 1) { padding-left: 0; border-left: 0; }
+  .fact-term { margin: 0; color: var(--signal); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+  .fact-value { margin: 0.45rem 0 0; color: var(--ink-soft); }
+  .case-body { padding-bottom: clamp(4rem, 8vw, 8rem); }
+  .chapter { display: grid; grid-template-columns: minmax(15rem, 0.32fr) 1fr; gap: clamp(2.5rem, 7vw, 8rem); padding-block: clamp(4rem, 8vw, 8rem); border-bottom: 1px solid var(--line); }
+  .chapter__rail > span { color: var(--signal); font-size: 0.78rem; }
+  .chapter__rail h2 { max-width: 9ch; margin-top: 0.75rem; font-size: clamp(2.5rem, 4.3vw, 4.7rem); }
+  .chapter__content { min-width: 0; }
+  .lead { max-width: 46rem; margin: 0 0 2.5rem; font-family: var(--display); font-size: clamp(1.4rem, 2.25vw, 2.05rem); line-height: 1.35; }
+  .prose { max-width: 49rem; }
+  .prose p { margin: 0 0 1.4rem; font-size: clamp(1.05rem, 1.35vw, 1.2rem); }
+  .chapter--signal { background: var(--paper-soft); box-shadow: 0 0 0 100vmax var(--paper-soft); clip-path: inset(0 -100vmax); }
+  .timeline { margin: 0; padding: 0; list-style: none; }
+  .timeline li { display: grid; grid-template-columns: 8rem 1fr; gap: 2rem; padding: 1.5rem 0; border-top: 1px solid var(--line); }
+  .timeline time { color: var(--signal); font-weight: 550; }
+  .timeline p { max-width: 46rem; margin: 0; color: var(--ink-soft); }
+  .decision-list > section { display: grid; grid-template-columns: minmax(13rem, 0.42fr) 1fr; gap: clamp(1.5rem, 4vw, 4rem); padding: 2rem 0; border-top: 1px solid var(--line); }
+  .decision-list h3 { font-size: clamp(1.55rem, 2.4vw, 2.35rem); }
+  .decision-list p, .work-list p, .next-list p { max-width: 42rem; margin: 0; color: var(--ink-soft); }
+  .work-list { display: grid; grid-template-columns: 1fr 1fr; }
+  .work-list section { padding: 1.75rem 2rem 1.75rem 0; border-top: 1px solid var(--line); }
+  .work-list section:nth-child(even) { padding-left: 2rem; border-left: 1px solid var(--line); }
+  .work-list h3, .next-list h3 { margin: 0 0 0.5rem; font-size: 1.15rem; }
+  .boundary { margin-top: 2.5rem; padding: 1.5rem 0 0 2rem; border-top: 1px solid var(--line); border-left: 3px solid var(--signal); }
+  .boundary p { max-width: 46rem; margin: 0; }
+  .evidence-list > div { display: grid; grid-template-columns: 8.5rem 1fr; gap: 2rem; padding: 1.4rem 0; border-top: 1px solid var(--line); }
+  .evidence-list strong { color: var(--signal); font-size: 0.82rem; }
+  .evidence-list p { max-width: 48rem; margin: 0; color: var(--ink-soft); }
+  .plain-list { margin: 0; padding: 0; list-style: none; }
+  .plain-list li { padding: 1.35rem 0 1.35rem 2rem; border-top: 1px solid var(--line); font-family: var(--display); font-size: clamp(1.35rem, 2vw, 1.85rem); line-height: 1.35; position: relative; }
+  .plain-list li::before { content: ""; position: absolute; left: 0; top: 2.1rem; width: 0.55rem; height: 0.55rem; background: var(--signal); }
+  .checklist { margin: 0; padding: 0; list-style: none; counter-reset: item; }
+  .checklist li { display: grid; grid-template-columns: 3rem 1fr; gap: 1.25rem; padding: 1.25rem 0; border-top: 1px solid var(--line); }
+  .checklist span { color: var(--signal); font-size: 0.78rem; }
+  .checklist p { max-width: 45rem; margin: 0; }
+  .next-list section { display: grid; grid-template-columns: 9rem 1fr; gap: 2rem; padding: 1.5rem 0; border-top: 1px solid var(--line); }
+  .proof-links { margin: 0 0 2.5rem; padding: 0; list-style: none; }
+  .proof-links li { border-top: 1px solid var(--line); }
+  .proof-links a { display: flex; justify-content: space-between; gap: 2rem; padding: 1.1rem 0; color: var(--signal); }
+  .proof-links a:hover { color: var(--ink); }
+  .disclosure { max-width: 46rem; color: var(--ink-soft); }
+  @media (max-width: 860px) {
+    .case-hero, .chapter { grid-template-columns: 1fr; gap: 2rem; }
+    .case-hero__meta { order: 2; }
+    .fact-sheet { grid-template-columns: 1fr 1fr; }
+    .fact-sheet div:nth-child(3n + 1) { padding-left: clamp(1.25rem, 2.5vw, 2.5rem); border-left: 1px solid var(--line); }
+    .fact-sheet div:nth-child(odd) { padding-left: 0; border-left: 0; }
+    .chapter__rail h2 { max-width: 14ch; }
+  }
+  @media (max-width: 620px) {
+    .fact-sheet, .work-list { grid-template-columns: 1fr; }
+    .fact-sheet div, .fact-sheet div:nth-child(3n + 1) { padding-inline: 0; border-top: 1px solid var(--line); border-left: 0; }
+    .timeline li, .decision-list > section, .evidence-list > div, .next-list section { grid-template-columns: 1fr; gap: 0.65rem; }
+    .work-list section, .work-list section:nth-child(even) { padding-inline: 0; border-left: 0; }
+  }
+</style>

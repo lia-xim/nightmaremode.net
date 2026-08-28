@@ -10,45 +10,45 @@ interface Props { locale: Locale }
 const { locale } = Astro.props;
 
 const copy = locale === "de" ? {
-  title: "Spiele genau lesen.",
-  description: "Essays und dokumentierte Play Studies darüber, wie Spiele funktionieren, was erhalten bleibt und was verloren geht.",
-  primary: "Vier Minuten in A Dark Room lesen",
-  secondary: "So funktionieren unsere Play Studies",
-  latest: "Neueste Play Study · 23. August 2026",
-  studyTitle: "Vier Minuten in A Dark Room",
-  studyText: "Eine kontrollierte Beobachtung: Wie aus einer einzelnen Aktion Feuerpflege, Sammeln und eine Entscheidung werden.",
-  readStudy: "Play Study lesen",
-  essayTitle: "Ein Spiel ist mehr als seine Dateien",
-  essayText: "Was Archive festhalten können – und wo die Überlieferung Lücken behält.",
-  readEssay: "Essay lesen",
-  formatsTitle: "Was wir veröffentlichen",
-  formats: [["01", "Essays", "Argumente auf Grundlage benannter Quellen."], ["02", "Play Studies", "Beobachtungen mit den jeweiligen Testbedingungen."], ["03", "Methoden", "Protokolle, die sich prüfen und wiederverwenden lassen."]],
-  ownershipTitle: "Neue Texte auf einer alten Domain.",
-  ownership: "Nightmare Mode wird seit 2026 unabhängig von Matthias Ramahi betrieben. Das Projekt setzt die frühere Redaktion nicht fort.",
-  ownershipLink: "Zur neuen Inhaberschaft",
-  operationsTitle: "So betreiben wir die Seite.",
-  operations: "Für Recherche, Suchanalyse und den technischen Betrieb nutzen wir Contextter, ein weiteres Projekt von Matthias Ramahi. Das ist keine unabhängige Empfehlung.",
-  contextter: "Mehr über Contextter",
+  title: "Eine alte Domain. Ein offener Neuaufbau.",
+  description: "Nightmare Mode dokumentiert, wie aus einer erworbenen früheren Games-Domain ein neues, rechtssicheres Projekt entsteht – einschließlich Fehlentscheidungen, Belegen und offener Fragen.",
+  primary: "Die vollständige Fallstudie lesen",
+  secondary: "Die redaktionelle Probe ansehen",
+  latest: "Offene Fallstudie · Stand 28. August 2026",
+  studyTitle: "Nightmare Mode neu aufbauen",
+  studyText: "Warum wir die alte Redaktion nicht nachspielen, welche erste Idee zu oberflächlich war und welche Gates vor einer Indexierung wirklich erfüllt sein müssen.",
+  readStudy: "Fallstudie öffnen",
+  essayTitle: "Vier Minuten in A Dark Room",
+  essayText: "Eine kleine, reproduzierbare Play Study als Beleg dafür, dass neue redaktionelle Substanz mehr sein kann als bloße Behauptung.",
+  readEssay: "Redaktionelle Probe lesen",
+  formatsTitle: "Was dieser Fall zeigt",
+  formats: [["01", "Rechte vor Reichweite", "Eine erworbene Domain überträgt keine alte Redaktion, Texte oder Autorität."], ["02", "Neue Belege", "Eigene Essays und protokollierte Play Studies bilden die neue Substanz."], ["03", "Technische Gates", "Indexierung bleibt gesperrt, bis Rechte, URLs, GSC und Live-QA belegt sind."]],
+  ownershipTitle: "Kein Revival. Kein Erfolgsmärchen.",
+  ownership: "Die frühere Publikation endete. Der heutige Betreiber besitzt die Domain, nicht automatisch ihre Artikel, Identitäten oder Empfehlungen. Auch ein SEO-Erfolg ist bisher nicht belegt.",
+  ownershipLink: "Die Eigentumsgrenze lesen",
+  operationsTitle: "Wo Contextter hineinpasst.",
+  operations: "Contextter ist das zweite Projekt desselben Betreibers und strukturiert Teile der Recherche, Seitenrollen und technischen Prüfungen. Die Fallstudie trennt offen zwischen Methode, Produkt und noch unbewiesenem Ergebnis.",
+  contextter: "Zusammenarbeit in der Fallstudie",
 } : {
-  title: "Read games closely.",
-  description: "Essays and documented play studies about how games work, what they preserve, and what they leave out.",
-  primary: "Read Four minutes in A Dark Room",
-  secondary: "How our play studies work",
-  latest: "Latest play study · 23 August 2026",
-  studyTitle: "Four minutes in A Dark Room",
-  studyText: "A controlled observation of how one action becomes fire maintenance, gathering and a decision.",
-  readStudy: "Read the study",
-  essayTitle: "A game is more than its files",
-  essayText: "What preservation can document — and where the record still has gaps.",
-  readEssay: "Read the essay",
-  formatsTitle: "What we publish",
-  formats: [["01", "Essays", "Arguments built from named sources."], ["02", "Play studies", "Observations with the test conditions attached."], ["03", "Methods", "Protocols you can inspect and reuse."]],
-  ownershipTitle: "New work on an old domain.",
-  ownership: "Nightmare Mode has been independently operated by Matthias Ramahi since 2026. It is not a continuation of the former newsroom.",
-  ownershipLink: "Read the ownership note",
-  operationsTitle: "How the site is run.",
-  operations: "We use Contextter, another project operated by Matthias Ramahi, for research, search analysis and site operations. This is not an independent recommendation.",
-  contextter: "About Contextter",
+  title: "An old domain. An open rebuild.",
+  description: "Nightmare Mode documents how an acquired former games domain becomes a new, rights-safe project — including wrong turns, evidence and unanswered questions.",
+  primary: "Read the full case study",
+  secondary: "See the editorial test",
+  latest: "Open case study · Updated 28 August 2026",
+  studyTitle: "Rebuilding Nightmare Mode",
+  studyText: "Why we will not imitate the former newsroom, why our first idea was too shallow, and which gates must actually pass before indexing.",
+  readStudy: "Open the case study",
+  essayTitle: "Four minutes in A Dark Room",
+  essayText: "A small, reproducible play study that tests whether new editorial substance can be more than a claim.",
+  readEssay: "Read the editorial test",
+  formatsTitle: "What this case demonstrates",
+  formats: [["01", "Rights before reach", "Buying a domain does not transfer its former newsroom, writing or authority."], ["02", "New evidence", "Original essays and documented play studies create the new substance."], ["03", "Technical gates", "Indexing stays blocked until rights, URLs, GSC and live QA are proven."]],
+  ownershipTitle: "Not a revival. Not a success story.",
+  ownership: "The former publication ended. The current operator owns the domain, not automatically its articles, identities or endorsements. No SEO success has been demonstrated either.",
+  ownershipLink: "Read the ownership boundary",
+  operationsTitle: "Where Contextter fits.",
+  operations: "Contextter is another project of the same operator and structures parts of the research, page roles and technical checks. The case study separates method, product and unproven outcome.",
+  contextter: "See the relationship in context",
 };
 ---
 
@@ -58,8 +58,8 @@ const copy = locale === "de" ? {
       <h1 id="hero-title" class="display">{copy.title}</h1>
       <p>{copy.description}</p>
       <div class="links">
-        <a class="action" href={pathFor(locale, "/field-notes/a-dark-room-first-four-minutes/")}>{copy.primary} <span aria-hidden="true">→</span></a>
-        <a class="action quiet" href={pathFor(locale, "/field-notes/play-study-protocol/")}>{copy.secondary}</a>
+        <a class="action" href={pathFor(locale, "/case-study/rebuilding-nightmare-mode/")}>{copy.primary} <span aria-hidden="true">→</span></a>
+        <a class="action quiet" href={pathFor(locale, "/field-notes/a-dark-room-first-four-minutes/")}>{copy.secondary}</a>
       </div>
     </div>
     <figure>
@@ -70,9 +70,9 @@ const copy = locale === "de" ? {
   <section class="work shell" aria-label={locale === "de" ? "Aktuelle Texte" : "Current work"}>
     <article class="feature feature--wide">
       <Image src={fieldStudy} alt="" widths={[360, 620]} sizes="(max-width: 760px) 35vw, 18vw" format="webp" />
-      <div><p class="meta">{copy.latest}</p><h2 class="display"><em>{copy.studyTitle}</em></h2><p>{copy.studyText}</p><a class="action" href={pathFor(locale, "/field-notes/a-dark-room-first-four-minutes/")}>{copy.readStudy} <span aria-hidden="true">→</span></a></div>
+      <div><p class="meta">{copy.latest}</p><h2 class="display"><em>{copy.studyTitle}</em></h2><p>{copy.studyText}</p><a class="action" href={pathFor(locale, "/case-study/rebuilding-nightmare-mode/")}>{copy.readStudy} <span aria-hidden="true">→</span></a></div>
     </article>
-    <article class="feature"><div><p class="meta">Essay · Preservation</p><h2 class="display">{copy.essayTitle}</h2><p>{copy.essayText}</p><a class="action" href={pathFor(locale, "/essays/a-game-is-more-than-its-files/")}>{copy.readEssay} <span aria-hidden="true">→</span></a></div></article>
+    <article class="feature"><div><p class="meta">Play Study · Evidence</p><h2 class="display">{copy.essayTitle}</h2><p>{copy.essayText}</p><a class="action" href={pathFor(locale, "/field-notes/a-dark-room-first-four-minutes/")}>{copy.readEssay} <span aria-hidden="true">→</span></a></div></article>
   </section>
 
   <section class="formats shell" aria-labelledby="formats-title">
@@ -82,7 +82,7 @@ const copy = locale === "de" ? {
 
   <section class="disclosures shell">
     <article><h2 class="display">{copy.ownershipTitle}</h2><p>{copy.ownership}</p><a class="action" href={pathFor(locale, "/about/new-ownership/")}>{copy.ownershipLink} <span aria-hidden="true">→</span></a></article>
-    <article><h2 class="display">{copy.operationsTitle}</h2><p>{copy.operations}</p><a class="action" href="https://contextter.com/" rel="external nofollow">{copy.contextter} <span aria-hidden="true">↗</span></a></article>
+    <article><h2 class="display">{copy.operationsTitle}</h2><p>{copy.operations}</p><a class="action" href={pathFor(locale, "/case-study/rebuilding-nightmare-mode/")}>{copy.contextter} <span aria-hidden="true">→</span></a></article>
   </section>
 
   <SiteFooter locale={locale} />

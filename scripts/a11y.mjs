@@ -4,6 +4,7 @@ import { chromium, devices } from "playwright";
 const base = process.env.QA_BASE_URL ?? "http://127.0.0.1:4321";
 const routes = [
   "/",
+  "/case-study/rebuilding-nightmare-mode/",
   "/essays/a-game-is-more-than-its-files/",
   "/field-notes/",
   "/field-notes/a-dark-room-first-four-minutes/",
@@ -12,6 +13,7 @@ const routes = [
   "/impressum/",
   "/rights-contact/",
   "/de/",
+  "/de/fallstudie/nightmare-mode-neuaufbau/",
   "/de/essays/ein-spiel-ist-mehr-als-seine-dateien/",
   "/de/play-studies/a-dark-room-die-ersten-vier-minuten/",
   "/de/play-studies/protokoll/",

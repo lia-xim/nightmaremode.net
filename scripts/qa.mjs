@@ -6,7 +6,7 @@ const output = process.env.QA_OUTPUT_DIR ?? "design/qa";
 mkdirSync(output, { recursive: true });
 
 const browser = await chromium.launch({ headless: true });
-const results = { desktop: {}, mobile: {}, article: {}, fieldStudy: {}, errors: [], failedRequests: [] };
+const results = { desktop: {}, mobile: {}, caseStudy: {}, article: {}, fieldStudy: {}, errors: [], failedRequests: [] };
 
 const attachDiagnostics = (page, prefix = "") => {
   page.on("console", (message) => {
@@ -68,6 +68,20 @@ results.article = await article.evaluate(() => ({
   robots: document.querySelector("meta[name='robots']")?.getAttribute("content"),
 }));
 await article.screenshot({ path: `${output}/essay-desktop-full.png`, fullPage: true });
+const caseStudy = await browser.newPage({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1 });
+attachDiagnostics(caseStudy, "case-study: ");
+await caseStudy.goto(`${base}/case-study/rebuilding-nightmare-mode/`, { waitUntil: "networkidle" });
+results.caseStudy = await caseStudy.evaluate(() => ({
+  h1: document.querySelector("h1")?.textContent?.trim(),
+  sections: document.querySelectorAll("main section").length,
+  contextterLinks: document.querySelectorAll('a[href^="https://contextter.com/"][rel~="nofollow"]').length,
+  schemaType: [...document.querySelectorAll('script[type="application/ld+json"]')].some((node) => node.textContent?.includes('"Article"')) ? "Article" : null,
+  brokenImages: [...document.images].filter((image) => image.currentSrc && image.complete && image.naturalWidth === 0).length,
+  scrollWidth: document.documentElement.scrollWidth,
+  clientWidth: document.documentElement.clientWidth,
+  robots: document.querySelector("meta[name='robots']")?.getAttribute("content"),
+}));
+await caseStudy.screenshot({ path: `${output}/case-study-desktop-full.png`, fullPage: true });
 const fieldStudy = await browser.newPage({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1 });
 attachDiagnostics(fieldStudy, "field-study: ");
 await fieldStudy.goto(base, { waitUntil: "networkidle" });
@@ -92,4 +106,4 @@ await fieldStudy.screenshot({ path: `${output}/field-study-desktop-full.png`, fu
 await browser.close();
 console.log(JSON.stringify(results, null, 2));
 
-if (results.errors.length || results.failedRequests.length || results.desktop.brokenImages || results.mobile.brokenImages || results.desktop.scrollWidth !== results.desktop.clientWidth || results.mobile.scrollWidth !== results.mobile.clientWidth || results.desktop.h1 !== "Read games closely." || !results.mobile.navVisible || results.article.h1 !== "A game is more than its files" || results.article.sources !== 3 || results.article.schemaType !== "Article" || results.article.brokenImages || results.article.scrollWidth !== results.article.clientWidth || results.fieldStudy.h1 !== "Four minutes in A Dark Room" || results.fieldStudy.timelineEvents !== 12 || results.fieldStudy.schemaType !== "Article" || results.fieldStudy.sessionStatus !== 200 || results.fieldStudy.sessionId !== "adr-web-2026-08-23-01" || results.fieldStudy.brokenImages || results.fieldStudy.scrollWidth !== results.fieldStudy.clientWidth) process.exitCode = 1;
+if (results.errors.length || results.failedRequests.length || results.desktop.brokenImages || results.mobile.brokenImages || results.desktop.scrollWidth !== results.desktop.clientWidth || results.mobile.scrollWidth !== results.mobile.clientWidth || results.desktop.h1 !== "An old domain. An open rebuild." || !results.mobile.navVisible || results.caseStudy.h1 !== "How we are rebuilding an old editorial domain without inheriting its past." || results.caseStudy.sections < 8 || results.caseStudy.contextterLinks !== 1 || results.caseStudy.schemaType !== "Article" || results.caseStudy.brokenImages || results.caseStudy.scrollWidth !== results.caseStudy.clientWidth || results.article.h1 !== "A game is more than its files" || results.article.sources !== 3 || results.article.schemaType !== "Article" || results.article.brokenImages || results.article.scrollWidth !== results.article.clientWidth || results.fieldStudy.h1 !== "Four minutes in A Dark Room" || results.fieldStudy.timelineEvents !== 12 || results.fieldStudy.schemaType !== "Article" || results.fieldStudy.sessionStatus !== 200 || results.fieldStudy.sessionId !== "adr-web-2026-08-23-01" || results.fieldStudy.brokenImages || results.fieldStudy.scrollWidth !== results.fieldStudy.clientWidth) process.exitCode = 1;

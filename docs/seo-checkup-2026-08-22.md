@@ -187,4 +187,14 @@ The method page adapts ideas into a new editorial worksheet. It does not reprodu
 - The homepage, publication hubs, preservation essay, A Dark Room study, play-study protocol, about/governance pages, imprint and privacy notice were rewritten in a shorter, evidence-first register. The former oversized manifesto sections and repeated slogan formulas were removed.
 - The canonical page registry now assigns a distinct German user job to each eventual indexable translation. Historical legacy URLs are not translated or multiplied.
 - A same-owner Contextter operating record is now accepted at `/about/site-operations/` and `/de/ueber-uns/website-betrieb/`. It reports performed research and technical work, discloses Matthias Ramahi as operator of both projects, states that the relationship is not an independent recommendation, and explicitly records that ranking, traffic, indexation and GSC status are not proven. Links use the Contextter brand and `nofollow`; there is no footer, reciprocal, exact-match or portfolio network.
+
+## Deep rebuild case study — 28 August 2026
+
+The site's primary user job has changed from presenting a small games publication to documenting the rebuild of an acquired former editorial domain. The games-and-culture work remains, but now serves as the original editorial test surface rather than the whole proposition.
+
+- `/case-study/rebuilding-nightmare-mode/` and `/de/fallstudie/nightmare-mode-neuaufbau/` are separate, reciprocal language URLs with their own canonicals.
+- The case study records the failed first direction, the rights boundary, seven operating decisions, a status-labelled evidence register, the two-key indexing gate, a reusable ten-point checklist and an explicit stop rule.
+- The Contextter disclosure distinguishes work performed and operating method from capability proven inside the current customer-facing application. It is a same-owner internal case, not a customer testimonial or an independent recommendation.
+- The published technical figures are a dated pre-expansion baseline, not performance outcomes. Rankings, traffic, indexation and authenticated GSC state remain unproven.
+- The protected state is unchanged: `noindex,nofollow`, `robots.txt` with `Disallow: /`, and no sitemap until the documented GSC and launch gates pass.
 - The protected launch state is unchanged. Global `noindex, nofollow`, `robots.txt` `Disallow: /`, absent sitemap and the two-key GSC launch lock remain mandatory until authenticated checks pass.
