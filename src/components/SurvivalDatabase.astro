@@ -15,6 +15,14 @@ const copy = locale === "de" ? {
   allStates: "Alle Zustände",
   outlook: "Tendenz",
   allOutlooks: "Alle Tendenzen",
+  sort: "Sortierung",
+  sortYearAsc: "Älteste zuerst",
+  sortYearDesc: "Neueste zuerst",
+  sortTitle: "Titel A–Z",
+  sortReviewed: "Geprüfte zuerst",
+  reset: "Filter zurücksetzen",
+  overview: "Tendenzen im Recherchekorpus",
+  overviewNote: "Bei offenen Datensätzen sind diese Tendenzen Hypothesen, keine Befunde.",
   reviewed: "Geprüft",
   pending: "Recherche offen",
   game: "Spiel",
@@ -40,6 +48,14 @@ const copy = locale === "de" ? {
   allStates: "All states",
   outlook: "Outlook",
   allOutlooks: "All outlooks",
+  sort: "Sort",
+  sortYearAsc: "Oldest first",
+  sortYearDesc: "Newest first",
+  sortTitle: "Title A–Z",
+  sortReviewed: "Reviewed first",
+  reset: "Reset filters",
+  overview: "Outlooks across the research corpus",
+  overviewNote: "For pending records, these outlooks are hypotheses, not findings.",
   reviewed: "Reviewed",
   pending: "Research pending",
   game: "Game",
@@ -56,6 +72,10 @@ const copy = locale === "de" ? {
   note: "Every game has a dossier and an immediate outlook. Only two outlooks are evidence-complete; every other one remains an explicit, noindex research hypothesis.",
 };
 const decades = [1990, 2000, 2010];
+const outlookCounts = survivalCatalog.reduce((counts, item) => {
+  counts[catalogOutlook(item)] += 1;
+  return counts;
+}, { positive: 0, mixed: 0, negative: 0 });
 ---
 
 <section class="database" data-survival-database data-locale={locale} aria-labelledby="database-title">
@@ -101,10 +121,34 @@ const decades = [1990, 2000, 2010];
         {Object.entries(outlookLabels).map(([value, label]) => <option value={value}>{label.icon} {label[locale]}</option>)}
       </select>
     </label>
+    <label>
+      <span>{copy.sort}</span>
+      <select data-sort>
+        <option value="year-asc">{copy.sortYearAsc}</option>
+        <option value="year-desc">{copy.sortYearDesc}</option>
+        <option value="title-asc">{copy.sortTitle}</option>
+        <option value="reviewed-first">{copy.sortReviewed}</option>
+      </select>
+    </label>
   </div>
 
-  <div class="database__summary" aria-live="polite">
-    <strong data-result-count>{survivalCatalog.length}</strong> {copy.resultSuffix}
+  <div class="outlook-overview" aria-labelledby="outlook-overview-title">
+    <div class="outlook-overview__intro">
+      <strong id="outlook-overview-title">{copy.overview}</strong>
+      <span>{copy.overviewNote}</span>
+    </div>
+    <div class="outlook-overview__buttons">
+      {Object.entries(outlookLabels).map(([value, label]) => <button type="button" data-outlook-quick={value} aria-pressed="false">
+        <span class="outlook-overview__icon" aria-hidden="true">{label.icon}</span>
+        <strong>{outlookCounts[value as keyof typeof outlookCounts]}</strong>
+        <span>{label[locale]}</span>
+      </button>)}
+    </div>
+  </div>
+
+  <div class="database__summary">
+    <span aria-live="polite"><strong data-result-count>{survivalCatalog.length}</strong> {copy.resultSuffix}</span>
+    <button type="button" data-reset-filters disabled>{copy.reset}</button>
   </div>
 
   <div class="table-wrap">
@@ -115,13 +159,13 @@ const decades = [1990, 2000, 2010];
           const reviewed = item.recordState === "reviewed" && item.reviewedCaseId;
           const outlook = catalogOutlook(item);
           const path = catalogCasePath(item, locale);
-          return <tr data-catalog-row data-title={item.title.toLocaleLowerCase(locale)} data-decade={Math.floor(item.originalRelease / 10) * 10} data-lane={item.researchLane} data-state={item.recordState} data-outlook={outlook}>
+          return <tr data-catalog-row data-title={item.title.toLocaleLowerCase(locale)} data-year={item.originalRelease} data-decade={Math.floor(item.originalRelease / 10) * 10} data-lane={item.researchLane} data-state={item.recordState} data-outlook={outlook}>
             <th scope="row"><a href={path} data-umami-event="survival-case-open" data-umami-event-case={item.id}>{item.title}</a></th>
-            <td>{item.originalRelease}</td>
-            <td><span class="lane">{catalogLaneLabel(item.researchLane, locale)}</span></td>
-            <td><span class:list={["outlook-chip", `outlook-chip--${outlook}`]}><span aria-hidden="true">{outlookLabels[outlook].icon}</span><strong>{catalogOutlookLabel(outlook, locale)}</strong></span></td>
-            <td><span class:list={["evidence", reviewed ? "evidence--verified" : "evidence--hypothesis"]}>{reviewed ? copy.verified : copy.hypothesis}</span></td>
-            <td><a class="row-action" href={path} aria-label={`${copy.open}: ${item.title}`}>{copy.open} <span aria-hidden="true">→</span></a></td>
+            <td data-label={copy.year}>{item.originalRelease}</td>
+            <td data-label={copy.question}><span class="lane">{catalogLaneLabel(item.researchLane, locale)}</span></td>
+            <td data-label={copy.verdict}><span class:list={["outlook-chip", `outlook-chip--${outlook}`]}><span aria-hidden="true">{outlookLabels[outlook].icon}</span><strong>{catalogOutlookLabel(outlook, locale)}</strong></span></td>
+            <td data-label={copy.evidence}><span class:list={["evidence", reviewed ? "evidence--verified" : "evidence--hypothesis"]}>{reviewed ? copy.verified : copy.hypothesis}</span></td>
+            <td class="record-cell"><a class="row-action" href={path} aria-label={`${copy.open}: ${item.title}`}>{copy.open} <span aria-hidden="true">→</span></a></td>
           </tr>;
         })}
       </tbody>
@@ -137,12 +181,26 @@ const decades = [1990, 2000, 2010];
     const lane = database.querySelector<HTMLSelectElement>("[data-filter-lane]");
     const state = database.querySelector<HTMLSelectElement>("[data-filter-state]");
     const outlook = database.querySelector<HTMLSelectElement>("[data-filter-outlook]");
+    const sort = database.querySelector<HTMLSelectElement>("[data-sort]");
+    const reset = database.querySelector<HTMLButtonElement>("[data-reset-filters]");
+    const quickFilters = [...database.querySelectorAll<HTMLButtonElement>("[data-outlook-quick]")];
+    const body = database.querySelector<HTMLTableSectionElement>("tbody");
     const rows = [...database.querySelectorAll<HTMLTableRowElement>("[data-catalog-row]")];
     const count = database.querySelector<HTMLElement>("[data-result-count]");
     const empty = database.querySelector<HTMLElement>("[data-empty]");
 
     const update = () => {
       const query = search?.value.trim().toLocaleLowerCase(database.dataset.locale ?? "en") ?? "";
+      const sortValue = sort?.value ?? "year-asc";
+      rows.sort((a, b) => {
+        const titleOrder = (a.dataset.title ?? "").localeCompare(b.dataset.title ?? "", database.dataset.locale ?? "en");
+        const yearOrder = Number(a.dataset.year ?? 0) - Number(b.dataset.year ?? 0);
+        if (sortValue === "year-desc") return -yearOrder || titleOrder;
+        if (sortValue === "title-asc") return titleOrder;
+        if (sortValue === "reviewed-first") return (a.dataset.state === "reviewed" ? -1 : 1) - (b.dataset.state === "reviewed" ? -1 : 1) || yearOrder || titleOrder;
+        return yearOrder || titleOrder;
+      });
+      for (const row of rows) body?.append(row);
       let visible = 0;
       for (const row of rows) {
         const matches = (!query || row.dataset.title?.includes(query))
@@ -155,6 +213,9 @@ const decades = [1990, 2000, 2010];
       }
       if (count) count.textContent = String(visible);
       if (empty) empty.hidden = visible !== 0;
+      const hasFilters = Boolean(query || decade?.value || lane?.value || state?.value || outlook?.value || sortValue !== "year-asc");
+      if (reset) reset.disabled = !hasFilters;
+      for (const button of quickFilters) button.setAttribute("aria-pressed", String(button.dataset.outlookQuick === outlook?.value));
     };
 
     search?.addEventListener("input", update);
@@ -162,6 +223,23 @@ const decades = [1990, 2000, 2010];
     lane?.addEventListener("change", update);
     state?.addEventListener("change", update);
     outlook?.addEventListener("change", update);
+    sort?.addEventListener("change", update);
+    reset?.addEventListener("click", () => {
+      if (search) search.value = "";
+      if (decade) decade.value = "";
+      if (lane) lane.value = "";
+      if (state) state.value = "";
+      if (outlook) outlook.value = "";
+      if (sort) sort.value = "year-asc";
+      update();
+      search?.focus();
+    });
+    for (const button of quickFilters) button.addEventListener("click", () => {
+      if (!outlook) return;
+      outlook.value = outlook.value === button.dataset.outlookQuick ? "" : button.dataset.outlookQuick ?? "";
+      update();
+    });
+    update();
   }
 </script>
 
@@ -171,13 +249,25 @@ const decades = [1990, 2000, 2010];
   .database__heading .mono { margin: 0 0 0.65rem; color: var(--signal); }
   .database__heading h2 { font-size: clamp(2.7rem, 5vw, 5rem); }
   .database__heading > p { max-width: 39rem; margin: 0; color: var(--ink-soft); }
-  .filters { display: grid; grid-template-columns: minmax(15rem, 1.35fr) repeat(4, minmax(9rem, 0.62fr)); margin-top: 3rem; border: 1px solid var(--line-strong); }
+  .filters { display: grid; grid-template-columns: minmax(14rem, 1.25fr) repeat(5, minmax(8rem, 0.58fr)); margin-top: 3rem; border: 1px solid var(--line-strong); }
   .filters label { display: grid; gap: 0.45rem; padding: 0.85rem 1rem; }
   .filters label + label { border-left: 1px solid var(--line); }
   .filters span { color: var(--ink-soft); font-size: 0.68rem; letter-spacing: 0.04em; text-transform: uppercase; }
   .filters input, .filters select { width: 100%; min-height: 2rem; padding: 0; border: 0; outline-offset: 0.35rem; background: transparent; color: var(--ink); font: inherit; font-size: 0.88rem; }
-  .database__summary { padding: 1.3rem 0 0.8rem; color: var(--ink-soft); font-size: 0.78rem; }
+  .outlook-overview { display: grid; grid-template-columns: minmax(15rem, 0.75fr) 1fr; gap: 2rem; align-items: center; margin-top: 1.25rem; padding: 1rem; background: var(--paper-soft); }
+  .outlook-overview__intro { display: grid; gap: 0.2rem; }
+  .outlook-overview__intro strong { font-family: var(--display); font-size: 1.05rem; font-weight: 600; }
+  .outlook-overview__intro span { color: var(--ink-soft); font-size: 0.72rem; }
+  .outlook-overview__buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.45rem; }
+  .outlook-overview button { display: grid; grid-template-columns: auto auto 1fr; gap: 0.55rem; align-items: center; min-height: 3rem; padding: 0.6rem 0.75rem; border: 1px solid var(--line); background: var(--paper); color: var(--ink); text-align: left; cursor: pointer; }
+  .outlook-overview button:hover, .outlook-overview button[aria-pressed="true"] { border-color: var(--signal); }
+  .outlook-overview button[aria-pressed="true"] { box-shadow: inset 0 -2px 0 var(--signal); }
+  .outlook-overview button > strong { font-size: 1rem; }
+  .outlook-overview button > span:last-child { color: var(--ink-soft); font-size: 0.72rem; }
+  .database__summary { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.3rem 0 0.8rem; color: var(--ink-soft); font-size: 0.78rem; }
   .database__summary strong { color: var(--ink); }
+  .database__summary button { padding: 0; border: 0; border-bottom: 1px solid currentColor; background: transparent; color: var(--signal); cursor: pointer; }
+  .database__summary button:disabled { border-color: transparent; color: var(--ink-soft); cursor: default; opacity: 0.55; }
   .table-wrap { overflow-x: auto; border-top: 1px solid var(--line-strong); }
   table { width: 100%; min-width: 66rem; border-collapse: collapse; }
   th, td { padding: 1rem 0.8rem; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
@@ -201,10 +291,27 @@ const decades = [1990, 2000, 2010];
     .filters label + label { border-left: 0; }
     .filters label:nth-child(even) { border-left: 1px solid var(--line); }
     .filters label:nth-child(n+3) { border-top: 1px solid var(--line); }
+    .outlook-overview { grid-template-columns: 1fr; gap: 0.8rem; }
+  }
+  @media (max-width: 1050px) {
+    .table-wrap { overflow: visible; border-top: 0; }
+    table, tbody { display: block; width: 100%; min-width: 0; }
+    thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+    tbody { display: grid; gap: 0.75rem; }
+    tbody tr { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem 1rem; padding: 1rem; border: 1px solid var(--line); }
+    tbody tr[hidden] { display: none; }
+    tbody th, tbody td { width: auto; padding: 0; border: 0; }
+    tbody th { grid-column: 1 / -1; padding-bottom: 0.75rem; border-bottom: 1px solid var(--line); font-size: 1.25rem; }
+    tbody td { display: grid; gap: 0.15rem; align-content: start; }
+    tbody td[data-label]::before { content: attr(data-label); color: var(--ink-soft); font-size: 0.62rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+    .record-cell { grid-column: 1 / -1; padding-top: 0.3rem; }
   }
   @media (max-width: 520px) {
     .filters { grid-template-columns: 1fr; }
     .filters label:nth-child(even) { border-left: 0; }
     .filters label + label { border-top: 1px solid var(--line); }
+    .outlook-overview__buttons { grid-template-columns: 1fr; }
+    tbody tr { grid-template-columns: 1fr; }
+    tbody th, .record-cell { grid-column: 1; }
   }
 </style>
