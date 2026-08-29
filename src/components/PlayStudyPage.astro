@@ -71,6 +71,7 @@ const schema = { "@context": "https://schema.org", "@type": "Article", inLanguag
       <section class="limits"><h2 class="display">{copy.limits}</h2><ul>{copy.limitsList.map((limit) => <li>{limit}</li>)}</ul></section>
       <section class="sources"><h2 class="display">{german ? "Quellen und Reproduktion" : "Sources and reproduction"}</h2><p><a href={session.game.url} rel="external">A Dark Room — official web build</a></p><p><a href={`https://github.com/doublespeakgames/adarkroom/commit/${session.game.sourceCommit}`} rel="external">Source repository at tested commit</a></p><p><a href="/field-notes/a-dark-room-first-four-minutes/session.json" download>{german ? "Strukturierten Sitzungsdatensatz laden" : "Download the structured session record"}</a></p></section>
       <section class="disclosure"><h2 class="display">{german ? "Produktionshinweis" : "Production note"}</h2><p>{copy.disclosure}</p></section>
+      <nav class="study-next" aria-label={german ? "Format und Arbeitsblatt" : "Format and worksheet"}><a href={pathFor(locale, "/field-notes/")}>{german ? "Zur Serie: Die ersten vier Minuten" : "About The First Four Minutes"} <span aria-hidden="true">→</span></a><a href={pathFor(locale, "/field-notes/worksheet/")} data-umami-event="worksheet-open" data-umami-event-placement="play-study">{german ? "Eigene Sitzung lokal protokollieren" : "Record your own session locally"} <span aria-hidden="true">→</span></a></nav>
     </div>
   </article>
   <SiteFooter locale={locale} />
@@ -99,5 +100,8 @@ const schema = { "@context": "https://schema.org", "@type": "Article", inLanguag
   .limits, .disclosure { padding: clamp(2rem, 4vw, 3.5rem); background: var(--paper-soft); }
   .sources { padding-top: 2rem; border-top: 1px solid var(--line); }
   .sources a { text-decoration: underline; text-underline-offset: 0.2em; }
-  @media (max-width: 620px) { .conditions dl { grid-template-columns: 1fr; } .timeline li { grid-template-columns: 3.5rem 1fr; gap: 0.8rem; } }
+  .study-next { display: grid; grid-template-columns: 1fr 1fr; margin-top: 5rem; border-block: 1px solid var(--line); }
+  .study-next a { display: flex; justify-content: space-between; gap: 1rem; padding: 1.25rem 1.25rem 1.25rem 0; color: var(--signal); }
+  .study-next a + a { padding-left: 1.25rem; border-left: 1px solid var(--line); }
+  @media (max-width: 620px) { .conditions dl, .study-next { grid-template-columns: 1fr; } .timeline li { grid-template-columns: 3.5rem 1fr; gap: 0.8rem; } .study-next a + a { padding-left: 0; border-top: 1px solid var(--line); border-left: 0; } }
 </style>

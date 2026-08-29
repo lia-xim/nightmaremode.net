@@ -1,0 +1,126 @@
+---
+import BaseLayout from "@/components/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import { pathFor, type Locale } from "@/i18n";
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const german = locale === "de";
+
+const copy = german ? {
+  title: "Die ersten vier Minuten",
+  description: "Eine fortlaufende Reihe prüfbarer Play Studies darüber, wie Spiele in ihren ersten vier Minuten Regeln, Entscheidungen und Erwartungen vermitteln.",
+  intro: "Keine Kurzreviews. Jede Studie hält Version, Bedingungen, Ereignisse und Beleggrenzen fest, bevor sie eine Interpretation formuliert.",
+  currentLabel: "Veröffentlichte Studie 01",
+  currentTitle: "A Dark Room: Vom Feuer zur ersten Entscheidung",
+  currentBody: "Ein automatisierter kontrollierter Lauf protokolliert 257 Sekunden des getesteten Web-Builds. Er belegt sichtbare Zustandsänderungen, nicht das Erleben eines Menschen.",
+  currentLink: "Studie und Datensatz prüfen",
+  toolTitle: "Die nächste Studie selbst dokumentieren",
+  toolBody: "Das browserlokale Arbeitsblatt führt eine Sitzung durch denselben Evidenzweg: vier Minuten, festgehaltene Bedingungen, Zeitprotokoll, getrennte Aussagearten und eine sichtbare Publikationsgrenze.",
+  toolLink: "Play Study Worksheet öffnen",
+  protocolLink: "Methodisches Protokoll lesen",
+  anatomyTitle: "Was jede Studie vergleichbar macht",
+  anatomy: [
+    ["01", "Ein klarer Ausschnitt", "Eine Frage, ein Spiel und eine feste Grenze von 00:00 bis 04:00."],
+    ["02", "Bedingungen vor Deutung", "Build, Plattform, Eingabe, Sprache, Zugänglichkeit und unbekannte Faktoren bleiben am Befund."],
+    ["03", "Ein chronologisches Ledger", "Aktion, Zustand davor, beobachtete Reaktion und Zustand danach werden getrennt notiert."],
+    ["04", "Aussagen mit Typ", "Beobachtung, externe Quelle, Interpretation, Unbekanntes und Gegenbeispiel sind nicht dasselbe."],
+  ],
+  nextTitle: "Die zweite Studie ist noch keine Behauptung",
+  nextBody: "Matthias Ramahi muss die nächste Sitzung selbst durchführen und den Datensatz redaktionell freigeben. Bis das geschehen ist, nennt Nightmare Mode weder ein Spiel noch eine menschliche Erfahrung. Das Worksheet ist die vorbereitete Aufnahmeoberfläche, nicht der Beleg für eine bereits erfolgte Studie.",
+  seriesTitle: "Wozu die Reihe dienen soll",
+  seriesBody: "Mit mehreren unterschiedlich aufgebauten Spielen kann später verglichen werden, wann eine Regel erklärt, wann sie durch Handlung sichtbar und wann sie zunächst verborgen bleibt. Eine solche Vergleichsseite entsteht erst, wenn genügend echte Datensätze vorliegen.",
+} : {
+  title: "The First Four Minutes",
+  description: "An ongoing series of inspectable play studies about how games communicate rules, decisions and expectations in their first four minutes.",
+  intro: "These are not miniature reviews. Each study fixes the version, conditions, events and evidence boundary before it makes an interpretation.",
+  currentLabel: "Published study 01",
+  currentTitle: "A Dark Room: From the fire to the first decision",
+  currentBody: "An automated controlled run records 257 seconds of the tested web build. It supports observations about visible state changes, not a claim about human experience.",
+  currentLink: "Inspect the study and dataset",
+  toolTitle: "Document the next study yourself",
+  toolBody: "The browser-local worksheet takes a session through the same evidence path: four minutes, fixed conditions, a timed ledger, separated claim types and a visible publication boundary.",
+  toolLink: "Open the Play Study Worksheet",
+  protocolLink: "Read the method protocol",
+  anatomyTitle: "What makes each study comparable",
+  anatomy: [
+    ["01", "One bounded question", "One question, one game and a fixed window from 00:00 to 04:00."],
+    ["02", "Conditions before interpretation", "Build, platform, input, language, accessibility and unknown factors stay attached to the finding."],
+    ["03", "A chronological ledger", "Action, state before, observed response and state after are recorded separately."],
+    ["04", "Claims with a type", "Observation, external source, interpretation, unknown and counterexample are not interchangeable."],
+  ],
+  nextTitle: "The second study is not yet a claim",
+  nextBody: "Matthias Ramahi must conduct the next session himself and approve its record editorially. Until that happens, Nightmare Mode names neither a game nor a human experience. The worksheet is the prepared recording surface, not evidence that the study already took place.",
+  seriesTitle: "What the series is meant to establish",
+  seriesBody: "With several structurally different games, a later comparison can examine when a rule is explained, when it becomes visible through action and when it initially remains hidden. That comparison page will be published only after enough real records exist.",
+};
+---
+
+<BaseLayout lang={locale} title={copy.title} description={copy.description}>
+  <article>
+    <header class="series-hero shell">
+      <h1 class="display">{copy.title}</h1>
+      <div><p class="dek">{copy.description}</p><p>{copy.intro}</p></div>
+    </header>
+
+    <section class="series-current shell" aria-labelledby="current-study">
+      <div class="series-current__rail"><p>{copy.currentLabel}</p><span aria-hidden="true">01</span></div>
+      <div><h2 id="current-study" class="display">{copy.currentTitle}</h2><p>{copy.currentBody}</p><a class="action" href={pathFor(locale, "/field-notes/a-dark-room-first-four-minutes/")} data-umami-event="content-open" data-umami-event-target="play-study-a-dark-room" data-umami-event-placement="series-hub">{copy.currentLink}</a></div>
+    </section>
+
+    <section class="series-tool shell" aria-labelledby="series-tool-title">
+      <div><h2 id="series-tool-title" class="display">{copy.toolTitle}</h2><p>{copy.toolBody}</p></div>
+      <nav aria-label={german ? "Werkzeuge und Methode" : "Tools and method"}>
+        <a class="tool-link" href={pathFor(locale, "/field-notes/worksheet/")} data-umami-event="worksheet-open" data-umami-event-placement="series-hub"><strong>{copy.toolLink}</strong><span aria-hidden="true">→</span></a>
+        <a class="tool-link" href={pathFor(locale, "/field-notes/play-study-protocol/")}><strong>{copy.protocolLink}</strong><span aria-hidden="true">→</span></a>
+      </nav>
+    </section>
+
+    <section class="series-anatomy shell" aria-labelledby="anatomy-title">
+      <h2 id="anatomy-title" class="display">{copy.anatomyTitle}</h2>
+      <ol>{copy.anatomy.map(([number, title, body]) => <li><span>{number}</span><div><h3 class="display">{title}</h3><p>{body}</p></div></li>)}</ol>
+    </section>
+
+    <section class="series-boundary shell">
+      <div><h2 class="display">{copy.nextTitle}</h2><p>{copy.nextBody}</p></div>
+      <div><h2 class="display">{copy.seriesTitle}</h2><p>{copy.seriesBody}</p></div>
+    </section>
+  </article>
+  <SiteFooter locale={locale} />
+</BaseLayout>
+
+<style>
+  .series-hero { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2.5rem, 7vw, 8rem); padding-block: clamp(5rem, 10vw, 10rem); border-bottom: 1px solid var(--line); }
+  .series-hero h1 { max-width: 8ch; font-size: clamp(4.5rem, 9vw, 9rem); }
+  .series-hero > div { align-self: end; max-width: 42rem; }
+  .dek { margin: 0 0 1.5rem; font-family: var(--display); font-size: clamp(1.5rem, 2.5vw, 2.3rem); line-height: 1.3; }
+  .series-hero > div > p:last-child, .series-current p, .series-tool p, .series-anatomy p, .series-boundary p { color: var(--ink-soft); }
+  .series-current { display: grid; grid-template-columns: minmax(12rem, 0.32fr) 1fr; gap: clamp(2rem, 7vw, 8rem); padding-block: clamp(4rem, 8vw, 8rem); border-bottom: 1px solid var(--line); }
+  .series-current__rail { color: var(--signal); }
+  .series-current__rail p { margin: 0; color: var(--signal); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .series-current__rail span { display: block; margin-top: 2rem; color: color-mix(in srgb, var(--signal) 55%, var(--paper)); font-family: var(--display); font-size: clamp(5rem, 10vw, 10rem); line-height: 0.75; }
+  .series-current h2, .series-tool h2 { max-width: 13ch; font-size: clamp(3rem, 5.5vw, 5.8rem); }
+  .series-current p, .series-tool p { max-width: 44rem; font-size: 1.08rem; }
+  .series-tool { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(3rem, 7vw, 8rem); padding-block: clamp(4rem, 8vw, 8rem); border-bottom: 1px solid var(--line); background: var(--paper-soft); box-shadow: 0 0 0 100vmax var(--paper-soft); clip-path: inset(0 -100vmax); }
+  .series-tool nav { align-self: end; border-top: 1px solid var(--line-strong); }
+  .tool-link { display: flex; justify-content: space-between; gap: 2rem; padding: 1.4rem 0; border-bottom: 1px solid var(--line-strong); color: var(--signal); }
+  .tool-link:hover { color: var(--ink); }
+  .series-anatomy { display: grid; grid-template-columns: 0.35fr 1fr; gap: clamp(3rem, 7vw, 8rem); padding-block: clamp(4rem, 8vw, 8rem); border-bottom: 1px solid var(--line); }
+  .series-anatomy > h2 { font-size: clamp(2.7rem, 4.5vw, 4.8rem); }
+  .series-anatomy ol { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+  .series-anatomy li { display: grid; grid-template-columns: 4rem 1fr; gap: 1.5rem; padding-block: 1.8rem; border-bottom: 1px solid var(--line); }
+  .series-anatomy li > span { color: var(--signal); }
+  .series-anatomy h3 { font-size: clamp(1.8rem, 2.8vw, 2.8rem); }
+  .series-anatomy p { max-width: 39rem; margin: 0.6rem 0 0; }
+  .series-boundary { display: grid; grid-template-columns: 1fr 1fr; padding-block: clamp(4rem, 8vw, 8rem); }
+  .series-boundary > div { padding-right: clamp(2rem, 5vw, 5rem); }
+  .series-boundary > div + div { padding-left: clamp(2rem, 5vw, 5rem); border-left: 1px solid var(--line); }
+  .series-boundary h2 { font-size: clamp(2.3rem, 3.8vw, 3.9rem); }
+  @media (max-width: 780px) {
+    .series-hero, .series-current, .series-tool, .series-anatomy, .series-boundary { grid-template-columns: 1fr; gap: 2.5rem; }
+    .series-current__rail { display: flex; align-items: center; justify-content: space-between; }
+    .series-current__rail span { margin: 0; font-size: 5rem; }
+    .series-boundary > div { padding-right: 0; }
+    .series-boundary > div + div { padding: 3rem 0 0; border-top: 1px solid var(--line); border-left: 0; }
+  }
+</style>

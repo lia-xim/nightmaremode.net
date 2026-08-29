@@ -25,6 +25,9 @@ const copy = german ? {
   worksheet: `STUDIE\nFrage:\nErwartung vorab:\nWas würde ihr widersprechen:\nAußerhalb des Umfangs:\n\nBEDINGUNGEN\nSpiel / Edition:\nPlattform / Region:\nVersion oder Build:\nDatum / Dauer:\nHardware / Eingabe / Bild / Ton:\nNetzwerk / Konto:\nSprache / Schwierigkeit:\nBarrierefreiheit:\nMods oder externe Werkzeuge:\nNicht verfügbare Funktionen:\nUnbekannte Bedingungen:\n\nZEITPROTOKOLL\nZeitmarke:\nAktion:\nZustand davor:\nBeobachtete Reaktion:\nZustand danach:\nAufnahme oder Notiz:\nWiederholung:\nAlternative Erklärung:\n\nAUSSAGEN\nBeobachtung:\nExterne Quelle:\nInterpretation:\nUnbekannt:\nGegenbeispiel:\n\nVERÖFFENTLICHUNGSGRENZE\nWas die Sitzung stützt:\nWas sie nicht belegt:\nRechte- oder Datenschutzgrenzen:\nKI-Hilfe:\nVerantwortliche Redaktion:\nKorrekturkontakt:`,
   limits: "Das Protokoll ist für kleine, prüfbare redaktionelle Studien gedacht. Es ersetzt keine Forschung mit Teilnehmenden, keine Ethnografie und keine statistische Aussage über eine Population.",
   sources: "Die Methode ist ein eigenes Nightmare-Mode-Arbeitsprotokoll. Sie ist unter anderem von Consalvo und Duttons qualitativer Methodik sowie dem Digital Game Analysis Protocol (DiGAP) angeregt; sie übernimmt keines der beiden Protokolle wörtlich.",
+  toolTitle: "Das Protokoll direkt im Browser verwenden",
+  toolBody: "Das interaktive Arbeitsblatt setzt eine feste Vier-Minuten-Grenze, speichert den Entwurf nur lokal und exportiert Markdown oder JSON. Es braucht weder Konto noch Upload.",
+  toolLink: "Play Study Worksheet öffnen",
   next: "Play Study in A Dark Room ansehen",
 } : {
   title: "A practical protocol for documenting play",
@@ -44,11 +47,14 @@ const copy = german ? {
   worksheet: `STUDY\nQuestion:\nInitial expectation:\nEvidence that would challenge it:\nOut of scope:\n\nCONDITIONS\nGame / edition:\nPlatform / region:\nVersion or build:\nDate / duration:\nHardware / input / display / audio:\nNetwork / account state:\nLanguage / difficulty:\nAccessibility settings:\nMods or external tools:\nUnavailable features:\nUnknown conditions:\n\nEVENT LOG\nTimestamp:\nAction or input:\nState before:\nObserved response:\nState after:\nCapture or note reference:\nRepeat result:\nAlternative explanation:\n\nCLAIMS\nObservation:\nExternal source:\nInterpretation:\nUnknown:\nCounterexample:\n\nPUBLICATION BOUNDARY\nWhat this session supports:\nWhat it cannot establish:\nRights or privacy limits:\nAI assistance:\nResponsible editor:\nCorrection contact:`,
   limits: "This protocol is for small, inspectable editorial studies. It does not replace participant research, ethnography or statistical claims about a population.",
   sources: "This is an original Nightmare Mode working protocol. It draws on Consalvo and Dutton's qualitative toolkit and the Digital Game Analysis Protocol (DiGAP) without reproducing either protocol.",
+  toolTitle: "Use the protocol in your browser",
+  toolBody: "The interactive worksheet enforces a four-minute boundary, stores the draft locally and exports Markdown or JSON. It needs no account and uploads nothing.",
+  toolLink: "Open the Play Study Worksheet",
   next: "See the A Dark Room study",
 };
 
 const canonicalPath = pathFor(locale, "/field-notes/play-study-protocol/");
-const schema = { "@context": "https://schema.org", "@type": "Article", inLanguage: locale, headline: copy.title, description: copy.description, datePublished: "2026-08-22", dateModified: "2026-08-28", mainEntityOfPage: `https://nightmaremode.net${canonicalPath}`, author: { "@type": "Organization", name: german ? "Nightmare Mode Redaktion" : "Nightmare Mode editorial desk" }, editor: { "@type": "Person", name: "Matthias Ramahi" } };
+const schema = { "@context": "https://schema.org", "@type": "Article", inLanguage: locale, headline: copy.title, description: copy.description, datePublished: "2026-08-22", dateModified: "2026-08-29", mainEntityOfPage: `https://nightmaremode.net${canonicalPath}`, author: { "@type": "Organization", name: german ? "Nightmare Mode Redaktion" : "Nightmare Mode editorial desk" }, editor: { "@type": "Person", name: "Matthias Ramahi" } };
 ---
 
 <BaseLayout lang={locale} title={copy.title} description={copy.description} ogType="article">
@@ -58,6 +64,7 @@ const schema = { "@context": "https://schema.org", "@type": "Article", inLanguag
     <div class="method-body shell">
       <section class="answer"><h2 class="display">{copy.short}</h2><p>{copy.shortBody}</p></section>
       <ol class="steps">{copy.steps.map(([title, body], index) => <li><span>{String(index + 1).padStart(2, "0")}</span><div><h2 class="display">{title}</h2><p>{body}</p></div></li>)}</ol>
+      <section class="tool-callout"><p class="label">{german ? "Browserlokales Werkzeug" : "Browser-local tool"}</p><h2 class="display">{copy.toolTitle}</h2><p>{copy.toolBody}</p><a class="action" href={pathFor(locale, "/field-notes/worksheet/")} data-umami-event="worksheet-open" data-umami-event-placement="protocol">{copy.toolLink} <span aria-hidden="true">→</span></a></section>
       <section class="worksheet"><p class="label">{german ? "Kopierbares Arbeitsblatt" : "Copyable worksheet"}</p><h2 class="display">{german ? "Play-Study-Datensatz" : "Play-study record"}</h2><pre><code>{copy.worksheet}</code></pre></section>
       <section><h2 class="display">{german ? "Wo die Methode endet" : "Where the method stops"}</h2><p>{copy.limits}</p></section>
       <section class="sources"><h2 class="display">{german ? "Quellen und Anpassung" : "Sources and adaptation"}</h2><p>{copy.sources}</p><ul><li><a href="https://gamestudies.org/0601/articles/consalvo_dutton" rel="external">Consalvo &amp; Dutton: Game analysis</a></li><li><a href="https://gamestudies.org/2202/articles/gap_daneels_denoo_vandewalle_dupont_malliet" rel="external">Daneels et al.: DiGAP</a></li></ul></section>
@@ -75,6 +82,8 @@ const schema = { "@context": "https://schema.org", "@type": "Article", inLanguag
   .byline { margin-top: 2rem; color: var(--ink-soft); font-size: 0.9rem; }
   .method-body { max-width: 62rem; padding-block: clamp(4rem, 8vw, 8rem); }
   .answer { padding: clamp(2rem, 5vw, 4rem); background: var(--paper-soft); }
+  .tool-callout { padding: clamp(2rem, 5vw, 4rem) !important; border-top: 3px solid var(--signal) !important; background: var(--paper-soft); }
+  .tool-callout p { max-width: 44rem; }
   .method-body h2 { margin: 0; font-size: clamp(2.35rem, 4.5vw, 4.4rem); }
   .method-body p { font-size: clamp(1rem, 1.25vw, 1.14rem); line-height: 1.75; }
   .steps { margin: 5rem 0 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }

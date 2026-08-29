@@ -1,4 +1,4 @@
-import { mkdirSync } from "node:fs";
+import { mkdirSync, readFileSync } from "node:fs";
 import { chromium } from "playwright";
 
 const base = process.env.QA_BASE_URL ?? "http://127.0.0.1:4321";
@@ -6,7 +6,7 @@ const output = process.env.QA_OUTPUT_DIR ?? "design/qa";
 mkdirSync(output, { recursive: true });
 
 const browser = await chromium.launch({ headless: true });
-const results = { desktop: {}, mobile: {}, caseStudy: {}, article: {}, fieldStudy: {}, errors: [], failedRequests: [] };
+const results = { desktop: {}, mobile: {}, caseStudy: {}, article: {}, fieldStudy: {}, worksheet: {}, errors: [], failedRequests: [] };
 
 const attachDiagnostics = (page, prefix = "") => {
   page.on("console", (message) => {
@@ -84,7 +84,7 @@ results.caseStudy = await caseStudy.evaluate(() => ({
 await caseStudy.screenshot({ path: `${output}/case-study-desktop-full.png`, fullPage: true });
 const fieldStudy = await browser.newPage({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1 });
 attachDiagnostics(fieldStudy, "field-study: ");
-await fieldStudy.goto(base, { waitUntil: "networkidle" });
+await fieldStudy.goto(`${base}/field-notes/`, { waitUntil: "networkidle" });
 await fieldStudy.locator('a[href="/field-notes/a-dark-room-first-four-minutes/"]').first().click();
 await fieldStudy.waitForURL(`${base}/field-notes/a-dark-room-first-four-minutes/`);
 const sessionResponse = await fieldStudy.context().request.get(`${base}/field-notes/a-dark-room-first-four-minutes/session.json`);
@@ -103,7 +103,46 @@ results.fieldStudy = await fieldStudy.evaluate(() => ({
 results.fieldStudy.sessionStatus = sessionResponse.status();
 results.fieldStudy.sessionId = sessionRecord.studyId;
 await fieldStudy.screenshot({ path: `${output}/field-study-desktop-full.png`, fullPage: true });
+
+const worksheetContext = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1, acceptDownloads: true });
+const worksheet = await worksheetContext.newPage();
+attachDiagnostics(worksheet, "worksheet: ");
+await worksheet.goto(`${base}/field-notes/worksheet/`, { waitUntil: "networkidle" });
+await worksheet.getByRole("textbox", { name: "Game", exact: true }).fill("QA Study");
+await worksheet.getByRole("textbox", { name: "Edition / version / build" }).fill("Build 1.0");
+await worksheet.getByRole("textbox", { name: "Responsible observer" }).fill("Matthias Ramahi");
+await worksheet.getByRole("button", { name: "Add event" }).click();
+await worksheet.locator('[data-event-field="time"]').nth(1).fill("03:59");
+await worksheet.locator('[data-event-field="action"]').nth(1).fill("Pressed start");
+await worksheet.getByRole("textbox", { name: "Observation", exact: true }).fill("One action became available.");
+await worksheet.getByRole("textbox", { name: "What this session supports" }).fill("Only the recorded opening state.");
+await worksheet.waitForTimeout(350);
+const jsonDownloadPromise = worksheet.waitForEvent("download");
+await worksheet.getByRole("button", { name: "Download JSON" }).click();
+const jsonDownload = await jsonDownloadPromise;
+const jsonDraft = JSON.parse(readFileSync(await jsonDownload.path(), "utf8"));
+const markdownDownloadPromise = worksheet.waitForEvent("download");
+await worksheet.getByRole("button", { name: "Download Markdown" }).click();
+const markdownDownload = await markdownDownloadPromise;
+const markdownDraft = readFileSync(await markdownDownload.path(), "utf8");
+await worksheet.reload({ waitUntil: "networkidle" });
+results.worksheet = await worksheet.evaluate(() => ({
+  h1: document.querySelector("h1")?.textContent?.trim(),
+  game: document.querySelector('[data-field="game"]')?.value,
+  eventRows: document.querySelectorAll(".event-row").length,
+  persistedAction: document.querySelectorAll('[data-event-field="action"]')[1]?.value,
+  storedOnlyCopy: document.body.textContent?.includes("Stored only in this browser"),
+  scrollWidth: document.documentElement.scrollWidth,
+  clientWidth: document.documentElement.clientWidth,
+  robots: document.querySelector("meta[name='robots']")?.getAttribute("content"),
+}));
+results.worksheet.json = { schemaVersion: jsonDraft.schemaVersion, kind: jsonDraft.kind, boundarySeconds: jsonDraft.boundarySeconds, game: jsonDraft.identity?.game, action: jsonDraft.events?.[1]?.action };
+results.worksheet.markdown = { heading: markdownDraft.startsWith("# QA Study: The First Four Minutes"), localOnly: markdownDraft.includes("No data was uploaded by the worksheet.") };
+await worksheet.screenshot({ path: `${output}/worksheet-mobile-full.png`, fullPage: true });
+await worksheet.setViewportSize({ width: 1440, height: 1000 });
+await worksheet.screenshot({ path: `${output}/worksheet-desktop-full.png`, fullPage: true });
+await worksheetContext.close();
 await browser.close();
 console.log(JSON.stringify(results, null, 2));
 
-if (results.errors.length || results.failedRequests.length || results.desktop.brokenImages || results.mobile.brokenImages || results.desktop.scrollWidth !== results.desktop.clientWidth || results.mobile.scrollWidth !== results.mobile.clientWidth || results.desktop.h1 !== "An old domain. An open rebuild." || !results.mobile.navVisible || results.caseStudy.h1 !== "How we are rebuilding an old editorial domain without inheriting its past." || results.caseStudy.sections < 8 || results.caseStudy.contextterLinks !== 1 || results.caseStudy.schemaType !== "Article" || results.caseStudy.brokenImages || results.caseStudy.scrollWidth !== results.caseStudy.clientWidth || results.article.h1 !== "A game is more than its files" || results.article.sources !== 3 || results.article.schemaType !== "Article" || results.article.brokenImages || results.article.scrollWidth !== results.article.clientWidth || results.fieldStudy.h1 !== "Four minutes in A Dark Room" || results.fieldStudy.timelineEvents !== 12 || results.fieldStudy.schemaType !== "Article" || results.fieldStudy.sessionStatus !== 200 || results.fieldStudy.sessionId !== "adr-web-2026-08-23-01" || results.fieldStudy.brokenImages || results.fieldStudy.scrollWidth !== results.fieldStudy.clientWidth) process.exitCode = 1;
+if (results.errors.length || results.failedRequests.length || results.desktop.brokenImages || results.mobile.brokenImages || results.desktop.scrollWidth !== results.desktop.clientWidth || results.mobile.scrollWidth !== results.mobile.clientWidth || results.desktop.h1 !== "An old domain. An open rebuild." || !results.mobile.navVisible || results.caseStudy.h1 !== "How we are rebuilding an old editorial domain without inheriting its past." || results.caseStudy.sections < 9 || results.caseStudy.contextterLinks !== 1 || results.caseStudy.schemaType !== "Article" || results.caseStudy.brokenImages || results.caseStudy.scrollWidth !== results.caseStudy.clientWidth || results.article.h1 !== "A game is more than its files" || results.article.sources !== 3 || results.article.schemaType !== "Article" || results.article.brokenImages || results.article.scrollWidth !== results.article.clientWidth || results.fieldStudy.h1 !== "Four minutes in A Dark Room" || results.fieldStudy.timelineEvents !== 12 || results.fieldStudy.schemaType !== "Article" || results.fieldStudy.sessionStatus !== 200 || results.fieldStudy.sessionId !== "adr-web-2026-08-23-01" || results.fieldStudy.brokenImages || results.fieldStudy.scrollWidth !== results.fieldStudy.clientWidth || results.worksheet.h1 !== "The First Four Minutes" || results.worksheet.game !== "QA Study" || results.worksheet.eventRows !== 2 || results.worksheet.persistedAction !== "Pressed start" || !results.worksheet.storedOnlyCopy || results.worksheet.scrollWidth !== results.worksheet.clientWidth || results.worksheet.robots !== "noindex, nofollow" || results.worksheet.json.schemaVersion !== 1 || results.worksheet.json.kind !== "nightmare-mode-play-study" || results.worksheet.json.boundarySeconds !== 240 || results.worksheet.json.game !== "QA Study" || results.worksheet.json.action !== "Pressed start" || !results.worksheet.markdown.heading || !results.worksheet.markdown.localOnly) process.exitCode = 1;

@@ -13,14 +13,14 @@ const copy = locale === "de" ? {
   title: "Eine alte Domain. Ein offener Neuaufbau.",
   description: "Nightmare Mode dokumentiert, wie aus einer erworbenen früheren Games-Domain ein neues, rechtssicheres Projekt entsteht – einschließlich Fehlentscheidungen, Belegen und offener Fragen.",
   primary: "Die vollständige Fallstudie lesen",
-  secondary: "Die redaktionelle Probe ansehen",
-  latest: "Offene Fallstudie · Stand 28. August 2026",
+  secondary: "Die ersten vier Minuten entdecken",
+  latest: "Offene Fallstudie · Stand 29. August 2026",
   studyTitle: "Nightmare Mode neu aufbauen",
   studyText: "Warum wir die alte Redaktion nicht nachspielen, welche erste Idee zu oberflächlich war und welche Gates vor einer Indexierung wirklich erfüllt sein müssen.",
   readStudy: "Fallstudie öffnen",
-  essayTitle: "Vier Minuten in A Dark Room",
-  essayText: "Eine kleine, reproduzierbare Play Study als Beleg dafür, dass neue redaktionelle Substanz mehr sein kann als bloße Behauptung.",
-  readEssay: "Redaktionelle Probe lesen",
+  essayTitle: "Die ersten vier Minuten",
+  essayText: "Ein vergleichbares Format darüber, wie Spiele zu Beginn Regeln, Entscheidungen und Erwartungen vermitteln – mit offenem Protokoll und lokalem Worksheet.",
+  readEssay: "Format und Werkzeug öffnen",
   formatsTitle: "Was dieser Fall zeigt",
   formats: [["01", "Rechte vor Reichweite", "Eine erworbene Domain überträgt keine alte Redaktion, Texte oder Autorität."], ["02", "Neue Belege", "Eigene Essays und protokollierte Play Studies bilden die neue Substanz."], ["03", "Technische Gates", "Indexierung bleibt gesperrt, bis Rechte, URLs, GSC und Live-QA belegt sind."]],
   ownershipTitle: "Kein Revival. Kein Erfolgsmärchen.",
@@ -33,14 +33,14 @@ const copy = locale === "de" ? {
   title: "An old domain. An open rebuild.",
   description: "Nightmare Mode documents how an acquired former games domain becomes a new, rights-safe project — including wrong turns, evidence and unanswered questions.",
   primary: "Read the full case study",
-  secondary: "See the editorial test",
-  latest: "Open case study · Updated 28 August 2026",
+  secondary: "Explore The First Four Minutes",
+  latest: "Open case study · Updated 29 August 2026",
   studyTitle: "Rebuilding Nightmare Mode",
   studyText: "Why we will not imitate the former newsroom, why our first idea was too shallow, and which gates must actually pass before indexing.",
   readStudy: "Open the case study",
-  essayTitle: "Four minutes in A Dark Room",
-  essayText: "A small, reproducible play study that tests whether new editorial substance can be more than a claim.",
-  readEssay: "Read the editorial test",
+  essayTitle: "The First Four Minutes",
+  essayText: "A comparable record of how games first communicate rules, choices and expectations, supported by an open protocol and local worksheet.",
+  readEssay: "Open the format and tool",
   formatsTitle: "What this case demonstrates",
   formats: [["01", "Rights before reach", "Buying a domain does not transfer its former newsroom, writing or authority."], ["02", "New evidence", "Original essays and documented play studies create the new substance."], ["03", "Technical gates", "Indexing stays blocked until rights, URLs, GSC and live QA are proven."]],
   ownershipTitle: "Not a revival. Not a success story.",
@@ -59,7 +59,7 @@ const copy = locale === "de" ? {
       <p>{copy.description}</p>
       <div class="links">
         <a class="action" href={pathFor(locale, "/case-study/rebuilding-nightmare-mode/")} data-umami-event="content-open" data-umami-event-target="case-study" data-umami-event-placement="home-hero">{copy.primary} <span aria-hidden="true">→</span></a>
-        <a class="action quiet" href={pathFor(locale, "/field-notes/a-dark-room-first-four-minutes/")} data-umami-event="content-open" data-umami-event-target="play-study" data-umami-event-placement="home-hero">{copy.secondary}</a>
+        <a class="action quiet" href={pathFor(locale, "/field-notes/")} data-umami-event="content-open" data-umami-event-target="play-study-series" data-umami-event-placement="home-hero">{copy.secondary}</a>
       </div>
     </div>
     <figure>
@@ -72,7 +72,7 @@ const copy = locale === "de" ? {
       <Image src={fieldStudy} alt="" widths={[360, 620]} sizes="(max-width: 760px) 35vw, 18vw" format="webp" />
       <div><p class="meta">{copy.latest}</p><h2 class="display"><em>{copy.studyTitle}</em></h2><p>{copy.studyText}</p><a class="action" href={pathFor(locale, "/case-study/rebuilding-nightmare-mode/")} data-umami-event="content-open" data-umami-event-target="case-study" data-umami-event-placement="home-feature">{copy.readStudy} <span aria-hidden="true">→</span></a></div>
     </article>
-    <article class="feature"><div><p class="meta">Play Study · Evidence</p><h2 class="display">{copy.essayTitle}</h2><p>{copy.essayText}</p><a class="action" href={pathFor(locale, "/field-notes/a-dark-room-first-four-minutes/")} data-umami-event="content-open" data-umami-event-target="play-study" data-umami-event-placement="home-feature">{copy.readEssay} <span aria-hidden="true">→</span></a></div></article>
+    <article class="feature"><div><p class="meta">Play Study · Method · Tool</p><h2 class="display">{copy.essayTitle}</h2><p>{copy.essayText}</p><a class="action" href={pathFor(locale, "/field-notes/")} data-umami-event="content-open" data-umami-event-target="play-study-series" data-umami-event-placement="home-feature">{copy.readEssay} <span aria-hidden="true">→</span></a></div></article>
   </section>
 
   <section class="formats shell" aria-labelledby="formats-title">

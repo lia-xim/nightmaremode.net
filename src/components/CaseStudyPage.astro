@@ -51,15 +51,32 @@ const copy = locale === "de" ? {
     ["Arbeit überprüfbar machen", "Repository, Commit, Deployment, Linkgraph, Browser-QA und die maschinenlesbare Play-Study-Datei liefern konkrete Prüfpfade."],
   ],
   productBoundary: "Wichtig: Der öffentliche Nachweis zeigt den Contextter-Arbeitsansatz rund um Recherche, Seitenentscheidungen und technische SEO. Er beweist nicht, dass jeder Schritt in der heutigen kundenorientierten Contextter-Oberfläche ausgeführt wurde. Wo Produktfunktion und operative Methode auseinanderfallen, sagen wir das ausdrücklich.",
-  evidenceTitle: "Evidenzregister – Stand 28. August 2026",
+  evidenceTitle: "Evidenzregister – Stand 29. August 2026",
   evidence: [
     ["Verifiziert", "Die Live-Domain liefert selbstreferenzierende Canonicals, EN/DE-hreflang, echte 404, pfaderhaltende 308-Redirects, Security-Header sowie noindex,nofollow. robots.txt enthält Disallow: /; eine Sitemap wird nicht ausgegeben."],
     ["Verifiziert", "Der geschützte Build vor dieser Vertiefung erzeugte 39 Seiten ohne Astro-Diagnosen. 211 Safeguards und ein Graph aus 476 internen Links liefen ohne Fehler; 28 Desktop-/Mobil-Axe-Scans meldeten keine Verstöße."],
     ["Verifiziert", "Commit a456d10 wurde zu origin/main gepusht; Vercel-Deployment dpl_2tZo1oNKWZPyqU3NJkcxxQ4d1pwn wurde READY und auf nightmaremode.net aliasiert."],
+    ["Verifiziert", "Umami erfasst seit dem 29. August Seitenaufrufe und wenige benannte Interaktionen. Das neue Worksheet speichert Entwürfe ausschließlich im Browser und exportiert Markdown oder JSON ohne Konto und Upload."],
     ["Gestützt", "Die Domain hatte einen klaren Games-Kultur-Schwerpunkt und später belastete Phasen. Die Aussage stützt sich auf eine begrenzte 500-URL-Wayback-Stichprobe und manuell geprüfte Referenzen, nicht auf einen vollständigen Backlinkgraphen."],
     ["Experiment", "Eine offene, bilinguale Neuaufbau-Fallstudie kann für Betreiber erworbener Domains nützlicher sein als eine dünne Themenpublikation. Ob daraus qualifizierte Nutzung oder externe Verweise entstehen, wird erst nach dem Index-Gate messbar."],
     ["Nicht belegt", "GSC-Eigentum, manuelle Maßnahmen, Sicherheitsprobleme, Entfernungen, Crawlzustand, Indexierung, Rankings, Traffic, Leads und kommerzieller Nutzen."],
     ["Verworfen", "Kopierte Altartikel, pauschale Homepage-Redirects, erfundene Kundenreferenz, Partnernetzwerk, Exact-Match-Linkmuster und künstliche Contentmasse."],
+  ],
+  measurementTitle: "Messstand statt Erfolgserzählung",
+  measurementIntro: "Das ist der Ausgangspunkt des Experiments, nicht sein Ergebnis. Solange der Schutz-Gate aktiv ist und keine belastbaren Daten vorliegen, bleiben Reichweite, Sucherfolg und Wirkung offen.",
+  measurementRows: [
+    ["Indexierung", "Nicht gestartet. noindex,nofollow, robots Disallow: / und die fehlende Sitemap halten Suchmaschinen weiterhin draußen."],
+    ["Suchnachfrage", "Nicht messbar. GSC-Impressionen, Suchanfragen, CTR und Indexabdeckung werden erst nach authentifizierter Prüfung und separater Indexfreigabe ausgewertet."],
+    ["Nutzung", "Umami kann Seitenaufrufe, Sprachwechsel, Content-Aufrufe, Worksheet-Öffnungen und Exporte sowie den offengelegten Contextter-Klick zählen. Es gibt noch keine belastbare Baseline."],
+    ["Play Studies", "Eine kontrollierte automatisierte Studie ist veröffentlicht. Eine zweite, von Matthias persönlich durchgeführte Studie existiert noch nicht."],
+    ["Contextter", "Ein gemessener ausgehender Klick zeigt nur eine bewusste Weiterleitung nach der Betreiber-Offenlegung. Er ist weder Lead noch Empfehlung oder SEO-Erfolg."],
+  ],
+  hypothesesTitle: "Hypothesenregister",
+  hypotheses: [
+    ["Verworfen", "Eine professionell aussehende Publikation habe bereits genug Eigenwert. Ohne wiederholbares Format und nutzbares Werkzeug blieb sie zu dünn."],
+    ["Verworfen", "Die historische Domainrelevanz könne neue redaktionelle Belege ersetzen."],
+    ["Offen", "Vergleichbare Vier-Minuten-Protokolle werden von Designern, Journalisten, Studierenden oder Forschenden gelesen, exportiert oder zitiert."],
+    ["Offen", "Eigenständige deutsche und englische Ausgaben erzeugen tatsächlich unterschiedliche Nutzung statt nur mehr URLs."],
   ],
   resultsTitle: "Welche Ergebnisse wir heute behaupten dürfen",
   results: [
@@ -86,7 +103,7 @@ const copy = locale === "de" ? {
   nextTitle: "Was als Nächstes passieren muss",
   next: [
     ["Vor Indexierung", "Authentifizierte Search-Console-Prüfung für Eigentum, Manual Actions, Security Issues, Removals, Page Indexing, Crawl Stats und URL Inspection. Erst danach ist eine separate Freigabe möglich."],
-    ["Redaktionell", "Eine zweite, menschlich geführte oder deutlich anders angelegte Play Study. Der erste automatisierte Lauf ist ein Methodenbeleg, aber noch keine tragfähige redaktionelle Serie."],
+    ["Redaktionell", "Matthias führt die zweite Studie persönlich nach dem jetzt veröffentlichten Vier-Minuten-Protokoll durch. Bis das geschehen und redaktionell freigegeben ist, nennen wir weder das nächste Spiel noch eine menschliche Spielerfahrung."],
     ["Nach Freigabe", "Baseline für Impressionen, Seiten-Query-Paare, externe Verweise und qualifizierte Übergänge. Gemessen wird, ob die Fallstudie genutzt wird – nicht, ob irgendein DR-Wert steigt."],
     ["Stop-Regel", "Wenn zwei monatliche Originalbeiträge ausfallen oder die Fallstudie ohne Contextter-Link keinen eigenen Nutzen zeigt, wird die Publikation verkleinert oder pausiert."],
   ],
@@ -96,6 +113,8 @@ const copy = locale === "de" ? {
     ["Öffentliches GitHub-Repository", "https://github.com/lia-xim/nightmaremode.net"],
     ["Maschinenlesbares A-Dark-Room-Protokoll", "/field-notes/a-dark-room-first-four-minutes/session.json"],
     ["Wiederverwendbares Play-Study-Protokoll", "/field-notes/play-study-protocol/"],
+    ["Serie: Die ersten vier Minuten", "/field-notes/"],
+    ["Browserlokales Play Study Worksheet", "/field-notes/worksheet/"],
     ["Abgrenzung der neuen Inhaberschaft", "/about/new-ownership/"],
   ],
   contextterLink: "Contextter ansehen",
@@ -145,15 +164,32 @@ const copy = locale === "de" ? {
     ["Making work inspectable", "The repository, commits, deployment record, link graph, browser QA and machine-readable play-study file provide concrete audit paths."],
   ],
   productBoundary: "One important boundary: the public evidence demonstrates the Contextter operating approach around research, page decisions and technical SEO. It does not prove that every step ran through the current customer-facing Contextter application. Where product capability and operating method differ, this record says so.",
-  evidenceTitle: "Evidence register — 28 August 2026",
+  evidenceTitle: "Evidence register — 29 August 2026",
   evidence: [
     ["Verified", "The live domain serves self-canonicals, EN/DE hreflang, real 404s, path-preserving 308 redirects, security headers and noindex,nofollow. robots.txt contains Disallow: / and no sitemap is emitted."],
     ["Verified", "Before this deeper case-study pass, the protected build produced 39 pages with no Astro diagnostics. 211 safeguards and a 476-link internal graph passed; 28 desktop/mobile Axe scans reported no violations."],
     ["Verified", "Commit a456d10 was pushed to origin/main; Vercel deployment dpl_2tZo1oNKWZPyqU3NJkcxxQ4d1pwn became READY and was aliased to nightmaremode.net."],
+    ["Verified", "Umami has collected pageviews and a small set of named interactions since 29 August. The new worksheet stores drafts only in the browser and exports Markdown or JSON without an account or upload."],
     ["Supported", "The domain had a strong games-culture phase followed by contaminated phases. This is supported by a bounded 500-URL Wayback sample and manually checked references, not a complete backlink graph."],
     ["Experiment", "An open bilingual rebuild case study may be more useful to expired-domain operators than a thin topical publication. Qualified use and independent references cannot be measured until the indexing gate opens."],
     ["Not proven", "GSC ownership, manual actions, security issues, removals, crawl state, indexing, rankings, traffic, leads and commercial value."],
     ["Rejected", "Copied legacy articles, blanket homepage redirects, a fabricated customer reference, a partner network, exact-match link patterns and synthetic content volume."],
+  ],
+  measurementTitle: "A measurement baseline, not a success story",
+  measurementIntro: "This is the starting point of the experiment, not its result. While the protection gate remains active and meaningful data is absent, reach, search performance and impact remain open questions.",
+  measurementRows: [
+    ["Indexing", "Not started. noindex,nofollow, robots Disallow: / and the absent sitemap continue to keep search crawlers out."],
+    ["Search demand", "Not measurable. GSC impressions, queries, CTR and coverage will be evaluated only after authenticated review and a separate indexing release."],
+    ["Use", "Umami can count pageviews, language switches, content opens, worksheet opens and exports, and the disclosed Contextter click. There is no meaningful baseline yet."],
+    ["Play studies", "One controlled automated study is published. A second study personally conducted by Matthias does not yet exist."],
+    ["Contextter", "A measured outbound click shows only a deliberate transition after the operator disclosure. It is not a lead, endorsement or SEO result."],
+  ],
+  hypothesesTitle: "Hypothesis register",
+  hypotheses: [
+    ["Rejected", "A professionally presented publication already had enough independent value. Without a repeatable format and useful tool, it remained too thin."],
+    ["Rejected", "The domain's historical relevance could substitute for new editorial evidence."],
+    ["Open", "Comparable four-minute records will be read, exported or cited by designers, journalists, students or researchers."],
+    ["Open", "Distinct English and German editions will produce distinct use rather than merely more URLs."],
   ],
   resultsTitle: "What results can be claimed today",
   results: [
@@ -180,7 +216,7 @@ const copy = locale === "de" ? {
   nextTitle: "What has to happen next",
   next: [
     ["Before indexing", "Authenticate Search Console ownership and review Manual Actions, Security Issues, Removals, Page Indexing, Crawl Stats and URL Inspection. Indexing requires a separate owner-reviewed release afterwards."],
-    ["Editorially", "Publish a second human-led or meaningfully varied play study. The first automated run proves a method; it is not yet a durable editorial series."],
+    ["Editorially", "Matthias personally conducts the second study using the now-published four-minute protocol. Until it is complete and editorially approved, we name neither the next game nor a human play experience."],
     ["After release", "Establish baselines for impressions, page-query pairs, external references and qualified transitions. The test is whether people use the case study, not whether a third-party authority score rises."],
     ["Stop rule", "If two monthly original releases are missed, or the case study has no value without its Contextter link, the publication is reduced or paused."],
   ],
@@ -190,6 +226,8 @@ const copy = locale === "de" ? {
     ["Public GitHub repository", "https://github.com/lia-xim/nightmaremode.net"],
     ["Machine-readable A Dark Room record", "/field-notes/a-dark-room-first-four-minutes/session.json"],
     ["Reusable play-study protocol", "/field-notes/play-study-protocol/"],
+    ["The First Four Minutes series", "/field-notes/"],
+    ["Browser-local Play Study Worksheet", "/field-notes/worksheet/"],
     ["New-ownership boundary", "/about/new-ownership/"],
   ],
   contextterLink: "Visit Contextter",
@@ -202,7 +240,7 @@ const articleSchema = {
   headline: copy.title,
   description: copy.description,
   datePublished: "2026-08-28",
-  dateModified: "2026-08-28",
+  dateModified: "2026-08-29",
   inLanguage: locale === "de" ? "de-DE" : "en",
   author: { "@type": "Person", name: "Matthias Ramahi" },
   editor: { "@type": "Person", name: "Matthias Ramahi" },
@@ -216,7 +254,7 @@ const hrefFor = (href: string) => href.endsWith(".json") ? href : href.startsWit
 
   <header class="case-hero shell">
     <div class="case-hero__meta">
-      <p class="mono">{locale === "de" ? "Offene Fallstudie · Stand 28. August 2026" : "Open case study · 28 August 2026"}</p>
+      <p class="mono">{locale === "de" ? "Offene Fallstudie · Stand 29. August 2026" : "Open case study · 29 August 2026"}</p>
       <p>{locale === "de" ? "Verantwortlich: Matthias Ramahi" : "Responsible editor: Matthias Ramahi"}</p>
     </div>
     <div>
@@ -256,22 +294,27 @@ const hrefFor = (href: string) => href.endsWith(".json") ? href : href.startsWit
     </section>
 
     <section class="chapter">
-      <div class="chapter__rail"><span>06</span><h2 class="display">{copy.resultsTitle}</h2></div>
+      <div class="chapter__rail"><span>06</span><h2 class="display">{copy.measurementTitle}</h2></div>
+      <div class="chapter__content"><p class="lead">{copy.measurementIntro}</p><dl class="measurement-list">{copy.measurementRows.map(([term, value]) => <div><dt>{term}</dt><dd>{value}</dd></div>)}</dl><h3 class="hypothesis-title display">{copy.hypothesesTitle}</h3><div class="hypothesis-list">{copy.hypotheses.map(([state, text]) => <div><strong>{state}</strong><p>{text}</p></div>)}</div></div>
+    </section>
+
+    <section class="chapter">
+      <div class="chapter__rail"><span>07</span><h2 class="display">{copy.resultsTitle}</h2></div>
       <div class="chapter__content"><ul class="plain-list">{copy.results.map((item) => <li>{item}</li>)}</ul></div>
     </section>
 
     <section class="chapter checklist-chapter">
-      <div class="chapter__rail"><span>07</span><h2 class="display">{copy.checklistTitle}</h2></div>
+      <div class="chapter__rail"><span>08</span><h2 class="display">{copy.checklistTitle}</h2></div>
       <div class="chapter__content"><p class="lead">{copy.checklistIntro}</p><ol class="checklist">{copy.checklist.map((item, index) => <li><span>{String(index + 1).padStart(2, "0")}</span><p>{item}</p></li>)}</ol></div>
     </section>
 
     <section class="chapter">
-      <div class="chapter__rail"><span>08</span><h2 class="display">{copy.nextTitle}</h2></div>
+      <div class="chapter__rail"><span>09</span><h2 class="display">{copy.nextTitle}</h2></div>
       <div class="chapter__content next-list">{copy.next.map(([title, body]) => <section><h3>{title}</h3><p>{body}</p></section>)}</div>
     </section>
 
     <section class="chapter proof-chapter">
-      <div class="chapter__rail"><span>09</span><h2 class="display">{copy.proofTitle}</h2></div>
+      <div class="chapter__rail"><span>10</span><h2 class="display">{copy.proofTitle}</h2></div>
       <div class="chapter__content"><p class="lead">{copy.proofIntro}</p><ul class="proof-links">{copy.proofLinks.map(([label, href]) => <li><a href={hrefFor(href)} rel={href.startsWith("http") ? "external" : undefined} data-umami-event="evidence-open" data-umami-event-target={href}>{label} <span aria-hidden="true">↗</span></a></li>)}</ul><p class="disclosure">{copy.disclosure}</p><a class="action" href="https://contextter.com/" rel="external nofollow" data-umami-event="contextter-visit" data-umami-event-placement="case-study-disclosure">{copy.contextterLink} <span aria-hidden="true">↗</span></a></div>
     </section>
   </article>
@@ -315,6 +358,13 @@ const hrefFor = (href: string) => href.endsWith(".json") ? href : href.startsWit
   .evidence-list > div { display: grid; grid-template-columns: 8.5rem 1fr; gap: 2rem; padding: 1.4rem 0; border-top: 1px solid var(--line); }
   .evidence-list strong { color: var(--signal); font-size: 0.82rem; }
   .evidence-list p { max-width: 48rem; margin: 0; color: var(--ink-soft); }
+  .measurement-list { margin: 0; }
+  .measurement-list > div { display: grid; grid-template-columns: 8.5rem 1fr; gap: 2rem; padding: 1.4rem 0; border-top: 1px solid var(--line); }
+  .measurement-list dt, .hypothesis-list strong { color: var(--signal); font-size: 0.82rem; font-weight: 600; }
+  .measurement-list dd { max-width: 48rem; margin: 0; color: var(--ink-soft); }
+  .hypothesis-title { margin: 4rem 0 1.25rem; font-size: clamp(2rem, 3vw, 3rem); }
+  .hypothesis-list > div { display: grid; grid-template-columns: 8.5rem 1fr; gap: 2rem; padding: 1.25rem 0; border-top: 1px solid var(--line); }
+  .hypothesis-list p { max-width: 48rem; margin: 0; }
   .plain-list { margin: 0; padding: 0; list-style: none; }
   .plain-list li { padding: 1.35rem 0 1.35rem 2rem; border-top: 1px solid var(--line); font-family: var(--display); font-size: clamp(1.35rem, 2vw, 1.85rem); line-height: 1.35; position: relative; }
   .plain-list li::before { content: ""; position: absolute; left: 0; top: 2.1rem; width: 0.55rem; height: 0.55rem; background: var(--signal); }
@@ -339,7 +389,7 @@ const hrefFor = (href: string) => href.endsWith(".json") ? href : href.startsWit
   @media (max-width: 620px) {
     .fact-sheet, .work-list { grid-template-columns: 1fr; }
     .fact-sheet div, .fact-sheet div:nth-child(3n + 1) { padding-inline: 0; border-top: 1px solid var(--line); border-left: 0; }
-    .timeline li, .decision-list > section, .evidence-list > div, .next-list section { grid-template-columns: 1fr; gap: 0.65rem; }
+    .timeline li, .decision-list > section, .evidence-list > div, .measurement-list > div, .hypothesis-list > div, .next-list section { grid-template-columns: 1fr; gap: 0.65rem; }
     .work-list section, .work-list section:nth-child(even) { padding-inline: 0; border-left: 0; }
   }
 </style>

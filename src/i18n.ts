@@ -13,6 +13,7 @@ const englishToGerman = new Map<string, string>([
   ["/essays/", "/de/essays/"],
   ["/essays/a-game-is-more-than-its-files/", "/de/essays/ein-spiel-ist-mehr-als-seine-dateien/"],
   ["/field-notes/", "/de/play-studies/"],
+  ["/field-notes/worksheet/", "/de/play-studies/arbeitsblatt/"],
   ["/field-notes/a-dark-room-first-four-minutes/", "/de/play-studies/a-dark-room-die-ersten-vier-minuten/"],
   ["/field-notes/play-study-protocol/", "/de/play-studies/protokoll/"],
   ["/history/", "/de/geschichte/"],

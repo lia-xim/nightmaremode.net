@@ -1,0 +1,262 @@
+---
+import BaseLayout from "@/components/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import { pathFor, type Locale } from "@/i18n";
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const german = locale === "de";
+
+const copy = german ? {
+  title: "Die ersten vier Minuten",
+  subtitle: "Play Study Worksheet",
+  description: "Ein browserlokales Arbeitsblatt für zeitlich begrenzte Play Studies mit Bedingungen, Ereignisprotokoll, Aussagearten und maschinenlesbarem Export.",
+  privacy: "Nur in diesem Browser gespeichert",
+  draft: "Entwurf",
+  elapsed: "Verstrichene Studienzeit",
+  autosave: "Änderungen werden lokal gespeichert",
+  start: "Timer starten", pause: "Pausieren", reset: "Timer zurücksetzen",
+  identity: "Sitzung identifizieren",
+  game: "Spiel", edition: "Edition / Version / Build", platform: "Plattform", date: "Datum", observer: "Verantwortliche Beobachtung", question: "Frage vor der Sitzung", expectation: "Erwartung vorab", counterevidence: "Was würde ihr widersprechen?",
+  conditions: "Bedingungen",
+  ledger: "Ereignisprotokoll",
+  ledgerHelp: "Nur Vorgänge zwischen 00:00 und 04:00 erfassen. Neue Zeilen übernehmen die aktuelle Timerzeit.",
+  addEvent: "Ereignis hinzufügen", remove: "Entfernen",
+  time: "Zeit", action: "Aktion / Eingabe", before: "Zustand davor", response: "Beobachtete Reaktion", after: "Zustand danach", evidenceRef: "Belegreferenz",
+  evidence: "Quellen und Aufnahmen",
+  evidenceHelp: "Screenshots oder Aufnahmen werden nicht hochgeladen. Erfassen Sie nur eine lokale Referenz, einen Dateinamen oder eine öffentliche URL.",
+  addEvidence: "Referenz hinzufügen", evidenceType: "Typ", evidenceLabel: "Bezeichnung", evidenceLocation: "URL oder lokale Referenz", evidenceNote: "Notiz",
+  claims: "Aussagen trennen", claimHelp: "Leere Felder sind besser als eine stärkere Aussage, die das Material nicht trägt.",
+  observation: "Beobachtung", externalSource: "Externe Quelle", interpretation: "Interpretation", unknown: "Unbekannt", counterexample: "Gegenbeispiel",
+  boundary: "Publikationsgrenze", supports: "Was diese Sitzung stützt", cannot: "Was sie nicht belegt", rights: "Rechte- oder Datenschutzgrenzen", ai: "KI-Hilfe", editor: "Verantwortliche Redaktion", corrections: "Korrekturkontakt",
+  protocol: "Zurück zum Protokoll", example: "Beispiel ansehen: A Dark Room",
+  downloadMd: "Markdown herunterladen", downloadJson: "JSON herunterladen", clear: "Entwurf löschen",
+  saved: "Entwurf lokal gespeichert", unavailable: "Lokales Speichern ist in diesem Browser nicht verfügbar", cleared: "Entwurf gelöscht", confirmClear: "Diesen lokalen Entwurf vollständig löschen?", boundaryReached: "Vier-Minuten-Grenze erreicht",
+  evidenceTypes: [["note", "Notiz"], ["screenshot", "Screenshot"], ["recording", "Aufnahme"], ["official-source", "Offizielle Quelle"], ["other", "Sonstiges"]],
+  conditionsList: [["hardware", "Hardware"], ["os", "Betriebssystem"], ["input", "Eingabegerät"], ["displayAudio", "Bild / Ton"], ["network", "Netzwerkzustand"], ["accountSave", "Konto / Speicherstand"], ["language", "Sprache / Region"], ["difficulty", "Schwierigkeit / Modus"], ["accessibility", "Barrierefreiheit"], ["mods", "Mods / externe Werkzeuge"], ["startMethod", "Startpunkt / Startmethode"], ["unknownConditions", "Unbekannte Bedingungen"]],
+} : {
+  title: "The First Four Minutes",
+  subtitle: "Play Study Worksheet",
+  description: "A browser-local worksheet for time-bounded play studies with conditions, an event ledger, separated claim types and machine-readable export.",
+  privacy: "Stored only in this browser",
+  draft: "Draft",
+  elapsed: "Elapsed study duration",
+  autosave: "All changes autosave locally",
+  start: "Start timer", pause: "Pause", reset: "Reset timer",
+  identity: "Session identity",
+  game: "Game", edition: "Edition / version / build", platform: "Platform", date: "Date", observer: "Responsible observer", question: "Question before the session", expectation: "Initial expectation", counterevidence: "What would challenge it?",
+  conditions: "Conditions",
+  ledger: "Event ledger",
+  ledgerHelp: "Record only events from 00:00 through 04:00. New rows use the current timer value.",
+  addEvent: "Add event", remove: "Remove",
+  time: "Time", action: "Action / input", before: "State before", response: "Observed response", after: "State after", evidenceRef: "Evidence reference",
+  evidence: "Sources and captures",
+  evidenceHelp: "Screenshots and recordings are not uploaded. Record only a local reference, filename or public URL.",
+  addEvidence: "Add reference", evidenceType: "Type", evidenceLabel: "Label", evidenceLocation: "URL or local reference", evidenceNote: "Note",
+  claims: "Separate the claims", claimHelp: "An empty field is better than a stronger claim the material cannot support.",
+  observation: "Observation", externalSource: "External source", interpretation: "Interpretation", unknown: "Unknown", counterexample: "Counterexample",
+  boundary: "Publication boundary", supports: "What this session supports", cannot: "What it cannot establish", rights: "Rights or privacy limits", ai: "AI assistance", editor: "Responsible editor", corrections: "Correction contact",
+  protocol: "Back to the protocol", example: "View example: A Dark Room",
+  downloadMd: "Download Markdown", downloadJson: "Download JSON", clear: "Clear draft",
+  saved: "Draft saved locally", unavailable: "Local saving is unavailable in this browser", cleared: "Draft cleared", confirmClear: "Delete this local draft completely?", boundaryReached: "Four-minute boundary reached",
+  evidenceTypes: [["note", "Note"], ["screenshot", "Screenshot"], ["recording", "Recording"], ["official-source", "Official source"], ["other", "Other"]],
+  conditionsList: [["hardware", "Hardware"], ["os", "Operating system"], ["input", "Input device"], ["displayAudio", "Display / audio"], ["network", "Network state"], ["accountSave", "Account / save state"], ["language", "Language / region"], ["difficulty", "Difficulty / mode"], ["accessibility", "Accessibility settings"], ["mods", "Mods / external tools"], ["startMethod", "Starting point / method"], ["unknownConditions", "Unknown conditions"]],
+};
+
+const eventFields = [["time", copy.time], ["action", copy.action], ["before", copy.before], ["response", copy.response], ["after", copy.after], ["evidenceRef", copy.evidenceRef]];
+const claimFields = [["observation", copy.observation], ["externalSource", copy.externalSource], ["interpretation", copy.interpretation], ["unknown", copy.unknown], ["counterexample", copy.counterexample]];
+const canonicalPath = pathFor(locale, "/field-notes/worksheet/");
+const appSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: `${copy.title} — ${copy.subtitle}`,
+  description: copy.description,
+  url: `https://nightmaremode.net${canonicalPath}`,
+  inLanguage: locale,
+  applicationCategory: "EducationalApplication",
+  operatingSystem: "Any",
+  browserRequirements: "JavaScript and local storage",
+  isAccessibleForFree: true,
+  offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
+  featureList: german ? ["Vier-Minuten-Timer", "Ereignisprotokoll", "Aussagentrennung", "Lokaler Entwurf", "Markdown-Export", "JSON-Export"] : ["Four-minute timer", "Event ledger", "Claim separation", "Local draft", "Markdown export", "JSON export"],
+};
+---
+
+<BaseLayout lang={locale} title={`${copy.title} — ${copy.subtitle}`} description={copy.description}>
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(appSchema)}></script>
+  <article class="worksheet-app" data-play-study-worksheet data-locale={locale} data-storage-key="nightmare-mode:first-four-minutes:draft:v1" data-copy-saved={copy.saved} data-copy-unavailable={copy.unavailable} data-copy-cleared={copy.cleared} data-copy-confirm-clear={copy.confirmClear} data-copy-boundary-reached={copy.boundaryReached} data-copy-remove={copy.remove}>
+    <header class="worksheet-header shell">
+      <div><h1 class="display">{copy.title}</h1><p class="worksheet-subtitle">{copy.subtitle}</p></div>
+      <p class="worksheet-privacy"><span aria-hidden="true">◇</span>{copy.privacy}</p>
+    </header>
+
+    <form id="play-study-form" class="worksheet-form shell" novalidate>
+      <section class="status-rail" aria-label={german ? "Entwurfsstatus und Timer" : "Draft status and timer"}>
+        <div><strong>{copy.draft}</strong><span>·</span><span>{copy.elapsed}: <time id="study-elapsed" datetime="PT0S">00:00</time> / 04:00</span></div>
+        <div class="timer-actions"><button type="button" data-action="timer-start" data-umami-event="worksheet-timer-start">{copy.start}</button><button type="button" data-action="timer-pause">{copy.pause}</button><button type="button" data-action="timer-reset">{copy.reset}</button></div>
+        <output id="autosave-status" aria-live="polite">{copy.autosave}</output>
+      </section>
+
+      <section class="worksheet-section" aria-labelledby="identity-title">
+        <h2 id="identity-title"><span>1.</span>{copy.identity}</h2>
+        <div class="identity-grid">
+          <label>{copy.game}<input data-field="game" name="game" autocomplete="off" /></label>
+          <label>{copy.edition}<input data-field="edition" name="edition" autocomplete="off" /></label>
+          <label>{copy.platform}<input data-field="platform" name="platform" autocomplete="off" /></label>
+          <label>{copy.date}<input data-field="date" name="date" type="date" /></label>
+          <label class="span-2">{copy.observer}<input data-field="observer" name="observer" autocomplete="name" /></label>
+          <label class="span-2">{copy.question}<textarea data-field="question" name="question" rows="3"></textarea></label>
+          <label>{copy.expectation}<textarea data-field="expectation" name="expectation" rows="3"></textarea></label>
+          <label>{copy.counterevidence}<textarea data-field="counterevidence" name="counterevidence" rows="3"></textarea></label>
+        </div>
+      </section>
+
+      <section class="worksheet-section" aria-labelledby="conditions-title">
+        <h2 id="conditions-title"><span>2.</span>{copy.conditions}</h2>
+        <div class="conditions-grid">{copy.conditionsList.map(([key, label]) => <label>{label}<input data-condition={key} name={`condition-${key}`} autocomplete="off" /></label>)}</div>
+      </section>
+
+      <section class="worksheet-section ledger-section" aria-labelledby="ledger-title">
+        <div class="section-heading"><div><h2 id="ledger-title"><span>3.</span>{copy.ledger}</h2><p>{copy.ledgerHelp}</p></div><button class="outline-button" type="button" data-action="add-event" data-umami-event="worksheet-event-add">{copy.addEvent}</button></div>
+        <div id="event-ledger" class="event-ledger" aria-live="polite"></div>
+      </section>
+
+      <section class="worksheet-section" aria-labelledby="evidence-title">
+        <div class="section-heading"><div><h2 id="evidence-title"><span>4.</span>{copy.evidence}</h2><p>{copy.evidenceHelp}</p></div><button class="outline-button" type="button" data-action="add-evidence">{copy.addEvidence}</button></div>
+        <div id="evidence-list" class="evidence-list" aria-live="polite"></div>
+      </section>
+
+      <section class="worksheet-section" aria-labelledby="claims-title">
+        <div class="section-heading"><div><h2 id="claims-title"><span>5.</span>{copy.claims}</h2><p>{copy.claimHelp}</p></div></div>
+        <div class="claims-list">{claimFields.map(([key, label]) => <label><span>{label}</span><textarea data-claim={key} name={`claim-${key}`} rows="3"></textarea><input data-claim-reference={key} name={`claim-reference-${key}`} aria-label={`${label}: ${copy.evidenceRef}`} placeholder={copy.evidenceRef} /></label>)}</div>
+      </section>
+
+      <section class="worksheet-section boundary-section" aria-labelledby="boundary-title">
+        <h2 id="boundary-title"><span>6.</span>{copy.boundary}</h2>
+        <div class="boundary-grid">
+          <label>{copy.supports}<textarea data-boundary="supports" name="supports" rows="5"></textarea></label>
+          <label>{copy.cannot}<textarea data-boundary="cannot" name="cannot" rows="5"></textarea></label>
+          <label>{copy.rights}<textarea data-boundary="rights" name="rights" rows="3"></textarea></label>
+          <label>{copy.ai}<textarea data-boundary="ai" name="ai" rows="3"></textarea></label>
+          <label>{copy.editor}<input data-boundary="editor" name="editor" autocomplete="name" /></label>
+          <label>{copy.corrections}<input data-boundary="corrections" name="corrections" autocomplete="email" /></label>
+        </div>
+      </section>
+
+      <nav class="worksheet-related" aria-label={german ? "Methode und Beispiel" : "Method and example"}>
+        <a href={pathFor(locale, "/field-notes/play-study-protocol/")} data-umami-event="content-open" data-umami-event-target="play-study-protocol" data-umami-event-placement="worksheet">← {copy.protocol}</a>
+        <a href={pathFor(locale, "/field-notes/a-dark-room-first-four-minutes/")}>{copy.example} →</a>
+      </nav>
+    </form>
+
+    <div class="worksheet-actions" aria-label={german ? "Export und Entwurf" : "Export and draft controls"}>
+      <div><strong id="action-status">{copy.autosave}</strong><span>{copy.privacy}</span></div>
+      <div><button type="button" data-action="download-markdown" data-umami-event="worksheet-export" data-umami-event-format="markdown">{copy.downloadMd}</button><button type="button" data-action="download-json" data-umami-event="worksheet-export" data-umami-event-format="json">{copy.downloadJson}</button><button class="danger" type="button" data-action="clear-draft">{copy.clear}</button></div>
+    </div>
+
+    <template id="event-template">
+      <fieldset class="event-row">
+        <legend><span data-event-number></span><button type="button" data-remove-event>{copy.remove}</button></legend>
+        <div>{eventFields.map(([key, label]) => <label class:list={{ "event-time": key === "time" }}>{label}{key === "time" ? <input data-event-field={key} inputmode="numeric" placeholder="00:00" pattern="(?:0?[0-3]:[0-5][0-9]|04:00)" /> : <textarea data-event-field={key} rows="2"></textarea>}</label>)}</div>
+      </fieldset>
+    </template>
+
+    <template id="evidence-template">
+      <fieldset class="evidence-row">
+        <legend><span data-evidence-number></span><button type="button" data-remove-evidence>{copy.remove}</button></legend>
+        <div><label>{copy.evidenceType}<select data-evidence-field="type">{copy.evidenceTypes.map(([value, label]) => <option value={value}>{label}</option>)}</select></label><label>{copy.evidenceLabel}<input data-evidence-field="label" /></label><label>{copy.evidenceLocation}<input data-evidence-field="location" /></label><label>{copy.evidenceNote}<textarea data-evidence-field="note" rows="2"></textarea></label></div>
+      </fieldset>
+    </template>
+  </article>
+  <SiteFooter locale={locale} />
+</BaseLayout>
+
+<script>
+  import "@/scripts/play-study-worksheet";
+</script>
+
+<style>
+  .worksheet-app { padding-bottom: 1rem; }
+  .worksheet-header { display: flex; align-items: end; justify-content: space-between; gap: 2rem; padding-block: clamp(3.5rem, 7vw, 7rem) 2rem; }
+  .worksheet-header h1 { font-size: clamp(4rem, 7vw, 7.2rem); }
+  .worksheet-subtitle { margin: 0.5rem 0 0; font-size: clamp(1.5rem, 2.5vw, 2.5rem); }
+  .worksheet-privacy { display: flex; gap: 0.6rem; align-items: center; margin: 0 0 0.4rem; color: var(--ink-soft); font-size: 0.9rem; }
+  .worksheet-privacy span { color: var(--signal); }
+  .worksheet-form { padding-bottom: 3rem; }
+  .status-rail { display: grid; grid-template-columns: 1fr auto auto; gap: 1.5rem; align-items: center; padding-block: 0.9rem; border-block: 1px solid var(--line-strong); font-size: 0.84rem; }
+  .status-rail > div:first-child { display: flex; flex-wrap: wrap; gap: 0.65rem; }
+  .status-rail strong, .status-rail time { color: var(--signal); }
+  .status-rail output { color: var(--ink-soft); text-align: right; }
+  .timer-actions { display: flex; gap: 0.4rem; }
+  .timer-actions button, .worksheet-actions button { border: 1px solid var(--line-strong); background: var(--paper); color: var(--ink); cursor: pointer; font-size: 0.82rem; font-weight: 520; }
+  .timer-actions button { padding: 0.45rem 0.65rem; }
+  .timer-actions button:hover, .worksheet-actions button:hover, .outline-button:hover { border-color: var(--signal); color: var(--signal); }
+  .worksheet-section { padding-block: 2.2rem; border-bottom: 1px solid var(--line-strong); }
+  .worksheet-section h2 { display: flex; gap: 0.75rem; align-items: baseline; margin: 0 0 1.2rem; font-size: 1.05rem; }
+  .worksheet-section h2 span { color: var(--signal); }
+  .identity-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+  .identity-grid .span-2 { grid-column: span 2; }
+  label { display: grid; align-content: start; gap: 0.35rem; min-width: 0; font-size: 0.78rem; font-weight: 560; }
+  input, textarea, select { width: 100%; min-width: 0; border: 1px solid var(--line-strong); border-radius: 0; background: var(--paper); color: var(--ink); font-size: 0.94rem; font-weight: 400; line-height: 1.45; }
+  input, select { min-height: 2.65rem; padding: 0.55rem 0.65rem; }
+  textarea { min-height: 4.2rem; padding: 0.6rem 0.65rem; resize: vertical; }
+  input:focus, textarea:focus, select:focus { border-color: var(--signal); outline: 2px solid color-mix(in srgb, var(--signal) 25%, transparent); outline-offset: 0; }
+  input:invalid { border-color: var(--signal); }
+  .conditions-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 2.5rem; }
+  .conditions-grid label { grid-template-columns: minmax(9rem, 0.35fr) 1fr; align-items: center; gap: 1rem; padding-block: 0.42rem; border-top: 1px solid var(--line); }
+  .conditions-grid label:nth-child(-n + 2) { border-top-color: var(--line-strong); }
+  .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 2rem; margin-bottom: 1.2rem; }
+  .section-heading h2 { margin-bottom: 0.3rem; }
+  .section-heading p { max-width: 52rem; margin: 0; color: var(--ink-soft); font-size: 0.9rem; }
+  .outline-button { flex: 0 0 auto; padding: 0.65rem 0.9rem; border: 1px solid var(--signal); background: transparent; color: var(--signal); cursor: pointer; font-size: 0.84rem; font-weight: 520; }
+  .event-ledger, .evidence-list { border-top: 1px solid var(--line-strong); }
+  :global(.event-row), :global(.evidence-row) { min-width: 0; margin: 0; padding: 1rem 0 1.25rem; border: 0; border-bottom: 1px solid var(--line); }
+  :global(.event-row legend), :global(.evidence-row legend) { display: flex; width: 100%; align-items: center; justify-content: space-between; padding: 0; color: var(--signal); font-size: 0.8rem; }
+  :global(.event-row legend button), :global(.evidence-row legend button) { border: 0; background: transparent; color: var(--ink-soft); cursor: pointer; font-size: 0.75rem; text-decoration: underline; text-underline-offset: 0.15em; }
+  :global(.event-row > div) { display: grid; grid-template-columns: 5.5rem repeat(5, 1fr); gap: 0.55rem; margin-top: 0.45rem; }
+  :global(.event-row textarea) { min-height: 5.2rem; }
+  :global(.evidence-row > div) { display: grid; grid-template-columns: 0.7fr 1fr 1.2fr 1.5fr; gap: 0.7rem; margin-top: 0.45rem; }
+  .claims-list { border-top: 1px solid var(--line-strong); }
+  .claims-list > label { grid-template-columns: minmax(8rem, 0.18fr) 1fr minmax(11rem, 0.35fr); gap: 0.7rem; align-items: start; padding-block: 0.8rem; border-bottom: 1px solid var(--line); }
+  .claims-list > label > span { padding-top: 0.65rem; color: var(--signal); }
+  .boundary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 1.5rem; }
+  .worksheet-related { display: flex; justify-content: space-between; gap: 2rem; padding-block: 2rem; }
+  .worksheet-related a { color: var(--signal); font-size: 0.88rem; }
+  .worksheet-actions { position: sticky; z-index: 20; bottom: 0; display: flex; justify-content: space-between; gap: 2rem; align-items: center; padding: 0.9rem var(--gutter); border-top: 2px solid var(--signal); background: color-mix(in srgb, var(--paper) 97%, transparent); backdrop-filter: blur(10px); }
+  .worksheet-actions > div:first-child { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; font-size: 0.78rem; }
+  .worksheet-actions > div:first-child span { color: var(--ink-soft); }
+  .worksheet-actions > div:last-child { display: flex; gap: 0.65rem; }
+  .worksheet-actions button { min-height: 2.8rem; padding: 0.55rem 1rem; }
+  .worksheet-actions button:first-child { border-color: var(--signal); background: var(--signal); color: var(--paper); }
+  .worksheet-actions .danger { color: var(--signal); }
+  @media (max-width: 1000px) {
+    .status-rail { grid-template-columns: 1fr auto; }
+    .status-rail output { grid-column: 1 / -1; text-align: left; }
+    .identity-grid { grid-template-columns: 1fr 1fr; }
+    :global(.event-row > div) { grid-template-columns: 5.5rem 1fr 1fr; }
+    :global(.event-row label:nth-child(n + 4)) { grid-column: span 1; }
+    :global(.evidence-row > div) { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 700px) {
+    .worksheet-header { display: grid; align-items: start; padding-block: 3.5rem 1.75rem; }
+    .worksheet-header h1 { font-size: clamp(3.35rem, 15vw, 5rem); }
+    .worksheet-privacy { margin: 0; }
+    .status-rail { grid-template-columns: 1fr; }
+    .timer-actions { display: grid; grid-template-columns: repeat(3, 1fr); }
+    .status-rail output { grid-column: auto; }
+    .identity-grid, .conditions-grid, .boundary-grid { grid-template-columns: 1fr; }
+    .identity-grid .span-2 { grid-column: auto; }
+    .conditions-grid label { grid-template-columns: 1fr; gap: 0.3rem; padding-block: 0.7rem; }
+    .conditions-grid label:nth-child(2) { border-top-color: var(--line); }
+    .section-heading { display: grid; align-items: start; gap: 1rem; }
+    .outline-button { width: 100%; }
+    :global(.event-row > div), :global(.evidence-row > div), .claims-list > label { grid-template-columns: 1fr; }
+    :global(.event-row label:nth-child(n + 4)) { grid-column: auto; }
+    :global(.event-row .event-time) { max-width: 8rem; }
+    .claims-list > label > span { padding-top: 0; }
+    .worksheet-related { flex-direction: column; }
+    .worksheet-actions { position: static; display: grid; padding-block: 1rem; }
+    .worksheet-actions > div:last-child { display: grid; grid-template-columns: 1fr 1fr; }
+    .worksheet-actions .danger { grid-column: 1 / -1; }
+  }
+</style>

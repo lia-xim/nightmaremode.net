@@ -143,10 +143,24 @@ assert(protocolSource.includes("does not replace participant research"), "play-s
 assert(protocolSource.includes("gamestudies.org/0601") && protocolSource.includes("gamestudies.org/2202"), "play-study protocol cites public methodology sources");
 assert(protocolSource.includes("Copyable worksheet"), "play-study protocol exposes a reusable proof asset");
 
+const worksheetSource = readFileSync(join(root, "src", "components", "PlayStudyWorksheet.astro"), "utf8");
+const worksheetScript = readFileSync(join(root, "src", "scripts", "play-study-worksheet.ts"), "utf8");
+const playStudyHubSource = readFileSync(join(root, "src", "components", "PlayStudyHub.astro"), "utf8");
+assert(worksheetSource.includes("Stored only in this browser") && worksheetSource.includes("Nur in diesem Browser gespeichert"), "worksheet states its local-only storage boundary in both languages");
+assert(worksheetScript.includes('boundarySeconds: 240') && worksheetScript.includes('Math.min(240'), "worksheet enforces the four-minute observation boundary");
+assert(worksheetScript.includes("localStorage.setItem") && worksheetScript.includes("new Blob"), "worksheet persists locally and generates local exports");
+assert(!/\b(?:fetch|XMLHttpRequest|WebSocket)\b/.test(worksheetScript), "worksheet contains no upload or network transport");
+assert(worksheetSource.includes('data-action="download-markdown"') && worksheetSource.includes('data-action="download-json"'), "worksheet offers Markdown and JSON export");
+assert(worksheetSource.includes('"@type": "WebApplication"') && worksheetSource.includes('applicationCategory: "EducationalApplication"'), "worksheet schema matches the visible browser application");
+assert(playStudyHubSource.includes("Matthias Ramahi must conduct the next session himself"), "series hub names the human-led second-study gate");
+assert(playStudyHubSource.includes("not a claim about human experience"), "series hub preserves the automated-study experience boundary");
+
 const caseStudySource = readFileSync(join(root, "src", "components", "CaseStudyPage.astro"), "utf8");
 assert(caseStudySource.includes("This is not a customer testimonial"), "case study rejects a customer-testimonial framing");
 assert(caseStudySource.includes("does not prove that every step ran through the current customer-facing Contextter application"), "case study separates operating method from product proof");
 assert(caseStudySource.includes("No SEO success has been demonstrated"), "case study states that SEO results are unproven");
+assert(caseStudySource.includes("A measurement baseline, not a success story"), "case study publishes a measurement baseline before claiming results");
+assert(caseStudySource.includes("A second study personally conducted by Matthias does not yet exist"), "case study does not fabricate the second human-led study");
 assert(caseStudySource.includes('rel="external nofollow"'), "case study marks the same-owner Contextter link nofollow");
 
 const studyRecord = JSON.parse(readFileSync(join(root, "src", "data", "studies", "a-dark-room-session.json"), "utf8"));
