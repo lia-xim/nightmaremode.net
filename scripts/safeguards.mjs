@@ -158,6 +158,8 @@ const survivalDataSource = readFileSync(join(root, "src", "data", "survival-atla
 const survivalCatalogSource = readFileSync(join(root, "src", "data", "survival-catalog.ts"), "utf8");
 const survivalDatabaseSource = readFileSync(join(root, "src", "components", "SurvivalDatabase.astro"), "utf8");
 const survivalCandidateSource = readFileSync(join(root, "src", "components", "SurvivalCandidatePage.astro"), "utf8");
+const survivalResearchModelSource = readFileSync(join(root, "src", "data", "survival-research-model.ts"), "utf8");
+const survivalResearchWorkbenchSource = readFileSync(join(root, "src", "components", "SurvivalResearchWorkbench.astro"), "utf8");
 const survivalExplorerSource = readFileSync(join(root, "src", "components", "SurvivalExplorer.astro"), "utf8");
 assert((survivalDataSource.match(/id: "the-crew(?:-2)?"/g) ?? []).length === 2, "survival atlas starts with exactly two reviewed contrast cases");
 assert((survivalCatalogSource.match(/originalRelease:/g) ?? []).length === 51, "survival database contains exactly 50 bounded candidate records plus its typed field declaration");
@@ -167,6 +169,11 @@ assert(survivalDatabaseSource.includes("Provisional hypothesis") && survivalData
 assert(survivalCandidateSource.includes("<BaseLayout lang={locale} title={copy.title} description={copy.description} noindex>"), "pending research dossier template hardcodes noindex");
 assert(survivalCandidateSource.includes("Hypothesis, not a finding") && survivalCandidateSource.includes("Hypothese, kein Befund"), "pending research dossiers reject invented verdicts in both languages");
 assert(pageRegistry.filter((page) => page.cluster === "survival-atlas-research").length === 96, "48 pending games have bilingual registered research dossiers");
+assert((survivalResearchModelSource.match(/summary:\s*\{/g) ?? []).length === 9, "every research lane has one bounded working-model definition plus its typed declaration");
+assert(survivalResearchWorkbenchSource.includes("does not yet contain verified dependency facts") && survivalResearchWorkbenchSource.includes("noch keine verifizierten Abhängigkeitsfakten"), "research simulator exposes its non-verified boundary in both languages");
+assert((survivalResearchWorkbenchSource.match(/data-research-failure=/g) ?? []).length === 1 && survivalResearchWorkbenchSource.includes("model.dependencies.map"), "research simulator derives all four failure controls from the bounded model");
+assert(survivalResearchWorkbenchSource.includes("No simulation replaces sources or a real test") && survivalResearchWorkbenchSource.includes("Keine Simulation ersetzt Quellen oder einen echten Test"), "research simulator cannot be mistaken for source or test evidence");
+assert(survivalResearchWorkbenchSource.includes('meter min="0" max="6" value="0"'), "pending dossiers expose a zero-complete evidence gate rather than fabricated progress");
 assert(survivalDataSource.includes("This record relies on Ubisoft's shutdown notice"), "The Crew record discloses its publisher-source boundary");
 assert(survivalDataSource.includes("not by our own long-term platform test"), "The Crew 2 record does not fabricate an independent platform test");
 assert(!survivalDataSource.includes("The game will not be accessible"), "survival atlas paraphrases sources instead of inventing direct quotations");

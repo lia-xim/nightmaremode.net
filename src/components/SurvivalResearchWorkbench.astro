@@ -1,0 +1,306 @@
+---
+import type { Locale } from "@/i18n";
+import type { SurvivalCatalogEntry } from "@/data/survival-catalog";
+import { catalogResearchModel, researchOutcomeIds } from "@/data/survival-research-model";
+
+interface Props { locale: Locale; entry: SurvivalCatalogEntry }
+const { locale, entry } = Astro.props;
+const model = catalogResearchModel(entry, locale);
+const copy = locale === "de" ? {
+  kicker: "Interaktives Arbeitsmodell",
+  title: "Was passiert, wenn ein Dienst ausfällt?",
+  intro: "Schalte Abhängigkeiten aus und beobachte, welche Bereiche das vorläufige Modell als wahrscheinlich verfügbar, gefährdet oder ungeklärt einordnet.",
+  warning: `Dieses Modell wird nur aus dem Prüffeld „${entry.researchLane}“ abgeleitet. Es enthält noch keine verifizierten Abhängigkeitsfakten zu ${entry.title}.`,
+  map: "Vorläufige Abhängigkeitskarte",
+  local: "Vorbereitete lokale Kopie",
+  localDetail: "Für die Simulation angenommen; Installation und Version sind noch nicht geprüft.",
+  simulate: "Ausfälle simulieren",
+  reset: "Ausgangslage",
+  controls: {
+    store: "Store nicht verfügbar",
+    "publisher-login": "Publisher-Login nicht verfügbar",
+    "game-server": "Spielserver nicht verfügbar",
+    internet: "Internet nicht verfügbar",
+  },
+  results: "Modelliertes Ergebnis",
+  assumption: "Annahme: Das Spiel wurde zuvor installiert und aktualisiert.",
+  outcomes: {
+    acquisition: ["Neuerwerb / Download", "Kauf, Lizenzprüfung oder erneuter Bezug"],
+    core: ["Kernspiel", "Solo-Inhalte und zentrale Systeme"],
+    save: ["Fortschritt", "Lokaler oder servergebundener Spielstand"],
+    online: ["Online-Funktionen", "Multiplayer, Bestenlisten und Community"],
+  },
+  states: { likely: "Modell: eher verfügbar", "at-risk": "Modell: gefährdet", unknown: "Nicht belegt" },
+  scenarioIdle: "Keine zusätzliche Abhängigkeit ausgeschaltet.",
+  scenarioOne: "Eine Abhängigkeit ausgeschaltet.",
+  scenarioMany: (count: number) => `${count} Abhängigkeiten ausgeschaltet.`,
+  matrix: "Was muss pro Abhängigkeit belegt werden?",
+  matrixIntro: "Die Zeilen zeigen keine fertige Wahrheit über das Spiel. Sie machen die Hypothese und ihren Prüfauftrag sichtbar.",
+  dependency: "Abhängigkeit",
+  assumptionLabel: "Arbeitsannahme",
+  failure: "Wenn sie ausfällt",
+  evidence: "Nötiger Beleg",
+  progress: "Evidenz-Fortschritt",
+  progressValue: "0 von 6 Prüfpunkten abgeschlossen",
+  progressIntro: "Erst nach vollständiger Prüfung wird aus diesem Modell ein veröffentlichbarer Befund.",
+  checks: ["Primärquellen", "Plattform und Version", "Installation und Lizenz", "Login-Verhalten", "Serverpfad", "Kernspiel, Spielstand und Online-Test"],
+} : {
+  kicker: "Interactive working model",
+  title: "What happens when a service fails?",
+  intro: "Switch dependencies off and see which areas the provisional model classifies as likely available, at risk or unresolved.",
+  warning: `This model is derived only from the “${entry.researchLane}” research lane. It does not yet contain verified dependency facts about ${entry.title}.`,
+  map: "Provisional dependency map",
+  local: "Prepared local copy",
+  localDetail: "Assumed for this simulation; installation and version have not been reviewed.",
+  simulate: "Simulate failures",
+  reset: "Reset scenario",
+  controls: {
+    store: "Store unavailable",
+    "publisher-login": "Publisher login unavailable",
+    "game-server": "Game server unavailable",
+    internet: "Internet unavailable",
+  },
+  results: "Modelled outcome",
+  assumption: "Assumption: the game was installed and updated beforehand.",
+  outcomes: {
+    acquisition: ["New acquisition / download", "Purchase, entitlement check or redownload"],
+    core: ["Core game", "Solo content and central systems"],
+    save: ["Progress", "A local or server-bound save"],
+    online: ["Online features", "Multiplayer, leaderboards and community"],
+  },
+  states: { likely: "Model: likely available", "at-risk": "Model: at risk", unknown: "Not established" },
+  scenarioIdle: "No additional dependency switched off.",
+  scenarioOne: "One dependency switched off.",
+  scenarioMany: (count: number) => `${count} dependencies switched off.`,
+  matrix: "What must be established for each dependency?",
+  matrixIntro: "These rows are not a finished truth about the game. They expose the hypothesis and the work required to test it.",
+  dependency: "Dependency",
+  assumptionLabel: "Working assumption",
+  failure: "If it fails",
+  evidence: "Evidence required",
+  progress: "Evidence progress",
+  progressValue: "0 of 6 review gates complete",
+  progressIntro: "Only a complete review can turn this model into a publishable finding.",
+  checks: ["Primary sources", "Platform and version", "Installation and entitlement", "Login behaviour", "Server path", "Core game, save and online test"],
+};
+const defaultCount = model.defaultFailures.length;
+---
+
+<section
+  class="research-lab shell"
+  data-research-workbench
+  data-case={entry.id}
+  data-label-likely={copy.states.likely}
+  data-label-risk={copy.states["at-risk"]}
+  data-label-unknown={copy.states.unknown}
+  data-scenario-idle={copy.scenarioIdle}
+  data-scenario-one={copy.scenarioOne}
+  data-scenario-many={locale === "de" ? "Abhängigkeiten ausgeschaltet." : "dependencies switched off."}
+>
+  <header class="lab-heading">
+    <div><p class="mono">{copy.kicker}</p><h2 class="display">{copy.title}</h2></div>
+    <div><p class="lab-lede">{copy.intro}</p><p class="model-warning">{copy.warning}</p></div>
+  </header>
+
+  <div class="workbench">
+    <div class="model-column">
+      <div class="section-heading"><h3 class="display">{copy.map}</h3><p>{model.summary}</p></div>
+      <div class="dependency-map" aria-label={`${entry.title}: ${copy.map}`}>
+        <div class="dependency-node role-local" data-model-node="local-copy"><strong>{copy.local}</strong><span>{copy.localDetail}</span><small>{locale === "de" ? "Simulationsannahme" : "Simulation assumption"}</small></div>
+        {model.dependencies.map((dependency) => <>
+          <span class="connector" aria-hidden="true">→</span>
+          <div class:list={["dependency-node", `role-${dependency.role}`]} data-model-node={dependency.id}>
+            <strong>{dependency.name}</strong><span>{dependency.failureEffect}</span><small>{dependency.roleLabel}</small>
+          </div>
+        </>)}
+      </div>
+
+      <fieldset class="simulator">
+        <legend class="display">{copy.simulate}</legend>
+        <div class="simulator__actions"><button type="button" data-reset-scenario>{copy.reset}</button></div>
+        <div class="simulator__controls">
+          {model.dependencies.map((dependency) => <label>
+            <input
+              type="checkbox"
+              data-research-failure={dependency.id}
+              data-impact-acquisition={dependency.impacts.acquisition ?? ""}
+              data-impact-core={dependency.impacts.core ?? ""}
+              data-impact-save={dependency.impacts.save ?? ""}
+              data-impact-online={dependency.impacts.online ?? ""}
+              checked={model.defaultFailures.includes(dependency.id)}
+            />
+            <span aria-hidden="true"></span><strong>{copy.controls[dependency.id]}</strong>
+          </label>)}
+        </div>
+      </fieldset>
+    </div>
+
+    <aside class="result-ledger" aria-live="polite">
+      <div class="section-heading"><h3 class="display">{copy.results}</h3><p>{copy.assumption}</p></div>
+      <ul>
+        {researchOutcomeIds.map((id) => {
+          const words = copy.outcomes[id];
+          const state = model.baseline[id];
+          return <li data-model-result={id} data-base-state={state} data-state={state}>
+            <span><strong>{words[0]}</strong><small>{words[1]}</small></span><b data-model-label>{copy.states[state]}</b>
+          </li>;
+        })}
+      </ul>
+      <p class="scenario-summary" data-scenario-label>{defaultCount === 0 ? copy.scenarioIdle : defaultCount === 1 ? copy.scenarioOne : copy.scenarioMany(defaultCount)}</p>
+      <p class="ledger-boundary">{locale === "de" ? "Keine Simulation ersetzt Quellen oder einen echten Test." : "No simulation replaces sources or a real test."}</p>
+    </aside>
+  </div>
+
+  <section class="evidence-matrix" aria-labelledby={`matrix-${entry.id}`}>
+    <div class="matrix-heading"><h3 id={`matrix-${entry.id}`} class="display">{copy.matrix}</h3><p>{copy.matrixIntro}</p></div>
+    <div class="table-wrap" role="group" aria-labelledby={`matrix-${entry.id}`} tabindex="0"><table>
+      <thead><tr><th>{copy.dependency}</th><th>{copy.assumptionLabel}</th><th>{copy.failure}</th><th>{copy.evidence}</th></tr></thead>
+      <tbody>{model.dependencies.map((dependency) => <tr><th scope="row">{dependency.name}</th><td>{dependency.roleLabel}</td><td>{dependency.failureEffect}</td><td>{dependency.evidenceNeeded}</td></tr>)}</tbody>
+    </table></div>
+  </section>
+
+  <section class="evidence-progress" aria-labelledby={`progress-${entry.id}`}>
+    <div><p class="mono">{copy.progress}</p><h3 id={`progress-${entry.id}`} class="display">{copy.progressValue}</h3><p>{copy.progressIntro}</p><meter min="0" max="6" value="0">0 / 6</meter></div>
+    <ol>{copy.checks.map((check, index) => <li><span>{String(index + 1).padStart(2, "0")}</span><strong>{check}</strong><em>{locale === "de" ? "offen" : "open"}</em></li>)}</ol>
+  </section>
+</section>
+
+<script>
+  const weight = { likely: 0, unknown: 1, "at-risk": 2 } as const;
+  type ModelState = keyof typeof weight;
+
+  for (const workbench of document.querySelectorAll<HTMLElement>("[data-research-workbench]")) {
+    const inputs = [...workbench.querySelectorAll<HTMLInputElement>("[data-research-failure]")];
+    const labels = {
+      likely: workbench.dataset.labelLikely ?? "Model: likely available",
+      "at-risk": workbench.dataset.labelRisk ?? "Model: at risk",
+      unknown: workbench.dataset.labelUnknown ?? "Not established",
+    };
+
+    const update = () => {
+      const active = inputs.filter((input) => input.checked);
+      for (const row of workbench.querySelectorAll<HTMLElement>("[data-model-result]")) {
+        const id = row.dataset.modelResult;
+        let state = (row.dataset.baseState ?? "unknown") as ModelState;
+        for (const input of active) {
+          const value = input.dataset[`impact${id?.charAt(0).toUpperCase()}${id?.slice(1)}` as keyof DOMStringMap] as ModelState | undefined;
+          if (value && weight[value] > weight[state]) state = value;
+        }
+        row.dataset.state = state;
+        const label = row.querySelector<HTMLElement>("[data-model-label]");
+        if (label) label.textContent = labels[state];
+      }
+
+      workbench.querySelectorAll<HTMLElement>("[data-model-node]").forEach((node) => {
+        node.classList.toggle("is-failed", active.some((input) => input.dataset.researchFailure === node.dataset.modelNode));
+      });
+
+      const summary = workbench.querySelector<HTMLElement>("[data-scenario-label]");
+      if (summary) summary.textContent = active.length === 0
+        ? (workbench.dataset.scenarioIdle ?? "")
+        : active.length === 1
+          ? (workbench.dataset.scenarioOne ?? "")
+          : `${active.length} ${workbench.dataset.scenarioMany ?? ""}`;
+    };
+
+    inputs.forEach((input) => input.addEventListener("change", () => {
+      update();
+      const analytics = (window as typeof window & { umami?: { track?: (name: string, data: Record<string, unknown>) => void } }).umami;
+      analytics?.track?.("survival-research-simulation", { case: workbench.dataset.case, condition: input.dataset.researchFailure, failed: input.checked });
+    }));
+    workbench.querySelector<HTMLButtonElement>("[data-reset-scenario]")?.addEventListener("click", () => {
+      inputs.forEach((input) => { input.checked = false; });
+      update();
+    });
+    update();
+  }
+</script>
+
+<style>
+  .research-lab { border-bottom: 1px solid var(--line); }
+  .lab-heading { display: grid; grid-template-columns: minmax(17rem, 0.62fr) 1fr; gap: clamp(3rem, 8vw, 9rem); padding-block: clamp(3.5rem, 7vw, 7rem); border-bottom: 1px solid var(--line); }
+  .lab-heading .mono { margin: 0 0 0.75rem; color: var(--signal); }
+  .lab-heading h2 { max-width: 11ch; font-size: clamp(2.8rem, 5vw, 5.2rem); }
+  .lab-heading > div:last-child { max-width: 48rem; }
+  .lab-lede { margin-top: 0; font-family: var(--display); font-size: clamp(1.25rem, 2vw, 1.8rem); line-height: 1.4; }
+  .model-warning { padding: 1.15rem 0 0 1.15rem; border-left: 3px solid var(--signal); color: var(--ink-soft); font-size: 0.82rem; }
+  .workbench { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(18rem, 0.65fr); border-bottom: 1px solid var(--line); }
+  .model-column { min-width: 0; padding: clamp(3rem, 5vw, 5rem) clamp(2rem, 5vw, 5rem) clamp(3rem, 5vw, 5rem) 0; }
+  .result-ledger { padding: clamp(3rem, 5vw, 5rem) 0 clamp(3rem, 5vw, 5rem) clamp(2rem, 4vw, 4rem); border-left: 1px solid var(--line); }
+  .section-heading h3, .matrix-heading h3 { font-size: clamp(2rem, 3.5vw, 3.2rem); font-weight: 500; }
+  .section-heading p, .matrix-heading p { max-width: 46rem; margin: 0.45rem 0 0; color: var(--ink-soft); font-size: 0.85rem; }
+  .dependency-map { display: grid; grid-template-columns: repeat(9, minmax(0, auto)); align-items: stretch; margin-top: 2rem; }
+  .connector { display: grid; place-items: center; padding: 0 0.3rem; color: var(--signal); }
+  .dependency-node { display: grid; min-width: 0; min-height: 9.2rem; align-content: start; gap: 0.45rem; padding: 1rem; border: 1px solid var(--line-strong); background: var(--paper); transition: background 160ms ease, border-color 160ms ease, opacity 160ms ease; }
+  .dependency-node strong { font-size: 0.78rem; line-height: 1.25; }
+  .dependency-node span { color: var(--ink-soft); font-size: 0.67rem; line-height: 1.4; }
+  .dependency-node small { align-self: end; padding-top: 0.55rem; color: var(--signal); font-size: 0.59rem; font-weight: 650; letter-spacing: 0.04em; text-transform: uppercase; }
+  .dependency-node.role-critical, .dependency-node.is-failed { border-color: color-mix(in srgb, var(--signal) 65%, var(--line)); }
+  .dependency-node.role-potential-bypass { border-style: dashed; }
+  .dependency-node.role-unknown { background: var(--paper-soft); }
+  .dependency-node.is-failed { background: #f7eef0; box-shadow: inset 3px 0 0 var(--signal); }
+  .simulator { margin: 3rem 0 0; padding: 2rem 0 0; border: 0; border-top: 1px solid var(--line); }
+  .simulator legend { padding: 0; font-size: clamp(1.7rem, 2.7vw, 2.4rem); }
+  .simulator__actions { display: flex; justify-content: flex-end; margin-top: -1.8rem; }
+  .simulator button { border: 0; border-bottom: 1px solid currentColor; background: transparent; color: var(--signal); font: inherit; font-size: 0.72rem; cursor: pointer; }
+  .simulator__controls { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 1.2rem; border: 1px solid var(--line); }
+  .simulator label { display: grid; grid-template-columns: auto 1fr; min-height: 6rem; align-content: start; gap: 0.75rem; padding: 1rem; cursor: pointer; }
+  .simulator label + label { border-left: 1px solid var(--line); }
+  .simulator input { position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0; }
+  .simulator label > span { width: 2.25rem; height: 1.2rem; border: 1px solid var(--line-strong); border-radius: 2rem; background: var(--paper-soft); transition: background 160ms ease, border-color 160ms ease; }
+  .simulator label > span::after { display: block; width: 0.8rem; height: 0.8rem; margin: 0.14rem; border-radius: 50%; content: ""; background: var(--ink-soft); transition: transform 160ms ease, background 160ms ease; }
+  .simulator input:checked + span { border-color: var(--signal); background: #f4e7e9; }
+  .simulator input:checked + span::after { transform: translateX(1rem); background: var(--signal); }
+  .simulator input:focus-visible + span { outline: 2px solid var(--signal); outline-offset: 3px; }
+  .simulator label strong { grid-column: 2; font-size: 0.74rem; font-weight: 550; line-height: 1.35; }
+  .result-ledger ul { margin: 2rem 0 0; padding: 0; list-style: none; }
+  .result-ledger li { display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: center; padding: 1.2rem 0; border-top: 1px solid var(--line); }
+  .result-ledger li > span { display: grid; }
+  .result-ledger li strong { font-family: var(--display); font-size: 1.18rem; font-weight: 550; }
+  .result-ledger small { color: var(--ink-soft); font-size: 0.7rem; }
+  .result-ledger b { max-width: 9.5rem; padding: 0.32rem 0.5rem; background: var(--paper-soft); color: var(--ink-soft); font-size: 0.58rem; line-height: 1.35; text-align: right; text-transform: uppercase; }
+  .result-ledger [data-state="at-risk"] b { background: #f4e7e9; color: var(--signal); }
+  .result-ledger [data-state="likely"] b { background: #eaf0e4; color: #3e5b2b; }
+  .scenario-summary { margin: 2rem 0 0; padding-top: 1.2rem; border-top: 1px dotted var(--line-strong); color: var(--signal); font-family: var(--display); font-size: 1.05rem; }
+  .ledger-boundary { color: var(--ink-soft); font-size: 0.72rem; }
+  .evidence-matrix { padding-block: clamp(3.5rem, 6vw, 6rem); border-bottom: 1px solid var(--line); }
+  .matrix-heading { display: grid; grid-template-columns: 0.8fr 1fr; gap: clamp(2rem, 7vw, 8rem); align-items: end; }
+  .table-wrap { margin-top: 2.5rem; overflow-x: auto; }
+  table { width: 100%; min-width: 62rem; border-collapse: collapse; }
+  th, td { padding: 1rem; border-top: 1px solid var(--line); text-align: left; vertical-align: top; }
+  thead th { color: var(--ink-soft); font-size: 0.62rem; letter-spacing: 0.05em; text-transform: uppercase; }
+  tbody th { width: 18%; font-family: var(--display); font-size: 1.05rem; font-weight: 550; }
+  tbody td { color: var(--ink-soft); font-size: 0.76rem; line-height: 1.5; }
+  tbody td:nth-child(2) { color: var(--signal); font-weight: 600; }
+  .evidence-progress { display: grid; grid-template-columns: minmax(17rem, 0.62fr) 1fr; gap: clamp(3rem, 8vw, 9rem); padding-block: clamp(3.5rem, 7vw, 7rem); border-bottom: 1px solid var(--line); }
+  .evidence-progress .mono { margin: 0 0 0.75rem; color: var(--signal); }
+  .evidence-progress h3 { max-width: 12ch; font-size: clamp(2.5rem, 4.7vw, 4.7rem); }
+  .evidence-progress p { max-width: 34rem; color: var(--ink-soft); }
+  meter { width: min(100%, 26rem); height: 0.4rem; margin-top: 1.2rem; accent-color: var(--signal); }
+  .evidence-progress ol { margin: 0; padding: 0; list-style: none; }
+  .evidence-progress li { display: grid; grid-template-columns: 2.2rem 1fr auto; gap: 1rem; align-items: center; padding: 1rem 0; border-top: 1px solid var(--line); }
+  .evidence-progress li span { color: var(--signal); font-size: 0.66rem; }
+  .evidence-progress li strong { font-family: var(--display); font-size: 1.08rem; font-weight: 550; }
+  .evidence-progress li em { color: var(--ink-soft); font-size: 0.64rem; font-style: normal; text-transform: uppercase; }
+  @media (max-width: 1050px) {
+    .workbench { grid-template-columns: 1fr; }
+    .model-column { padding-right: 0; }
+    .result-ledger { padding-left: 0; border-left: 0; }
+  }
+  @media (max-width: 800px) {
+    .lab-heading, .matrix-heading, .evidence-progress { grid-template-columns: 1fr; gap: 2rem; }
+    .dependency-map { grid-template-columns: 1fr; gap: 0; }
+    .connector { min-height: 2rem; transform: rotate(90deg); }
+    .dependency-node { min-height: 0; }
+    .simulator__controls { grid-template-columns: 1fr 1fr; }
+    .simulator label:nth-child(even) { border-left: 1px solid var(--line); }
+    .simulator label:nth-child(n+3) { border-top: 1px solid var(--line); }
+  }
+  @media (max-width: 500px) {
+    .simulator__controls { grid-template-columns: 1fr; }
+    .simulator label + label, .simulator label:nth-child(even) { border-left: 0; }
+    .simulator label + label { border-top: 1px solid var(--line); }
+    .evidence-progress li { grid-template-columns: 2rem 1fr; }
+    .evidence-progress li em { grid-column: 2; }
+  }
+</style>

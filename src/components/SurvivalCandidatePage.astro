@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@/components/BaseLayout.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
+import SurvivalResearchWorkbench from "@/components/SurvivalResearchWorkbench.astro";
 import {
   catalogCasePath,
   catalogLaneLabel,
@@ -93,6 +94,8 @@ const copy = locale === "de" ? {
     <div><p class="mono">{copy.direct}</p><h2 class="display">{copy.directText}</h2></div>
     <div><p class="rationale">{catalogOutlookRationale(entry, locale)}</p><p>{copy.directDetail}</p></div>
   </section>
+
+  <SurvivalResearchWorkbench locale={locale} entry={entry} />
 
   <section class="known shell" aria-labelledby="known-title">
     <div><p class="mono">01</p><h2 id="known-title" class="display">{copy.known}</h2></div>
