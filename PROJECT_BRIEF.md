@@ -70,9 +70,15 @@ The launch asset is the original, source-led essay `/essays/a-game-is-more-than-
 
 Google Search Console manual actions, Security Issues, temporary removals, and property-level crawl reports are **NOT PROVEN** because no reproducible authenticated Search Console connection was available. This unknown is reported, not inferred as clean, and remains a pre-indexing blocker.
 
-## Current controlling index-launch gate — 22 August 2026
+## Authenticated index-launch review — 29 August 2026
 
-The earlier post-launch Search Console wording is superseded. Production must remain protected until an authenticated owner or full user of the `nightmaremode.net` domain property records all of the following:
+The earlier Search Console unknown has now been resolved through the verified `sc-domain:nightmaremode.net` property. Matthias Ramahi is shown as a verified owner. Authenticated reports show no Manual Actions, no Security Issues, and no removal requests in the previous six months. Page Indexing and Crawl Stats were captured as a pre-release baseline; they still include historical redirects, 404s, unreachable responses, and crawled-but-not-indexed URLs from earlier domain phases and the migration period. URL Inspection was run for `/`, the launch essay, the first play study, and the play-study protocol: the historical homepage was submitted and indexed, while all three new content URLs were still unknown to Google before release. Those historical figures and inspection states are recorded as limitations, not treated as current live defects or launch success.
+
+The owner explicitly approved the first indexable release after these checks. The release opens crawling and the automatic sitemap only for the 28 canonical, evidence-ready routes in `src/data/indexable-routes.mjs`. The 48 pending game dossiers across 96 language URLs remain hardcoded `noindex`, as do legal, governance, utility, bibliographic legacy, and error pages. A fresh Google crawl, Google-selected canonicals, durable indexation, rankings, demand, traffic, referrals, conversions, and commercial value remain unproven after launch.
+
+## Two-key index-launch procedure — established 22 August 2026
+
+Production remained protected until an authenticated owner or full user of the `nightmaremode.net` domain property recorded all of the following:
 
 1. property ownership and access level;
 2. Manual Actions showing no unresolved action;
@@ -82,4 +88,4 @@ The earlier post-launch Search Console wording is superseded. Production must re
 6. URL Inspection live tests for `/`, the launch essay, the first play study, and the play-study protocol;
 7. the evidence date, reviewer, screenshots or exports, and any limitations in the project evidence register and DomainPortfolio dossier.
 
-After that evidence exists, an owner-reviewed launch change must set both `PUBLIC_SITE_INDEXABLE=true` and `PUBLIC_GSC_INDEX_GATE_CONFIRMED=manual-actions-security-removals-crawl-index-verified` in Production. The second value is only a deployment lock; it is not a substitute for the evidence above. The same build must then pass protected-to-launch regression checks and live verification of meta robots, robots.txt, the exact bilingual automatic sitemap allowlist, reciprocal language alternates, canonicals, apex/`www` redirects, real 404s, security headers, internal links, mobile, keyboard, console, and accessibility before sitemap submission. Preview and unconfigured environments remain protected by default.
+After that evidence exists, an owner-reviewed launch change sets both `PUBLIC_SITE_INDEXABLE=true` and `PUBLIC_GSC_INDEX_GATE_CONFIRMED=manual-actions-security-removals-crawl-index-verified` in Production. The second value is only a deployment lock; it is not a substitute for the evidence above. The same build must then pass protected-to-launch regression checks and live verification of meta robots, robots.txt, the exact bilingual automatic sitemap allowlist, reciprocal language alternates, canonicals, apex/`www` redirects, real 404s, security headers, internal links, mobile, keyboard, console, and accessibility before sitemap submission. Preview and unconfigured environments remain protected by default.
