@@ -8,7 +8,12 @@ export const siteConfig = {
   ownershipDisclosure:
     "A separate publication established in 2026 after the domain changed hands. Former contributors do not automatically participate in or endorse it.",
   indexableEnvironmentVariable: "PUBLIC_SITE_INDEXABLE",
-  analyticsEnabled: false,
+  analytics: {
+    enabled: true,
+    scriptUrl: "https://analytics.contextter.com/script.js",
+    websiteId: "56f584d7-b9de-4871-af37-c2c829ef9620",
+    domains: "nightmaremode.net",
+  },
   contactDeliveryEnabled: false,
 } as const;
 

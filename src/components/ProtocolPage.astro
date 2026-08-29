@@ -61,7 +61,7 @@ const schema = { "@context": "https://schema.org", "@type": "Article", inLanguag
       <section class="worksheet"><p class="label">{german ? "Kopierbares Arbeitsblatt" : "Copyable worksheet"}</p><h2 class="display">{german ? "Play-Study-Datensatz" : "Play-study record"}</h2><pre><code>{copy.worksheet}</code></pre></section>
       <section><h2 class="display">{german ? "Wo die Methode endet" : "Where the method stops"}</h2><p>{copy.limits}</p></section>
       <section class="sources"><h2 class="display">{german ? "Quellen und Anpassung" : "Sources and adaptation"}</h2><p>{copy.sources}</p><ul><li><a href="https://gamestudies.org/0601/articles/consalvo_dutton" rel="external">Consalvo &amp; Dutton: Game analysis</a></li><li><a href="https://gamestudies.org/2202/articles/gap_daneels_denoo_vandewalle_dupont_malliet" rel="external">Daneels et al.: DiGAP</a></li></ul></section>
-      <a class="next" href={pathFor(locale, "/field-notes/a-dark-room-first-four-minutes/")}>{copy.next} <span aria-hidden="true">→</span></a>
+      <a class="next" href={pathFor(locale, "/field-notes/a-dark-room-first-four-minutes/")} data-umami-event="content-next" data-umami-event-target="play-study">{copy.next} <span aria-hidden="true">→</span></a>
     </div>
   </article>
   <SiteFooter locale={locale} />

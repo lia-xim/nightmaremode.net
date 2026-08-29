@@ -121,6 +121,22 @@ assert(securityHeaders["x-frame-options"] === "DENY", "frame policy is exact");
 assert(securityHeaders["content-security-policy"]?.includes("frame-ancestors 'none'"), "CSP blocks framing");
 assert(securityHeaders["content-security-policy"]?.includes("object-src 'none'"), "CSP blocks plugins");
 assert(!securityHeaders["content-security-policy"]?.includes("http:"), "CSP does not allow insecure origins");
+assert(securityHeaders["content-security-policy"]?.includes("script-src 'self' 'unsafe-inline' https://analytics.contextter.com"), "CSP permits only the configured analytics script origin");
+assert(securityHeaders["content-security-policy"]?.includes("connect-src 'self' https://analytics.contextter.com"), "CSP permits analytics collection only at the configured origin");
+
+const baseLayoutSource = readFileSync(join(root, "src", "components", "BaseLayout.astro"), "utf8");
+const siteConfigSource = readFileSync(join(root, "src", "config", "site.ts"), "utf8");
+const privacyEnglishSource = readFileSync(join(root, "src", "pages", "datenschutz.astro"), "utf8");
+const privacyGermanSource = readFileSync(join(root, "src", "pages", "de", "datenschutz.astro"), "utf8");
+assert(siteConfigSource.includes('scriptUrl: "https://analytics.contextter.com/script.js"'), "analytics endpoint is centrally configured");
+assert(siteConfigSource.includes('websiteId: "56f584d7-b9de-4871-af37-c2c829ef9620"'), "analytics website ID is centrally configured");
+for (const attribute of ['data-domains={siteConfig.analytics.domains}', 'data-exclude-search="true"', 'data-exclude-hash="true"', 'data-do-not-track="true"', 'data-performance="true"']) {
+  assert(baseLayoutSource.includes(attribute), `privacy-oriented analytics setting is present: ${attribute}`);
+}
+for (const [label, source] of [["English", privacyEnglishSource], ["German", privacyGermanSource]]) {
+  assert(source.includes("analytics.contextter.com"), `${label} privacy notice names the analytics endpoint`);
+  assert(!source.includes(label === "English" ? "No tracking" : "Kein Tracking"), `${label} privacy notice no longer makes a false no-tracking claim`);
+}
 
 const protocolSource = readFileSync(join(root, "src", "components", "ProtocolPage.astro"), "utf8");
 assert(protocolSource.includes("does not replace participant research"), "play-study protocol states its experience boundary");

@@ -272,7 +272,7 @@ const hrefFor = (href: string) => href.endsWith(".json") ? href : href.startsWit
 
     <section class="chapter proof-chapter">
       <div class="chapter__rail"><span>09</span><h2 class="display">{copy.proofTitle}</h2></div>
-      <div class="chapter__content"><p class="lead">{copy.proofIntro}</p><ul class="proof-links">{copy.proofLinks.map(([label, href]) => <li><a href={hrefFor(href)} rel={href.startsWith("http") ? "external" : undefined}>{label} <span aria-hidden="true">↗</span></a></li>)}</ul><p class="disclosure">{copy.disclosure}</p><a class="action" href="https://contextter.com/" rel="external nofollow">{copy.contextterLink} <span aria-hidden="true">↗</span></a></div>
+      <div class="chapter__content"><p class="lead">{copy.proofIntro}</p><ul class="proof-links">{copy.proofLinks.map(([label, href]) => <li><a href={hrefFor(href)} rel={href.startsWith("http") ? "external" : undefined} data-umami-event="evidence-open" data-umami-event-target={href}>{label} <span aria-hidden="true">↗</span></a></li>)}</ul><p class="disclosure">{copy.disclosure}</p><a class="action" href="https://contextter.com/" rel="external nofollow" data-umami-event="contextter-visit" data-umami-event-placement="case-study-disclosure">{copy.contextterLink} <span aria-hidden="true">↗</span></a></div>
     </section>
   </article>
 

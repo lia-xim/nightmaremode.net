@@ -85,7 +85,7 @@ const articleSchema = { "@context": "https://schema.org", "@type": "Article", in
       <div class="body">
         {copy.sections.map((section, index) => <section><h2 class="display">{section.title}</h2>{index === 1 && <Image src={studyImage} alt="" widths={[480, 760]} sizes="(max-width: 800px) 100vw, 40vw" format="webp" />}{section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}</section>)}
         <section class="disclosure"><h2 class="display">{copy.disclosureTitle}</h2><p>{copy.disclosure}</p></section>
-        <a class="next" href={pathFor(locale, "/field-notes/a-dark-room-first-four-minutes/")}>{copy.next} <span aria-hidden="true">→</span></a>
+        <a class="next" href={pathFor(locale, "/field-notes/a-dark-room-first-four-minutes/")} data-umami-event="content-next" data-umami-event-target="play-study">{copy.next} <span aria-hidden="true">→</span></a>
       </div>
       <aside class="sources" aria-labelledby="sources-title"><h2 id="sources-title" class="display">{copy.sourcesTitle}</h2><ol>{sources.map((source) => <li><a href={source.href} rel="external">{source.title}</a><span>{source.publisher}, {source.date}</span></li>)}</ol><p class="method">{copy.method}</p></aside>
     </div>

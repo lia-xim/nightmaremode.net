@@ -20,8 +20,8 @@ const alternate = alternatePath(path);
         <a class:list={{ active: path.startsWith(item.href) }} href={item.href}>{item.label}</a>
       ))}
       <span class="language-switch" aria-label={locale === "de" ? "Sprache" : "Language"}>
-        <a class:list={{ active: locale === "en" }} href={locale === "en" ? path : alternate ?? "/"} lang="en" hreflang="en">EN</a>
-        <a class:list={{ active: locale === "de" }} href={locale === "de" ? path : alternate ?? "/de/"} lang="de" hreflang="de">DE</a>
+        <a class:list={{ active: locale === "en" }} href={locale === "en" ? path : alternate ?? "/"} lang="en" hreflang="en" data-umami-event="language-switch" data-umami-event-language="en">EN</a>
+        <a class:list={{ active: locale === "de" }} href={locale === "de" ? path : alternate ?? "/de/"} lang="de" hreflang="de" data-umami-event="language-switch" data-umami-event-language="de">DE</a>
       </span>
     </nav>
   </div>

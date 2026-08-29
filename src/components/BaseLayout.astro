@@ -73,6 +73,19 @@ const pageSchema = ["/", "/de/"].includes(Astro.url.pathname)
     <meta property="og:image" content={new URL(image, siteConfig.canonicalHost)} />
     <meta name="twitter:card" content="summary_large_image" />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(pageSchema)}></script>
+    {siteConfig.analytics.enabled && (
+      <script
+        is:inline
+        defer
+        src={siteConfig.analytics.scriptUrl}
+        data-website-id={siteConfig.analytics.websiteId}
+        data-domains={siteConfig.analytics.domains}
+        data-exclude-search="true"
+        data-exclude-hash="true"
+        data-do-not-track="true"
+        data-performance="true"
+      ></script>
+    )}
     <slot name="head" />
   </head>
   <body>

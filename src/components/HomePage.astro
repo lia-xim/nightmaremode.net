@@ -58,8 +58,8 @@ const copy = locale === "de" ? {
       <h1 id="hero-title" class="display">{copy.title}</h1>
       <p>{copy.description}</p>
       <div class="links">
-        <a class="action" href={pathFor(locale, "/case-study/rebuilding-nightmare-mode/")}>{copy.primary} <span aria-hidden="true">→</span></a>
-        <a class="action quiet" href={pathFor(locale, "/field-notes/a-dark-room-first-four-minutes/")}>{copy.secondary}</a>
+        <a class="action" href={pathFor(locale, "/case-study/rebuilding-nightmare-mode/")} data-umami-event="content-open" data-umami-event-target="case-study" data-umami-event-placement="home-hero">{copy.primary} <span aria-hidden="true">→</span></a>
+        <a class="action quiet" href={pathFor(locale, "/field-notes/a-dark-room-first-four-minutes/")} data-umami-event="content-open" data-umami-event-target="play-study" data-umami-event-placement="home-hero">{copy.secondary}</a>
       </div>
     </div>
     <figure>
@@ -70,9 +70,9 @@ const copy = locale === "de" ? {
   <section class="work shell" aria-label={locale === "de" ? "Aktuelle Texte" : "Current work"}>
     <article class="feature feature--wide">
       <Image src={fieldStudy} alt="" widths={[360, 620]} sizes="(max-width: 760px) 35vw, 18vw" format="webp" />
-      <div><p class="meta">{copy.latest}</p><h2 class="display"><em>{copy.studyTitle}</em></h2><p>{copy.studyText}</p><a class="action" href={pathFor(locale, "/case-study/rebuilding-nightmare-mode/")}>{copy.readStudy} <span aria-hidden="true">→</span></a></div>
+      <div><p class="meta">{copy.latest}</p><h2 class="display"><em>{copy.studyTitle}</em></h2><p>{copy.studyText}</p><a class="action" href={pathFor(locale, "/case-study/rebuilding-nightmare-mode/")} data-umami-event="content-open" data-umami-event-target="case-study" data-umami-event-placement="home-feature">{copy.readStudy} <span aria-hidden="true">→</span></a></div>
     </article>
-    <article class="feature"><div><p class="meta">Play Study · Evidence</p><h2 class="display">{copy.essayTitle}</h2><p>{copy.essayText}</p><a class="action" href={pathFor(locale, "/field-notes/a-dark-room-first-four-minutes/")}>{copy.readEssay} <span aria-hidden="true">→</span></a></div></article>
+    <article class="feature"><div><p class="meta">Play Study · Evidence</p><h2 class="display">{copy.essayTitle}</h2><p>{copy.essayText}</p><a class="action" href={pathFor(locale, "/field-notes/a-dark-room-first-four-minutes/")} data-umami-event="content-open" data-umami-event-target="play-study" data-umami-event-placement="home-feature">{copy.readEssay} <span aria-hidden="true">→</span></a></div></article>
   </section>
 
   <section class="formats shell" aria-labelledby="formats-title">

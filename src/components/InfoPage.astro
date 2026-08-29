@@ -129,7 +129,7 @@ const localHref = (section: Section) => section.href && !section.external ? path
     <p>{copy.intro}</p>
   </header>
   <div class="info-sections shell">
-    {copy.sections.map((section) => <section><h2 class="display">{section.title}</h2><div><p>{section.body}</p>{section.href && <a class="action" href={localHref(section)} rel={section.external ? "external nofollow" : undefined}>{section.link} <span aria-hidden="true">{section.external ? "↗" : "→"}</span></a>}</div></section>)}
+    {copy.sections.map((section) => <section><h2 class="display">{section.title}</h2><div><p>{section.body}</p>{section.href && <a class="action" href={localHref(section)} rel={section.external ? "external nofollow" : undefined} data-umami-event={section.href.startsWith("mailto:") ? "contact-email" : undefined} data-umami-event-placement={section.href.startsWith("mailto:") ? page : undefined}>{section.link} <span aria-hidden="true">{section.external ? "↗" : "→"}</span></a>}</div></section>)}
   </div>
   <SiteFooter locale={locale} />
 </BaseLayout>
