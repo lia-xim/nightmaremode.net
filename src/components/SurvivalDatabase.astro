@@ -1,6 +1,5 @@
 ---
-import { catalogLaneLabel, researchLaneLabels, survivalCatalog } from "@/data/survival-catalog";
-import { getSurvivalCase, localize, survivalCasePath } from "@/data/survival-atlas";
+import { catalogCasePath, catalogLaneLabel, catalogOutlook, catalogOutlookLabel, outlookLabels, researchLaneLabels, survivalCatalog } from "@/data/survival-catalog";
 import type { Locale } from "@/i18n";
 
 interface Props { locale: Locale }
@@ -14,19 +13,22 @@ const copy = locale === "de" ? {
   allLanes: "Alle Prüffelder",
   state: "Datensatz",
   allStates: "Alle Zustände",
+  outlook: "Tendenz",
+  allOutlooks: "Alle Tendenzen",
   reviewed: "Geprüft",
   pending: "Recherche offen",
   game: "Spiel",
   year: "Jahr",
   question: "Prüffeld",
-  verdict: "Aktueller Befund",
+  verdict: "Tendenz",
+  evidence: "Evidenz",
+  verified: "Geprüfter Befund",
+  hypothesis: "Vorläufige Annahme",
   record: "Datensatz",
   open: "Öffnen",
-  queued: "Noch keine Detailseite",
   noResults: "Keine Spiele entsprechen diesen Filtern.",
   resultSuffix: "Spiele",
-  pendingVerdict: "Noch kein veröffentlichter Befund",
-  note: "Die 50 Titel bilden einen begrenzten Recherchekorpus. Nur vollständig belegte Fälle erhalten eine Detailseite; offene Einträge behaupten noch keinen Überlebensstatus.",
+  note: "Jedes Spiel hat ein Dossier und eine sofort sichtbare Tendenz. Nur zwei Tendenzen sind bereits belegt; alle anderen bleiben ausdrücklich überprüfbare Hypothesen und noindex.",
 } : {
   search: "Search games",
   searchPlaceholder: "Enter a title …",
@@ -36,19 +38,22 @@ const copy = locale === "de" ? {
   allLanes: "All research lanes",
   state: "Record",
   allStates: "All states",
+  outlook: "Outlook",
+  allOutlooks: "All outlooks",
   reviewed: "Reviewed",
   pending: "Research pending",
   game: "Game",
   year: "Year",
   question: "Research lane",
-  verdict: "Current finding",
+  verdict: "Outlook",
+  evidence: "Evidence",
+  verified: "Reviewed finding",
+  hypothesis: "Provisional hypothesis",
   record: "Record",
   open: "Open",
-  queued: "No detail page yet",
   noResults: "No games match these filters.",
   resultSuffix: "games",
-  pendingVerdict: "No published finding yet",
-  note: "These 50 titles form a bounded research corpus. Only evidence-complete cases receive a detail page; pending entries make no survival claim.",
+  note: "Every game has a dossier and an immediate outlook. Only two outlooks are evidence-complete; every other one remains an explicit, noindex research hypothesis.",
 };
 const decades = [1990, 2000, 2010];
 ---
@@ -89,6 +94,13 @@ const decades = [1990, 2000, 2010];
         <option value="research-pending">{copy.pending}</option>
       </select>
     </label>
+    <label>
+      <span>{copy.outlook}</span>
+      <select data-filter-outlook>
+        <option value="">{copy.allOutlooks}</option>
+        {Object.entries(outlookLabels).map(([value, label]) => <option value={value}>{label.icon} {label[locale]}</option>)}
+      </select>
+    </label>
   </div>
 
   <div class="database__summary" aria-live="polite">
@@ -97,17 +109,19 @@ const decades = [1990, 2000, 2010];
 
   <div class="table-wrap">
     <table>
-      <thead><tr><th>{copy.game}</th><th>{copy.year}</th><th>{copy.question}</th><th>{copy.verdict}</th><th><span class="sr-only">{copy.record}</span></th></tr></thead>
+      <thead><tr><th>{copy.game}</th><th>{copy.year}</th><th>{copy.question}</th><th>{copy.verdict}</th><th>{copy.evidence}</th><th><span class="sr-only">{copy.record}</span></th></tr></thead>
       <tbody>
         {survivalCatalog.map((item) => {
           const reviewed = item.recordState === "reviewed" && item.reviewedCaseId;
-          const reviewedCase = reviewed ? getSurvivalCase(item.reviewedCaseId) : undefined;
-          return <tr data-catalog-row data-title={item.title.toLocaleLowerCase(locale)} data-decade={Math.floor(item.originalRelease / 10) * 10} data-lane={item.researchLane} data-state={item.recordState}>
-            <th scope="row">{reviewed ? <a href={survivalCasePath(item.reviewedCaseId, locale)} data-umami-event="survival-case-open" data-umami-event-case={item.id}>{item.title}</a> : item.title}</th>
+          const outlook = catalogOutlook(item);
+          const path = catalogCasePath(item, locale);
+          return <tr data-catalog-row data-title={item.title.toLocaleLowerCase(locale)} data-decade={Math.floor(item.originalRelease / 10) * 10} data-lane={item.researchLane} data-state={item.recordState} data-outlook={outlook}>
+            <th scope="row"><a href={path} data-umami-event="survival-case-open" data-umami-event-case={item.id}>{item.title}</a></th>
             <td>{item.originalRelease}</td>
             <td><span class="lane">{catalogLaneLabel(item.researchLane, locale)}</span></td>
-            <td>{reviewedCase ? <span class:list={["verdict", `verdict--${reviewedCase.answerState}`]}>{localize(reviewedCase.shortAnswer, locale)}</span> : <span class="pending">{copy.pendingVerdict}</span>}</td>
-            <td>{reviewed ? <a class="row-action" href={survivalCasePath(item.reviewedCaseId, locale)} aria-label={`${copy.open}: ${item.title}`}>{copy.open} <span aria-hidden="true">→</span></a> : <span class="queued">{copy.queued}</span>}</td>
+            <td><span class:list={["outlook-chip", `outlook-chip--${outlook}`]}><span aria-hidden="true">{outlookLabels[outlook].icon}</span><strong>{catalogOutlookLabel(outlook, locale)}</strong></span></td>
+            <td><span class:list={["evidence", reviewed ? "evidence--verified" : "evidence--hypothesis"]}>{reviewed ? copy.verified : copy.hypothesis}</span></td>
+            <td><a class="row-action" href={path} aria-label={`${copy.open}: ${item.title}`}>{copy.open} <span aria-hidden="true">→</span></a></td>
           </tr>;
         })}
       </tbody>
@@ -122,6 +136,7 @@ const decades = [1990, 2000, 2010];
     const decade = database.querySelector<HTMLSelectElement>("[data-filter-decade]");
     const lane = database.querySelector<HTMLSelectElement>("[data-filter-lane]");
     const state = database.querySelector<HTMLSelectElement>("[data-filter-state]");
+    const outlook = database.querySelector<HTMLSelectElement>("[data-filter-outlook]");
     const rows = [...database.querySelectorAll<HTMLTableRowElement>("[data-catalog-row]")];
     const count = database.querySelector<HTMLElement>("[data-result-count]");
     const empty = database.querySelector<HTMLElement>("[data-empty]");
@@ -133,7 +148,8 @@ const decades = [1990, 2000, 2010];
         const matches = (!query || row.dataset.title?.includes(query))
           && (!decade?.value || row.dataset.decade === decade.value)
           && (!lane?.value || row.dataset.lane === lane.value)
-          && (!state?.value || row.dataset.state === state.value);
+          && (!state?.value || row.dataset.state === state.value)
+          && (!outlook?.value || row.dataset.outlook === outlook.value);
         row.hidden = !matches;
         if (matches) visible += 1;
       }
@@ -145,6 +161,7 @@ const decades = [1990, 2000, 2010];
     decade?.addEventListener("change", update);
     lane?.addEventListener("change", update);
     state?.addEventListener("change", update);
+    outlook?.addEventListener("change", update);
   }
 </script>
 
@@ -154,7 +171,7 @@ const decades = [1990, 2000, 2010];
   .database__heading .mono { margin: 0 0 0.65rem; color: var(--signal); }
   .database__heading h2 { font-size: clamp(2.7rem, 5vw, 5rem); }
   .database__heading > p { max-width: 39rem; margin: 0; color: var(--ink-soft); }
-  .filters { display: grid; grid-template-columns: minmax(15rem, 1.4fr) repeat(3, minmax(10rem, 0.65fr)); margin-top: 3rem; border: 1px solid var(--line-strong); }
+  .filters { display: grid; grid-template-columns: minmax(15rem, 1.35fr) repeat(4, minmax(9rem, 0.62fr)); margin-top: 3rem; border: 1px solid var(--line-strong); }
   .filters label { display: grid; gap: 0.45rem; padding: 0.85rem 1rem; }
   .filters label + label { border-left: 1px solid var(--line); }
   .filters span { color: var(--ink-soft); font-size: 0.68rem; letter-spacing: 0.04em; text-transform: uppercase; }
@@ -162,17 +179,19 @@ const decades = [1990, 2000, 2010];
   .database__summary { padding: 1.3rem 0 0.8rem; color: var(--ink-soft); font-size: 0.78rem; }
   .database__summary strong { color: var(--ink); }
   .table-wrap { overflow-x: auto; border-top: 1px solid var(--line-strong); }
-  table { width: 100%; min-width: 58rem; border-collapse: collapse; }
+  table { width: 100%; min-width: 66rem; border-collapse: collapse; }
   th, td { padding: 1rem 0.8rem; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
   thead th { color: var(--ink-soft); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
   tbody th { width: 23%; font-family: var(--display); font-size: 1.1rem; font-weight: 550; }
   tbody th a { color: var(--signal); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
   tbody td { color: var(--ink-soft); font-size: 0.78rem; }
-  tbody td:nth-child(4) { width: 32%; }
-  .lane, .queued { white-space: nowrap; }
-  .pending, .queued { color: var(--ink-soft); }
-  .verdict { color: var(--ink); }
-  .verdict--unavailable { color: var(--signal); }
+  .lane { white-space: nowrap; }
+  .outlook-chip { display: inline-flex; align-items: center; gap: 0.45rem; color: var(--ink); white-space: nowrap; }
+  .outlook-chip strong { font-size: 0.76rem; font-weight: 600; }
+  .outlook-chip--positive strong { color: #3e5b2b; }
+  .outlook-chip--negative strong { color: var(--signal); }
+  .evidence { color: var(--ink-soft); white-space: nowrap; }
+  .evidence--verified { color: var(--ink); font-weight: 600; }
   .row-action { color: var(--signal); font-weight: 600; white-space: nowrap; }
   .empty { margin: 2rem 0 0; color: var(--ink-soft); }
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }

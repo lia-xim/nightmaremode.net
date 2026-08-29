@@ -55,16 +55,7 @@ if (existsSync(dist)) {
       assert(html.includes(`<link rel="canonical" href="${canonicalForRoute(route)}"`), `indexable route has exact canonical: ${route}`);
     }
 
-    const excluded = [
-      "/404/", "/archive/", "/contact/", "/conversations/", "/datenschutz/",
-      "/discovery/how-indie-games-get-discovered-in-2026/", "/history/",
-      "/impressum/", "/ownership/", "/rights-contact/", "/about/new-ownership/", "/about/site-operations/",
-      "/de/archiv/", "/de/kontakt/", "/de/datenschutz/", "/de/geschichte/", "/de/impressum/",
-      "/de/rechte-und-korrekturen/", "/de/ueber-uns/neue-inhaberschaft/", "/de/ueber-uns/website-betrieb/",
-      "/2012/01/metal-gear-solids-postmodern-legacy-part-1-15146/",
-      "/2012/03/unmanned-a-talk-with-molleindustria-about-the-politics-of-war-games-16946/",
-      "/2012/11/creation-under-capitalism-23422/",
-    ];
+    const excluded = pageRegistry.filter((page) => !page.indexable).map((page) => page.route);
     for (const route of excluded) {
       const path = fileForRoute(route);
       const html = existsSync(path) ? readFileSync(path, "utf8") : "";
@@ -166,12 +157,16 @@ assert(caseStudySource.includes('rel="external nofollow"'), "case study marks th
 const survivalDataSource = readFileSync(join(root, "src", "data", "survival-atlas.ts"), "utf8");
 const survivalCatalogSource = readFileSync(join(root, "src", "data", "survival-catalog.ts"), "utf8");
 const survivalDatabaseSource = readFileSync(join(root, "src", "components", "SurvivalDatabase.astro"), "utf8");
+const survivalCandidateSource = readFileSync(join(root, "src", "components", "SurvivalCandidatePage.astro"), "utf8");
 const survivalExplorerSource = readFileSync(join(root, "src", "components", "SurvivalExplorer.astro"), "utf8");
 assert((survivalDataSource.match(/id: "the-crew(?:-2)?"/g) ?? []).length === 2, "survival atlas starts with exactly two reviewed contrast cases");
 assert((survivalCatalogSource.match(/originalRelease:/g) ?? []).length === 51, "survival database contains exactly 50 bounded candidate records plus its typed field declaration");
 assert((survivalCatalogSource.match(/recordState: "reviewed"/g) ?? []).length === 2, "only two source-complete survival cases are marked reviewed");
-assert(survivalCatalogSource.includes("They do not receive a detail route"), "pending catalog entries explicitly reject thin detail routes");
-assert(survivalDatabaseSource.includes("No published finding yet") && survivalDatabaseSource.includes("No detail page yet"), "database labels open research without inventing verdicts or pages");
+assert(survivalCatalogSource.includes("research dossiers remain noindex"), "pending catalog dossiers explicitly remain outside the index");
+assert(survivalDatabaseSource.includes("Provisional hypothesis") && survivalDatabaseSource.includes("Vorläufige Annahme"), "database labels open research as hypotheses in both languages");
+assert(survivalCandidateSource.includes("<BaseLayout lang={locale} title={copy.title} description={copy.description} noindex>"), "pending research dossier template hardcodes noindex");
+assert(survivalCandidateSource.includes("Hypothesis, not a finding") && survivalCandidateSource.includes("Hypothese, kein Befund"), "pending research dossiers reject invented verdicts in both languages");
+assert(pageRegistry.filter((page) => page.cluster === "survival-atlas-research").length === 96, "48 pending games have bilingual registered research dossiers");
 assert(survivalDataSource.includes("This record relies on Ubisoft's shutdown notice"), "The Crew record discloses its publisher-source boundary");
 assert(survivalDataSource.includes("not by our own long-term platform test"), "The Crew 2 record does not fabricate an independent platform test");
 assert(!survivalDataSource.includes("The game will not be accessible"), "survival atlas paraphrases sources instead of inventing direct quotations");

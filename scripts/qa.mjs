@@ -6,7 +6,7 @@ const output = process.env.QA_OUTPUT_DIR ?? "design/qa";
 mkdirSync(output, { recursive: true });
 
 const browser = await chromium.launch({ headless: true });
-const results = { desktop: {}, mobile: {}, atlas: {}, caseStudy: {}, article: {}, fieldStudy: {}, worksheet: {}, errors: [], failedRequests: [] };
+const results = { desktop: {}, mobile: {}, atlas: {}, database: {}, candidate: {}, caseStudy: {}, article: {}, fieldStudy: {}, worksheet: {}, errors: [], failedRequests: [] };
 
 const attachDiagnostics = (page, prefix = "") => {
   page.on("console", (message) => {
@@ -83,11 +83,31 @@ results.database = await database.evaluate(() => ({
   totalRows: document.querySelectorAll("[data-catalog-row]").length,
   visibleRows: [...document.querySelectorAll("[data-catalog-row]")].filter((row) => !row.hidden).length,
   detailLinks: document.querySelectorAll('[data-catalog-row] a[href*="/survival-atlas/games/"]').length,
+  outlookChips: document.querySelectorAll("[data-catalog-row] .outlook-chip").length,
+  provisionalRows: document.querySelectorAll("[data-catalog-row] .evidence--hypothesis").length,
   count: document.querySelector("[data-result-count]")?.textContent,
   scrollWidth: document.documentElement.scrollWidth,
   clientWidth: document.documentElement.clientWidth,
 }));
 await database.screenshot({ path: `${output}/survival-database-desktop-full.png`, fullPage: true });
+
+const candidate = await browser.newPage({ viewport: { width: 1440, height: 1000 }, deviceScaleFactor: 1 });
+attachDiagnostics(candidate, "candidate: ");
+await candidate.goto(`${base}/survival-atlas/games/darkspore/`, { waitUntil: "networkidle" });
+results.candidate = await candidate.evaluate(() => ({
+  title: document.title,
+  h1: document.querySelector("h1")?.textContent?.trim(),
+  robots: document.querySelector("meta[name='robots']")?.getAttribute("content"),
+  canonical: document.querySelector('link[rel="canonical"]')?.getAttribute("href"),
+  germanAlternate: document.querySelector('link[rel="alternate"][hreflang="de"]')?.getAttribute("href"),
+  outlook: document.querySelector(".outlook strong")?.textContent?.trim(),
+  hypothesis: document.body.textContent?.includes("Hypothesis, not a finding"),
+  questions: document.querySelectorAll(".questions li").length,
+  related: document.querySelectorAll(".related li").length,
+  scrollWidth: document.documentElement.scrollWidth,
+  clientWidth: document.documentElement.clientWidth,
+}));
+await candidate.screenshot({ path: `${output}/survival-candidate-darkspore-desktop-full.png`, fullPage: true });
 
 const article = await browser.newPage({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1 });
 attachDiagnostics(article, "article: ");
@@ -181,4 +201,4 @@ await worksheetContext.close();
 await browser.close();
 console.log(JSON.stringify(results, null, 2));
 
-if (results.errors.length || results.failedRequests.length || results.desktop.brokenImages || results.mobile.brokenImages || results.desktop.scrollWidth !== results.desktop.clientWidth || results.mobile.scrollWidth !== results.mobile.clientWidth || results.desktop.h1 !== "Which games remain when their services disappear?" || !results.mobile.navVisible || results.atlas.h1 !== "Can The Crew 2 be played offline?" || results.atlas.cases !== 2 || results.atlas.dependencies !== 7 || results.atlas.sources !== 2 || results.atlas.coreState !== "available" || results.atlas.onlineState !== "lost" || results.atlas.robots !== "noindex, nofollow" || results.atlas.scrollWidth !== results.atlas.clientWidth || results.atlas.record.status !== 200 || results.atlas.record.kind !== "nightmare-mode-survival-record" || results.atlas.record.id !== "the-crew-2" || results.atlas.record.dependencies !== 7 || results.database.h1 !== "Which older games are still playable?" || results.database.totalRows !== 50 || results.database.visibleRows !== 2 || results.database.detailLinks !== 4 || results.database.count !== "2" || results.database.scrollWidth !== results.database.clientWidth || results.caseStudy.h1 !== "How we are rebuilding an old editorial domain without inheriting its past." || results.caseStudy.sections < 9 || results.caseStudy.contextterLinks !== 1 || results.caseStudy.schemaType !== "Article" || results.caseStudy.brokenImages || results.caseStudy.scrollWidth !== results.caseStudy.clientWidth || results.article.h1 !== "A game is more than its files" || results.article.sources !== 3 || results.article.schemaType !== "Article" || results.article.brokenImages || results.article.scrollWidth !== results.article.clientWidth || results.fieldStudy.h1 !== "Four minutes in A Dark Room" || results.fieldStudy.timelineEvents !== 12 || results.fieldStudy.schemaType !== "Article" || results.fieldStudy.sessionStatus !== 200 || results.fieldStudy.sessionId !== "adr-web-2026-08-23-01" || results.fieldStudy.brokenImages || results.fieldStudy.scrollWidth !== results.fieldStudy.clientWidth || results.worksheet.h1 !== "The First Four Minutes" || results.worksheet.game !== "QA Study" || results.worksheet.eventRows !== 2 || results.worksheet.persistedAction !== "Pressed start" || !results.worksheet.storedOnlyCopy || results.worksheet.scrollWidth !== results.worksheet.clientWidth || results.worksheet.robots !== "noindex, nofollow" || results.worksheet.json.schemaVersion !== 1 || results.worksheet.json.kind !== "nightmare-mode-play-study" || results.worksheet.json.boundarySeconds !== 240 || results.worksheet.json.game !== "QA Study" || results.worksheet.json.action !== "Pressed start" || !results.worksheet.markdown.heading || !results.worksheet.markdown.localOnly) process.exitCode = 1;
+if (results.errors.length || results.failedRequests.length || results.desktop.brokenImages || results.mobile.brokenImages || results.desktop.scrollWidth !== results.desktop.clientWidth || results.mobile.scrollWidth !== results.mobile.clientWidth || results.desktop.h1 !== "Which games remain when their services disappear?" || !results.mobile.navVisible || results.atlas.h1 !== "Can The Crew 2 be played offline?" || results.atlas.cases !== 2 || results.atlas.dependencies !== 7 || results.atlas.sources !== 2 || results.atlas.coreState !== "available" || results.atlas.onlineState !== "lost" || results.atlas.robots !== "noindex, nofollow" || results.atlas.scrollWidth !== results.atlas.clientWidth || results.atlas.record.status !== 200 || results.atlas.record.kind !== "nightmare-mode-survival-record" || results.atlas.record.id !== "the-crew-2" || results.atlas.record.dependencies !== 7 || results.database.h1 !== "Which older games are still playable?" || results.database.totalRows !== 50 || results.database.visibleRows !== 2 || results.database.detailLinks !== 100 || results.database.outlookChips !== 50 || results.database.provisionalRows !== 48 || results.database.count !== "2" || results.database.scrollWidth !== results.database.clientWidth || results.candidate.h1 !== "Is Darkspore still playable?" || results.candidate.robots !== "noindex, nofollow" || results.candidate.canonical !== "https://nightmaremode.net/survival-atlas/games/darkspore/" || results.candidate.germanAlternate !== "https://nightmaremode.net/de/survival-atlas/spiele/darkspore/" || results.candidate.outlook !== "At risk" || !results.candidate.hypothesis || results.candidate.questions !== 5 || results.candidate.related !== 3 || results.candidate.scrollWidth !== results.candidate.clientWidth || results.caseStudy.h1 !== "How we are rebuilding an old editorial domain without inheriting its past." || results.caseStudy.sections < 9 || results.caseStudy.contextterLinks !== 1 || results.caseStudy.schemaType !== "Article" || results.caseStudy.brokenImages || results.caseStudy.scrollWidth !== results.caseStudy.clientWidth || results.article.h1 !== "A game is more than its files" || results.article.sources !== 3 || results.article.schemaType !== "Article" || results.article.brokenImages || results.article.scrollWidth !== results.article.clientWidth || results.fieldStudy.h1 !== "Four minutes in A Dark Room" || results.fieldStudy.timelineEvents !== 12 || results.fieldStudy.schemaType !== "Article" || results.fieldStudy.sessionStatus !== 200 || results.fieldStudy.sessionId !== "adr-web-2026-08-23-01" || results.fieldStudy.brokenImages || results.fieldStudy.scrollWidth !== results.fieldStudy.clientWidth || results.worksheet.h1 !== "The First Four Minutes" || results.worksheet.game !== "QA Study" || results.worksheet.eventRows !== 2 || results.worksheet.persistedAction !== "Pressed start" || !results.worksheet.storedOnlyCopy || results.worksheet.scrollWidth !== results.worksheet.clientWidth || results.worksheet.robots !== "noindex, nofollow" || results.worksheet.json.schemaVersion !== 1 || results.worksheet.json.kind !== "nightmare-mode-play-study" || results.worksheet.json.boundarySeconds !== 240 || results.worksheet.json.game !== "QA Study" || results.worksheet.json.action !== "Pressed start" || !results.worksheet.markdown.heading || !results.worksheet.markdown.localOnly) process.exitCode = 1;

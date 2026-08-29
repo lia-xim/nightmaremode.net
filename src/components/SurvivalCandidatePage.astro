@@ -1,0 +1,170 @@
+---
+import BaseLayout from "@/components/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import {
+  catalogCasePath,
+  catalogLaneLabel,
+  catalogOutlook,
+  catalogOutlookLabel,
+  catalogOutlookRationale,
+  catalogResearchQuestions,
+  outlookLabels,
+  survivalCatalog,
+  type SurvivalCatalogEntry,
+} from "@/data/survival-catalog";
+import type { Locale } from "@/i18n";
+
+interface Props { locale: Locale; entry: SurvivalCatalogEntry }
+const { locale, entry } = Astro.props;
+const outlook = catalogOutlook(entry);
+const outlookLabel = catalogOutlookLabel(outlook, locale);
+const atlasPath = locale === "de" ? "/de/survival-atlas/" : "/survival-atlas/";
+const methodPath = locale === "de" ? "/de/survival-atlas/methodik/" : "/survival-atlas/methodology/";
+const rightsPath = locale === "de" ? "/de/rechte-und-korrekturen/" : "/rights-contact/";
+const peers = survivalCatalog.filter((candidate) => candidate.id !== entry.id && candidate.researchLane === entry.researchLane).slice(0, 3);
+const copy = locale === "de" ? {
+  title: `Ist ${entry.title} noch spielbar? Offline-, Server- und Erhaltungsprüfung`,
+  description: `Vorläufiges Forschungsdossier zu Offline-Zugang, Serverabhängigkeiten und langfristiger Spielbarkeit von ${entry.title}. Noch kein abschließender Befund.`,
+  breadcrumb: "Survival-Datenbank",
+  status: "Forschungsdossier · noch nicht vollständig geprüft",
+  answerLabel: "Vorläufige Tendenz",
+  hypothesis: "Hypothese, kein Befund",
+  direct: "Kurzantwort",
+  directText: "Noch nicht abschließend geprüft.",
+  directDetail: "Die Tendenz hilft bei der Orientierung. Sie wird aus dem gewählten Prüffeld abgeleitet und erst durch Quellen sowie einen klar abgegrenzten Test bestätigt oder verworfen.",
+  known: "Was bereits feststeht",
+  knownItems: [
+    ["Titel", entry.title],
+    ["Ursprüngliches Erscheinungsjahr", String(entry.originalRelease)],
+    ["Prüffeld", catalogLaneLabel(entry.researchLane, locale)],
+    ["Evidenzstatus", "Recherche offen"],
+  ],
+  questions: "Was wir als Nächstes prüfen",
+  questionsIntro: "Diese Fragen müssen beantwortet sein, bevor die Seite einen belastbaren Daumen hoch oder runter erhält.",
+  publication: "Wann diese Seite fertig ist",
+  publicationText: "Der Datensatz wird erst zum geprüften Fall, wenn Primärquellen, Plattform- und Versionsgrenzen, Abhängigkeiten, Ausfallszenarien, Unsicherheit, Prüfdatum und Änderungsverlauf vollständig vorliegen. Bis dahin bleibt diese URL auch bei einer späteren Freigabe der Hauptseite noindex.",
+  method: "Methodik",
+  corrections: "Quelle oder Korrektur melden",
+  related: "Ähnliche Forschungsfälle",
+  relatedText: "Diese Spiele liegen im gleichen Prüffeld. Ihre Tendenzen sind ebenfalls vorläufig, sofern sie nicht ausdrücklich als geprüft markiert sind.",
+  open: "Dossier öffnen",
+} : {
+  title: `Is ${entry.title} still playable? Offline, server and preservation research`,
+  description: `A provisional research dossier on offline access, server dependencies and the long-term playability of ${entry.title}. No final finding yet.`,
+  breadcrumb: "Survival database",
+  status: "Research dossier · review incomplete",
+  answerLabel: "Provisional outlook",
+  hypothesis: "Hypothesis, not a finding",
+  direct: "Short answer",
+  directText: "Not fully verified yet.",
+  directDetail: "The outlook is an orientation aid. It is derived from the selected research lane and must still be confirmed or rejected through sources and a clearly bounded test.",
+  known: "What is established so far",
+  knownItems: [
+    ["Title", entry.title],
+    ["Original release year", String(entry.originalRelease)],
+    ["Research lane", catalogLaneLabel(entry.researchLane, locale)],
+    ["Evidence state", "Research pending"],
+  ],
+  questions: "What we need to verify next",
+  questionsIntro: "These questions must be answered before this page receives a defensible thumbs-up or thumbs-down finding.",
+  publication: "When this page becomes complete",
+  publicationText: "This record becomes a reviewed case only when primary sources, platform and version boundaries, dependencies, failure scenarios, uncertainty, a review date and change history are complete. Until then, this URL remains noindex even if the main site is later released for indexing.",
+  method: "Methodology",
+  corrections: "Submit a source or correction",
+  related: "Related research cases",
+  relatedText: "These games share the same research lane. Their outlooks are provisional too unless they are explicitly marked reviewed.",
+  open: "Open dossier",
+};
+---
+
+<BaseLayout lang={locale} title={copy.title} description={copy.description} noindex>
+  <section class="candidate-hero shell">
+    <nav aria-label={locale === "de" ? "Brotkrumen" : "Breadcrumb"}><a href={atlasPath}>{copy.breadcrumb}</a><span aria-hidden="true">/</span><span>{entry.title}</span></nav>
+    <div class="candidate-hero__grid">
+      <div><p class="status">{copy.status}</p><h1 class="display">{locale === "de" ? `Ist ${entry.title} noch spielbar?` : `Is ${entry.title} still playable?`}</h1></div>
+      <div class:list={["outlook", `outlook--${outlook}`]}>
+        <span class="outlook__icon" aria-hidden="true">{outlookLabels[outlook].icon}</span>
+        <div><small>{copy.answerLabel}</small><strong>{outlookLabel}</strong><span>{copy.hypothesis}</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="direct-answer shell">
+    <div><p class="mono">{copy.direct}</p><h2 class="display">{copy.directText}</h2></div>
+    <div><p class="rationale">{catalogOutlookRationale(entry, locale)}</p><p>{copy.directDetail}</p></div>
+  </section>
+
+  <section class="known shell" aria-labelledby="known-title">
+    <div><p class="mono">01</p><h2 id="known-title" class="display">{copy.known}</h2></div>
+    <dl>{copy.knownItems.map(([term, value]) => <div><dt>{term}</dt><dd>{value}</dd></div>)}</dl>
+  </section>
+
+  <section class="questions shell" aria-labelledby="questions-title">
+    <div><p class="mono">02</p><h2 id="questions-title" class="display">{copy.questions}</h2><p>{copy.questionsIntro}</p></div>
+    <ol>{catalogResearchQuestions(entry, locale).map((question, index) => <li><span>{String(index + 1).padStart(2, "0")}</span><p>{question}</p></li>)}</ol>
+  </section>
+
+  <section class="publication shell">
+    <div><p class="mono">03</p><h2 class="display">{copy.publication}</h2></div>
+    <div><p>{copy.publicationText}</p><div class="actions"><a class="action" href={methodPath}>{copy.method} <span aria-hidden="true">→</span></a><a class="action quiet" href={rightsPath}>{copy.corrections}</a></div></div>
+  </section>
+
+  {peers.length > 0 && <section class="related shell" aria-labelledby="related-title">
+    <div><p class="mono">04</p><h2 id="related-title" class="display">{copy.related}</h2><p>{copy.relatedText}</p></div>
+    <ul>{peers.map((peer) => {
+      const peerOutlook = catalogOutlook(peer);
+      return <li><a href={catalogCasePath(peer, locale)}><span class="peer-icon" aria-hidden="true">{outlookLabels[peerOutlook].icon}</span><span><strong class="display">{peer.title}</strong><small>{peer.originalRelease} · {catalogOutlookLabel(peerOutlook, locale)}</small></span><b>{copy.open} <span aria-hidden="true">→</span></b></a></li>;
+    })}</ul>
+  </section>}
+
+  <SiteFooter locale={locale} />
+</BaseLayout>
+
+<style>
+  .candidate-hero { padding-block: clamp(2.5rem, 6vw, 5.5rem); border-bottom: 1px solid var(--line); }
+  nav { display: flex; gap: 0.55rem; color: var(--ink-soft); font-size: 0.75rem; }
+  nav a { color: var(--signal); text-decoration: underline; text-underline-offset: 0.2em; }
+  .candidate-hero__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.36fr); gap: clamp(3rem, 8vw, 9rem); align-items: end; margin-top: clamp(2.5rem, 5vw, 5rem); }
+  .status { margin: 0 0 0.8rem; color: var(--signal); font-size: 0.72rem; font-weight: 650; letter-spacing: 0.06em; text-transform: uppercase; }
+  h1 { max-width: 14ch; font-size: clamp(3.5rem, 7vw, 7rem); }
+  .outlook { display: grid; grid-template-columns: auto 1fr; gap: 1.25rem; align-items: center; padding: 1.4rem 0; border-block: 1px solid var(--line-strong); }
+  .outlook__icon { display: grid; width: 3.8rem; height: 3.8rem; place-items: center; border: 1px solid var(--line-strong); border-radius: 50%; background: var(--paper); font-size: 1.8rem; }
+  .outlook > div { display: grid; }
+  .outlook small, .outlook span:last-child { color: var(--ink-soft); font-size: 0.68rem; }
+  .outlook strong { font-family: var(--display); font-size: 1.55rem; font-weight: 550; }
+  .outlook--positive strong { color: #3e5b2b; }
+  .outlook--negative strong { color: var(--signal); }
+  .direct-answer, .known, .questions, .publication, .related { display: grid; grid-template-columns: minmax(16rem, 0.62fr) 1fr; gap: clamp(3rem, 8vw, 9rem); padding-block: clamp(3.5rem, 7vw, 7rem); border-bottom: 1px solid var(--line); }
+  .mono { margin: 0 0 0.75rem; color: var(--signal); }
+  .direct-answer h2, .known h2, .questions h2, .publication h2, .related h2 { max-width: 11ch; font-size: clamp(2.5rem, 4.8vw, 4.8rem); }
+  .direct-answer > div:last-child, .publication > div:last-child { max-width: 48rem; }
+  .direct-answer > div:last-child p, .publication > div:last-child > p { color: var(--ink-soft); }
+  .direct-answer .rationale { margin-top: 0; color: var(--ink); font-family: var(--display); font-size: clamp(1.3rem, 2.1vw, 1.85rem); line-height: 1.4; }
+  dl { margin: 0; }
+  dl div { display: grid; grid-template-columns: 0.65fr 1fr; gap: 2rem; padding: 1.15rem 0; border-top: 1px solid var(--line); }
+  dt { color: var(--ink-soft); font-size: 0.78rem; }
+  dd { margin: 0; font-size: 0.9rem; }
+  .questions > div > p:last-child, .related > div > p:last-child { max-width: 34rem; color: var(--ink-soft); }
+  .questions ol, .related ul { margin: 0; padding: 0; list-style: none; }
+  .questions li { display: grid; grid-template-columns: 3rem 1fr; gap: 1.1rem; padding: 1.25rem 0; border-top: 1px solid var(--line); }
+  .questions li span { color: var(--signal); font-size: 0.72rem; }
+  .questions li p { margin: 0; font-size: 0.95rem; }
+  .actions { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 2rem; }
+  .quiet { color: var(--ink-soft); }
+  .related li { border-top: 1px solid var(--line); }
+  .related a { display: grid; grid-template-columns: auto 1fr auto; gap: 1rem; align-items: center; padding: 1.25rem 0; color: var(--ink); }
+  .peer-icon { display: grid; width: 2.5rem; height: 2.5rem; place-items: center; border: 1px solid var(--line); border-radius: 50%; }
+  .related a > span:nth-child(2) { display: grid; }
+  .related strong { font-size: 1.25rem; font-weight: 550; }
+  .related small { color: var(--ink-soft); font-size: 0.72rem; }
+  .related b { color: var(--signal); font-size: 0.74rem; }
+  @media (max-width: 760px) {
+    .candidate-hero__grid, .direct-answer, .known, .questions, .publication, .related { grid-template-columns: 1fr; gap: 2rem; }
+    h1 { font-size: clamp(3.3rem, 15vw, 5.5rem); }
+    dl div { grid-template-columns: 1fr; gap: 0.35rem; }
+  }
+  @media (max-width: 480px) {
+    .related a { grid-template-columns: auto 1fr; }
+    .related b { grid-column: 2; }
+  }
+</style>

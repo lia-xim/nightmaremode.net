@@ -34,6 +34,10 @@ export function localeFromPath(pathname: string): Locale {
 }
 
 export function alternatePath(pathname: string): string | undefined {
+  const englishGame = pathname.match(/^\/survival-atlas\/games\/([^/]+)\/$/);
+  if (englishGame) return `/de/survival-atlas/spiele/${englishGame[1]}/`;
+  const germanGame = pathname.match(/^\/de\/survival-atlas\/spiele\/([^/]+)\/$/);
+  if (germanGame) return `/survival-atlas/games/${germanGame[1]}/`;
   return localeFromPath(pathname) === "de"
     ? germanToEnglish.get(pathname)
     : englishToGerman.get(pathname);

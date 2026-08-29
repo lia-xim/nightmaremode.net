@@ -1,0 +1,14 @@
+---
+import SurvivalCandidatePage from "@/components/SurvivalCandidatePage.astro";
+import { survivalCatalog, type SurvivalCatalogEntry } from "@/data/survival-catalog";
+
+export function getStaticPaths() {
+  return survivalCatalog
+    .filter((entry) => entry.recordState === "research-pending")
+    .map((entry) => ({ params: { game: entry.id }, props: { entry } }));
+}
+
+interface Props { entry: SurvivalCatalogEntry }
+const { entry } = Astro.props;
+---
+<SurvivalCandidatePage locale="de" entry={entry} />

@@ -12,6 +12,7 @@ export type ResearchLane =
   | "server-only";
 
 export type CatalogRecordState = "reviewed" | "research-pending";
+export type SurvivalOutlook = "positive" | "mixed" | "negative";
 
 export interface SurvivalCatalogEntry {
   id: string;
@@ -25,9 +26,10 @@ export interface SurvivalCatalogEntry {
 /**
  * A bounded research corpus, not a list of survival verdicts.
  *
- * Pending entries expose only neutral identity metadata and the question the
- * editorial review should investigate. They do not receive a detail route or
- * a public playability claim until the full evidence gate is complete.
+ * Pending entries expose neutral identity metadata, an explicitly provisional
+ * outlook and the questions the editorial review should investigate. Their
+ * research dossiers remain noindex and make no final playability claim until
+ * the full evidence gate is complete.
  */
 export const survivalCatalog = [
   { id: "doom-1993", title: "Doom", originalRelease: 1993, researchLane: "offline-baseline", recordState: "research-pending" },
@@ -93,6 +95,82 @@ export const researchLaneLabels: Record<ResearchLane, { en: string; de: string }
   "server-only": { en: "Server-only risk", de: "Reines Serverrisiko" },
 };
 
+const laneOutlook: Record<ResearchLane, SurvivalOutlook> = {
+  "offline-baseline": "positive",
+  "community-hosting": "positive",
+  "publisher-login": "mixed",
+  "local-and-server": "mixed",
+  shutdown: "negative",
+  "offline-patch": "positive",
+  delisted: "mixed",
+  "server-only": "negative",
+};
+
+export const outlookLabels: Record<SurvivalOutlook, { en: string; de: string; icon: string }> = {
+  positive: { en: "Looks resilient", de: "Eher robust", icon: "👍" },
+  mixed: { en: "Mixed outlook", de: "Gemischtes Bild", icon: "↔" },
+  negative: { en: "At risk", de: "Eher gefährdet", icon: "👎" },
+};
+
 export function catalogLaneLabel(lane: ResearchLane, locale: Locale): string {
   return researchLaneLabels[lane][locale];
+}
+
+export function catalogOutlook(entry: SurvivalCatalogEntry): SurvivalOutlook {
+  if (entry.reviewedCaseId === "the-crew") return "negative";
+  if (entry.reviewedCaseId === "the-crew-2") return "positive";
+  return laneOutlook[entry.researchLane];
+}
+
+export function catalogOutlookLabel(outlook: SurvivalOutlook, locale: Locale): string {
+  return outlookLabels[outlook][locale];
+}
+
+export function catalogCasePath(entry: SurvivalCatalogEntry, locale: Locale): string {
+  const prefix = locale === "de" ? "/de/survival-atlas/spiele" : "/survival-atlas/games";
+  return `${prefix}/${entry.id}/`;
+}
+
+export function catalogOutlookRationale(entry: SurvivalCatalogEntry, locale: Locale): string {
+  const outlook = catalogOutlook(entry);
+  const copy = {
+    en: {
+      positive: `${entry.title} enters the queue with a promising preservation hypothesis because its research lane may leave a local or community-controlled path. That is not yet a verified game-specific finding.`,
+      mixed: `${entry.title} enters the queue with a mixed hypothesis: local files may survive while accounts, services or particular modes remain dependent. The boundary has not yet been verified.`,
+      negative: `${entry.title} enters the queue as an at-risk case because its research lane centres on an operator-controlled service or shutdown. Its exact current playability has not yet been verified.`,
+    },
+    de: {
+      positive: `${entry.title} startet mit einer eher positiven Erhaltungsannahme: Das Prüffeld könnte einen lokalen oder von der Community kontrollierbaren Weg offenlassen. Das ist noch kein verifizierter Befund zu diesem Spiel.`,
+      mixed: `${entry.title} startet mit einer gemischten Annahme: Lokale Dateien könnten erhalten bleiben, während Accounts, Dienste oder einzelne Modi abhängig bleiben. Diese Grenze ist noch nicht geprüft.`,
+      negative: `${entry.title} startet als gefährdeter Fall, weil das Prüffeld einen betreiberkontrollierten Dienst oder eine Abschaltung betrifft. Die heutige Spielbarkeit ist noch nicht verifiziert.`,
+    },
+  } as const;
+  return copy[locale][outlook];
+}
+
+export function catalogResearchQuestions(entry: SurvivalCatalogEntry, locale: Locale): string[] {
+  const laneQuestion: Record<ResearchLane, { en: string; de: string }> = {
+    "offline-baseline": { en: "Does a clean installation start and reach its core mode without an account or network connection?", de: "Startet eine saubere Installation ohne Account oder Netzwerk bis in den Kernmodus?" },
+    "community-hosting": { en: "Can players replace the original network path with dedicated or community-operated infrastructure?", de: "Können Spieler die ursprüngliche Netzwerkinfrastruktur durch eigene oder Community-Server ersetzen?" },
+    "publisher-login": { en: "Is publisher authentication required only for acquisition, or also every time the game starts?", de: "Wird die Publisher-Authentifizierung nur beim Erwerb oder bei jedem Spielstart benötigt?" },
+    "local-and-server": { en: "Which modes and saves remain local, and which functions stop with the official services?", de: "Welche Modi und Spielstände bleiben lokal, und welche Funktionen enden mit den offiziellen Diensten?" },
+    shutdown: { en: "What exactly remained accessible after the official shutdown, if anything?", de: "Was blieb nach der offiziellen Abschaltung tatsächlich zugänglich?" },
+    "offline-patch": { en: "Which version introduced the offline path, and what still depends on a live service?", de: "Welche Version führte den Offline-Weg ein, und was bleibt weiterhin dienstabhängig?" },
+    delisted: { en: "Can previous owners still download, install and launch the delisted game?", de: "Können frühere Besitzer das delistete Spiel weiterhin herunterladen, installieren und starten?" },
+    "server-only": { en: "Does any documented preservation path exist outside the operator-controlled service?", de: "Existiert ein belegter Erhaltungsweg außerhalb des betreiberkontrollierten Dienstes?" },
+  };
+  const common = locale === "de"
+    ? [
+        "Welche Installation, Edition, Plattform und Version wird geprüft?",
+        "Welche Store-, Account-, Login- und Serverabhängigkeiten sind zwingend?",
+        "Was passiert mit Kernspiel, Spielstand und Online-Funktionen bei jedem einzelnen Ausfall?",
+        "Welche Aussage stützt eine Primärquelle, welche ein eigener Test und was bleibt unbekannt?",
+      ]
+    : [
+        "Which installation, edition, platform and version is being reviewed?",
+        "Which store, account, login and server dependencies are mandatory?",
+        "What happens to the core game, saves and online features under each individual failure?",
+        "Which claim is supported by a primary source, which by direct testing, and what remains unknown?",
+      ];
+  return [laneQuestion[entry.researchLane][locale], ...common];
 }

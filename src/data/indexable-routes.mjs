@@ -1,3 +1,33 @@
+export const pendingSurvivalGameIds = Object.freeze([
+  "doom-1993", "quake", "diablo", "ultima-online", "half-life", "starsiege-tribes",
+  "everquest", "quake-iii-arena", "counter-strike", "diablo-ii", "phantasy-star-online",
+  "anarchy-online", "neverwinter-nights", "battlefield-1942", "unreal-tournament-2004",
+  "world-of-warcraft", "guild-wars", "battlefield-2", "trackmania-nations",
+  "test-drive-unlimited", "hellgate-london", "team-fortress-2", "burnout-paradise",
+  "left-4-dead", "demons-souls", "league-of-legends", "minecraft-java", "darkspore",
+  "star-wars-the-old-republic", "diablo-iii", "simcity-2013", "final-fantasy-xiv-arr",
+  "grand-theft-auto-online", "hearthstone", "destiny", "driveclub", "wildstar", "evolve",
+  "cities-skylines", "metal-gear-solid-v", "rainbow-six-siege", "rocket-league",
+  "battleborn", "overwatch", "lawbreakers", "fortnite", "gran-turismo-sport", "fallout-76",
+]);
+
+const pendingSurvivalRoutes = pendingSurvivalGameIds.flatMap((id) => [
+  {
+    route: `/survival-atlas/games/${id}/`,
+    indexable: false,
+    cluster: "survival-atlas-research",
+    action: "hold-noindex",
+    primaryJob: "Inspect the provisional survival outlook and the evidence questions still required before publication.",
+  },
+  {
+    route: `/de/survival-atlas/spiele/${id}/`,
+    indexable: false,
+    cluster: "survival-atlas-research",
+    action: "hold-noindex",
+    primaryJob: "Die vorläufige Überlebenstendenz und die noch offenen Evidenzfragen vor einer Veröffentlichung prüfen.",
+  },
+]);
+
 export const pageRegistry = Object.freeze([
   { route: "/", indexable: true, cluster: "survival-atlas", action: "strengthen", primaryJob: "Understand which game dependencies determine whether an installed title remains playable after services fail." },
   { route: "/survival-atlas/", indexable: true, cluster: "survival-atlas", action: "create", primaryJob: "Compare reviewed game-survival cases and simulate the effects of store, login, internet and server failure." },
@@ -27,6 +57,7 @@ export const pageRegistry = Object.freeze([
   { route: "/de/play-studies/arbeitsblatt/", indexable: true, cluster: "play-studies", action: "create", primaryJob: "Eine vierminuetige Play Study lokal erfassen und als Markdown- oder JSON-Entwurf exportieren." },
   { route: "/de/play-studies/a-dark-room-die-ersten-vier-minuten/", indexable: true, cluster: "play-studies", action: "create", primaryJob: "Eine kontrollierte Untersuchung der ersten vier Minuten von A Dark Room prüfen." },
   { route: "/de/play-studies/protokoll/", indexable: true, cluster: "play-studies", action: "create", primaryJob: "Ein reproduzierbares Arbeitsblatt für Play Studies verwenden." },
+  ...pendingSurvivalRoutes,
   { route: "/404/", indexable: false, cluster: "utility", action: "keep-noindex", primaryJob: "Help a visitor recover from a genuinely missing URL." },
   { route: "/about/new-ownership/", indexable: false, cluster: "governance", action: "keep-noindex", primaryJob: "Verify exactly what the 2026 ownership change does and does not transfer." },
   { route: "/about/site-operations/", indexable: false, cluster: "governance", action: "keep-noindex", primaryJob: "Verify the same-owner Contextter operating relationship and the claims it does not support." },
