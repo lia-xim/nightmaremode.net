@@ -3,7 +3,7 @@ export const siteConfig = {
   canonicalHost: "https://nightmaremode.net",
   language: "en",
   description:
-    "Independent criticism, play studies and conversations about games and interactive culture.",
+    "An independent, evidence-led atlas of which games remain playable when stores, logins and servers disappear.",
   establishedYear: 2026,
   ownershipDisclosure:
     "A separate publication established in 2026 after the domain changed hands. Former contributors do not automatically participate in or endorse it.",

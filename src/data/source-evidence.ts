@@ -75,6 +75,22 @@ export const sourceEvidence: SourceEvidence[] = [
     note: "A fresh Playwright Chromium context executed a fixed click policy for 257 seconds. The record makes no human-experience claim and preserves limitations around causality, audio, later play and overlay timing.",
   },
   {
+    id: "survival-atlas-the-crew-publisher-record",
+    subject: "The Crew delisting, server shutdown and loss of access",
+    source: "Ubisoft, An Update on The Crew, 14 December 2023; rechecked 29 August 2026",
+    status: "verified",
+    rights: "public-fact",
+    note: "The atlas conclusion is bounded to Ubisoft's direct statement that the servers would close on 31 March 2024 and the game would then be inaccessible on every named platform. No independent platform test or unofficial preservation assessment is claimed.",
+  },
+  {
+    id: "survival-atlas-the-crew-2-hybrid-mode",
+    subject: "The Crew 2 official offline path and its online-only feature boundary",
+    source: "Ubisoft Hybrid Mode documentation dated 16 October 2025 and 22 April 2026; rechecked 29 August 2026",
+    status: "verified",
+    rights: "public-fact",
+    note: "The atlas records the publisher-documented offline launch, separate local save and unavailable connected features. It does not claim an independent long-term platform test or guarantee future entitlement behaviour.",
+  },
+  {
     id: "legacy-article-rights",
     subject: "Former article bodies and contributor media",
     source: "No license or article-level permission recorded",

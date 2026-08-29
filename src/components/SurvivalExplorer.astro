@@ -1,0 +1,393 @@
+---
+import type { Locale } from "@/i18n";
+import { localize, survivalCasePath, survivalCases, type SurvivalCase } from "@/data/survival-atlas";
+
+interface Props {
+  entry: SurvivalCase;
+  locale: Locale;
+  compact?: boolean;
+}
+
+const { entry, locale, compact = false } = Astro.props;
+const copy = locale === "de" ? {
+  choose: "Geprüften Fall wählen",
+  released: "Erschienen",
+  checked: "Geprüft",
+  sourceStatus: "Quellenstatus",
+  publisherVerified: "Publisher-belegt",
+  map: "Abhängigkeitskarte",
+  mapIntro: "Die obere Kette zeigt Zugangshürden. Darunter steht, was von ihnen abhängt – oder sie umgehen kann.",
+  simulate: "Ausfall simulieren",
+  simulateIntro: "Die Simulation verändert keine Fakten. Sie macht die dokumentierten Abhängigkeiten sichtbar.",
+  failures: {
+    store: "Store nicht verfügbar",
+    publisher: "Publisher-Login nicht verfügbar",
+    server: "Spielserver nicht verfügbar",
+    internet: "Internet nicht verfügbar",
+  },
+  remains: "Was bleibt übrig?",
+  assumes: "Für eine bereits installierte und aktualisierte Kopie.",
+  outcomes: {
+    acquisition: ["Neuerwerb / Download", "Kauf oder erneuter Bezug"],
+    core: ["Kernspiel", "Solo-Inhalte und zentrale Systeme"],
+    save: ["Lokaler Fortschritt", "Unabhängig gespeicherter Spielstand"],
+    online: ["Online-Funktionen", "Multiplayer, Bestenlisten, Community"],
+  },
+  states: { available: "verfügbar", lost: "verloren", unknown: "nicht belegt" },
+  evidenceNote: "Belege statt Haltbarkeits-Score.",
+  conditions: "Bedingungen ändern sich. Regelmäßig neu prüfen.",
+  sourcesTitle: "Warum diese Antwort?",
+  sourcesIntro: "Primärquellen, aus denen die sichtbare Aussage abgeleitet ist.",
+  source: "Quelle",
+  relevance: "Was sie belegt",
+  timeline: "Historische Timeline",
+  boundary: "Unsicherheit und Grenze",
+  methodology: "Methodik lesen",
+  change: "Änderungsverlauf",
+  data: "Datensatz (JSON)",
+  fullCase: "Vollständigen Fall öffnen",
+} : {
+  choose: "Choose a reviewed case",
+  released: "Released",
+  checked: "Checked",
+  sourceStatus: "Source status",
+  publisherVerified: "Publisher-sourced",
+  map: "Dependency map",
+  mapIntro: "The upper chain shows access gates. The lower row shows what depends on them — or can bypass them.",
+  simulate: "Simulate failure",
+  simulateIntro: "The simulation does not change the facts. It exposes the documented dependencies.",
+  failures: {
+    store: "Store unavailable",
+    publisher: "Publisher login unavailable",
+    server: "Game server unavailable",
+    internet: "Internet unavailable",
+  },
+  remains: "What remains?",
+  assumes: "For a copy that is already installed and updated.",
+  outcomes: {
+    acquisition: ["New acquisition / download", "Purchase or redownload access"],
+    core: ["Core game", "Solo content and central systems"],
+    save: ["Local progress", "An independently stored save"],
+    online: ["Online features", "Multiplayer, leaderboards, community"],
+  },
+  states: { available: "available", lost: "lost", unknown: "not established" },
+  evidenceNote: "Evidence, not a permanence score.",
+  conditions: "Conditions change. Re-check often.",
+  sourcesTitle: "Why this answer?",
+  sourcesIntro: "Primary sources from which the visible conclusion is derived.",
+  source: "Source",
+  relevance: "What it establishes",
+  timeline: "Historical timeline",
+  boundary: "Uncertainty and boundary",
+  methodology: "Read the methodology",
+  change: "Change history",
+  data: "Dataset (JSON)",
+  fullCase: "Open the full case",
+};
+
+const path = survivalCasePath(entry.id, locale);
+const dataPath = `${path}record.json`;
+const methodPath = locale === "de" ? "/de/survival-atlas/methodik/" : "/survival-atlas/methodology/";
+const dependency = Object.fromEntries(entry.dependencies.map((item) => [item.id, item]));
+const initialState = (key: "acquisition" | "core" | "save" | "online") => {
+  if (key === "acquisition") return entry.defaultFailures.includes("store") ? "lost" : "available";
+  if (entry.id === "the-crew") return key === "save" ? "not-established" : "lost";
+  return key === "online" ? "available" : "available";
+};
+---
+
+<section
+  class:list={["explorer", { "explorer--compact": compact }]}
+  data-survival-explorer
+  data-case={entry.id}
+  data-label-available={copy.states.available}
+  data-label-lost={copy.states.lost}
+  data-label-unknown={copy.states.unknown}
+>
+  <div class="case-switcher" aria-label={copy.choose}>
+    <p class="mono">{copy.choose}</p>
+    <div class="case-switcher__options">
+      {survivalCases.map((candidate) => (
+        <a
+          class:list={{ active: candidate.id === entry.id }}
+          href={survivalCasePath(candidate.id, locale)}
+          aria-current={candidate.id === entry.id ? "page" : undefined}
+          data-umami-event="survival-case-select"
+          data-umami-event-case={candidate.id}
+        >
+          <strong class="display">{candidate.title}</strong>
+          <span>{localize(candidate.shortAnswer, locale)}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <div class="case-answer">
+    <div>
+      <p class="mono">{entry.answerState === "unavailable" ? (locale === "de" ? "Nicht mehr spielbar" : "No longer playable") : (locale === "de" ? "Offizieller Offline-Weg" : "Official offline path")}</p>
+      <h2 class="display">{entry.title}</h2>
+      <p class="answer">{localize(entry.answer, locale)}</p>
+    </div>
+    <dl>
+      <div><dt>{copy.released}</dt><dd>{entry.released}</dd></div>
+      <div><dt>{copy.sourceStatus}</dt><dd>{copy.publisherVerified}</dd></div>
+      <div><dt>{copy.checked}</dt><dd><time datetime={entry.checkedAt}>{entry.checkedAt}</time></dd></div>
+    </dl>
+  </div>
+
+  <div class="workbench">
+    <div class="map-column">
+      <div class="section-heading">
+        <h3 class="display">{copy.map}</h3>
+        <p>{copy.mapIntro}</p>
+      </div>
+
+      <div class="dependency-map" aria-label={`${entry.title}: ${copy.map}`}>
+        <div class="map-chain">
+          {(["installation", "store", "publisher-login", "game-server"] as const).map((id, index) => {
+            const item = dependency[id];
+            return <>
+              <div class:list={["dependency-node", `state-${item.state}`]} data-dependency={id}>
+                <strong>{localize(item.label, locale)}</strong>
+                <span>{localize(item.detail, locale)}</span>
+              </div>
+              {index < 3 && <span class="connector" aria-hidden="true">→</span>}
+            </>;
+          })}
+        </div>
+        <div class="map-outcomes">
+          {(["single-player", "local-save", "online-features"] as const).map((id) => {
+            const item = dependency[id];
+            return <div class:list={["dependency-node", "dependency-node--outcome", `state-${item.state}`]} data-dependency={id}>
+              <strong>{localize(item.label, locale)}</strong>
+              <span>{localize(item.detail, locale)}</span>
+            </div>;
+          })}
+        </div>
+      </div>
+
+      <fieldset class="simulator">
+        <legend class="display">{copy.simulate}</legend>
+        <p>{copy.simulateIntro}</p>
+        <div class="simulator__controls">
+          <label><input type="checkbox" data-failure="store" checked={entry.defaultFailures.includes("store")} /><span>{copy.failures.store}</span></label>
+          <label><input type="checkbox" data-failure="publisher-login" checked={entry.defaultFailures.includes("publisher-login")} /><span>{copy.failures.publisher}</span></label>
+          <label><input type="checkbox" data-failure="game-server" checked={entry.defaultFailures.includes("game-server")} /><span>{copy.failures.server}</span></label>
+          <label><input type="checkbox" data-failure="internet" checked={entry.defaultFailures.includes("internet")} /><span>{copy.failures.internet}</span></label>
+        </div>
+      </fieldset>
+    </div>
+
+    <aside class="result-ledger" aria-live="polite">
+      <div class="section-heading">
+        <h3 class="display">{copy.remains}</h3>
+        <p>{copy.assumes}</p>
+      </div>
+      <ul>
+        {(["acquisition", "core", "save", "online"] as const).map((key) => {
+          const initial = initialState(key);
+          const words = copy.outcomes[key];
+          return <li data-result={key} data-state={initial}>
+            <span><strong>{words[0]}</strong><small>{words[1]}</small></span>
+            <b data-result-label>{initial === "not-established" ? copy.states.unknown : copy.states[initial]}</b>
+          </li>;
+        })}
+      </ul>
+      <div class="evidence-note">
+        <strong>{copy.evidenceNote}</strong>
+        <span>{copy.conditions}</span>
+      </div>
+    </aside>
+  </div>
+
+  {!compact && <div class="evidence-grid">
+    <section class="sources" aria-labelledby={`sources-${entry.id}`}>
+      <div class="section-heading">
+        <h3 id={`sources-${entry.id}`} class="display">{copy.sourcesTitle}</h3>
+        <p>{copy.sourcesIntro}</p>
+      </div>
+      <ol>
+        {entry.sources.map((source) => <li>
+          <div><span class="source-number" aria-hidden="true">{String(entry.sources.indexOf(source) + 1).padStart(2, "0")}</span><a href={source.url} rel="external">{localize(source.title, locale)} <span aria-hidden="true">↗</span></a><small>{source.publisher} · <time datetime={source.publishedAt}>{source.publishedAt}</time></small></div>
+          <p>{localize(source.relevance, locale)}</p>
+        </li>)}
+      </ol>
+    </section>
+
+    <section class="timeline" aria-labelledby={`timeline-${entry.id}`}>
+      <div class="section-heading"><h3 id={`timeline-${entry.id}`} class="display">{copy.timeline}</h3></div>
+      <ol>
+        {entry.timeline.map((item) => <li><time datetime={item.date}>{item.date}</time><div><strong>{localize(item.title, locale)}</strong><p>{localize(item.detail, locale)}</p></div></li>)}
+      </ol>
+    </section>
+  </div>}
+
+  <div class="boundary">
+    <div><p class="mono">{copy.boundary}</p><p>{localize(entry.evidenceBoundary, locale)}</p><p class="scope">{localize(entry.platformScope, locale)}</p></div>
+    <div class="boundary__links">
+      {compact && <a class="action" href={path}>{copy.fullCase} <span aria-hidden="true">→</span></a>}
+      <a class="action" href={methodPath}>{copy.methodology} <span aria-hidden="true">→</span></a>
+      <a class="action quiet" href={dataPath} data-umami-event="survival-dataset-open" data-umami-event-case={entry.id}>{copy.data} <span aria-hidden="true">↗</span></a>
+      {!compact && <a class="action quiet" href="#change-history">{copy.change}</a>}
+    </div>
+  </div>
+</section>
+
+<script>
+  const explorers = document.querySelectorAll<HTMLElement>("[data-survival-explorer]");
+
+  for (const explorer of explorers) {
+    const inputs = [...explorer.querySelectorAll<HTMLInputElement>("[data-failure]")];
+    const labels = {
+      available: explorer.dataset.labelAvailable ?? "available",
+      lost: explorer.dataset.labelLost ?? "lost",
+      unknown: explorer.dataset.labelUnknown ?? "not established",
+    };
+
+    const setResult = (key: string, state: "available" | "lost" | "not-established") => {
+      const row = explorer.querySelector<HTMLElement>(`[data-result="${key}"]`);
+      if (!row) return;
+      row.dataset.state = state;
+      const label = row.querySelector<HTMLElement>("[data-result-label]");
+      if (label) label.textContent = state === "not-established" ? labels.unknown : labels[state];
+    };
+
+    const update = () => {
+      const failed = new Set(inputs.filter((input) => input.checked).map((input) => input.dataset.failure));
+      const crewOne = explorer.dataset.case === "the-crew";
+      const connectionLost = failed.has("publisher-login") || failed.has("game-server") || failed.has("internet");
+
+      setResult("acquisition", failed.has("store") ? "lost" : "available");
+      if (crewOne) {
+        setResult("core", connectionLost ? "lost" : "available");
+        setResult("save", "not-established");
+      } else {
+        setResult("core", "available");
+        setResult("save", "available");
+      }
+      setResult("online", connectionLost ? "lost" : "available");
+
+      explorer.querySelectorAll<HTMLElement>("[data-dependency]").forEach((node) => {
+        const id = node.dataset.dependency;
+        const directFailure = failed.has(id);
+        const internetFailure = failed.has("internet") && ["publisher-login", "game-server", "online-features"].includes(id ?? "");
+        const outcomeFailure = id === "online-features" && connectionLost;
+        const coreFailure = crewOne && id === "single-player" && connectionLost;
+        node.classList.toggle("is-failed", directFailure || internetFailure || outcomeFailure || coreFailure);
+      });
+    };
+
+    inputs.forEach((input) => input.addEventListener("change", () => {
+      update();
+      const analytics = (window as typeof window & { umami?: { track?: (name: string, data: Record<string, unknown>) => void } }).umami;
+      analytics?.track?.("survival-simulation", { case: explorer.dataset.case, condition: input.dataset.failure, failed: input.checked });
+    }));
+    update();
+  }
+</script>
+
+<style>
+  .explorer { border-top: 1px solid var(--line); }
+  .case-switcher { display: grid; grid-template-columns: minmax(9rem, 0.28fr) 1fr; gap: clamp(2rem, 5vw, 5rem); padding: clamp(2rem, 4vw, 3.5rem) 0; border-bottom: 1px solid var(--line); }
+  .case-switcher > p { margin: 0.5rem 0 0; color: var(--signal); }
+  .case-switcher__options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid var(--line); }
+  .case-switcher__options a { display: grid; min-height: 8.5rem; align-content: start; gap: 0.5rem; padding: 1.5rem; color: var(--ink-soft); }
+  .case-switcher__options a + a { border-left: 1px solid var(--line); }
+  .case-switcher__options a.active { box-shadow: inset 4px 0 0 var(--signal); color: var(--ink); }
+  .case-switcher__options a:hover { background: var(--paper-soft); color: var(--ink); }
+  .case-switcher strong { font-size: clamp(1.8rem, 3vw, 2.7rem); font-weight: 500; }
+  .case-switcher span { max-width: 34ch; font-size: 0.88rem; }
+  .case-answer { display: grid; grid-template-columns: 1fr minmax(15rem, 0.34fr); gap: clamp(3rem, 8vw, 9rem); padding: clamp(3rem, 6vw, 5.5rem) 0; border-bottom: 1px solid var(--line); }
+  .case-answer .mono { margin: 0 0 0.7rem; color: var(--signal); }
+  .case-answer h2 { font-size: clamp(3.6rem, 7vw, 7rem); }
+  .answer { max-width: 55rem; margin: 1rem 0 0; font-family: var(--display); font-size: clamp(1.35rem, 2.2vw, 2rem); line-height: 1.3; }
+  dl { align-self: end; margin: 0; }
+  dl div { display: grid; grid-template-columns: 1fr auto; gap: 1rem; padding: 0.7rem 0; border-top: 1px solid var(--line); }
+  dt { color: var(--ink-soft); font-size: 0.8rem; }
+  dd { margin: 0; font-size: 0.8rem; text-align: right; }
+  .workbench { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(17rem, 0.65fr); border-bottom: 1px solid var(--line); }
+  .map-column { min-width: 0; padding: clamp(2.5rem, 5vw, 5rem) clamp(2rem, 5vw, 5rem) clamp(2.5rem, 5vw, 5rem) 0; }
+  .result-ledger { padding: clamp(2.5rem, 5vw, 5rem) 0 clamp(2.5rem, 5vw, 5rem) clamp(2rem, 4vw, 4rem); border-left: 1px solid var(--line); }
+  .section-heading h3 { margin: 0; font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 500; }
+  .section-heading p { max-width: 46rem; margin: 0.4rem 0 0; color: var(--ink-soft); font-size: 0.88rem; }
+  .dependency-map { margin-top: 2rem; }
+  .map-chain { display: grid; grid-template-columns: repeat(7, minmax(0, auto)); align-items: stretch; }
+  .connector { display: grid; place-items: center; padding: 0 0.35rem; color: var(--signal); }
+  .dependency-node { display: grid; min-width: 0; align-content: start; gap: 0.5rem; padding: 1rem; border: 1px solid var(--line-strong); background: var(--paper); transition: opacity 160ms ease, border-color 160ms ease, background 160ms ease; }
+  .dependency-node strong { font-size: 0.82rem; line-height: 1.25; }
+  .dependency-node span { color: var(--ink-soft); font-size: 0.72rem; line-height: 1.4; }
+  .dependency-node.state-bypassable { border-color: color-mix(in srgb, var(--signal) 48%, var(--line)); }
+  .dependency-node.state-unavailable, .dependency-node.is-failed { border-color: var(--signal); background: #f7eef0; }
+  .dependency-node.is-failed { box-shadow: inset 3px 0 0 var(--signal); }
+  .map-outcomes { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 3rem 0 0 18%; }
+  .map-outcomes::before { position: absolute; top: -1.5rem; right: 8%; left: 8%; height: 1px; content: ""; background: var(--line-strong); }
+  .dependency-node--outcome { min-height: 7.5rem; }
+  .simulator { margin: 3rem 0 0; padding: 2rem 0 0; border: 0; border-top: 1px solid var(--line); }
+  .simulator legend { padding: 0; font-size: clamp(1.7rem, 2.7vw, 2.3rem); }
+  .simulator > p { margin: 0.35rem 0 1.25rem; color: var(--ink-soft); font-size: 0.86rem; }
+  .simulator__controls { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--line); }
+  .simulator label { display: flex; min-height: 5.2rem; align-items: flex-start; gap: 0.7rem; padding: 1rem; cursor: pointer; }
+  .simulator label + label { border-left: 1px solid var(--line); }
+  .simulator input { width: 1.1rem; height: 1.1rem; margin: 0.15rem 0 0; accent-color: var(--signal); }
+  .simulator span { font-size: 0.78rem; line-height: 1.35; }
+  .result-ledger ul { margin: 2rem 0 0; padding: 0; list-style: none; }
+  .result-ledger li { display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: center; padding: 1.25rem 0; border-top: 1px solid var(--line); }
+  .result-ledger li > span { display: grid; }
+  .result-ledger strong { font-family: var(--display); font-size: 1.25rem; font-weight: 550; }
+  .result-ledger small { color: var(--ink-soft); font-size: 0.75rem; }
+  .result-ledger b { padding: 0.3rem 0.5rem; background: var(--paper-soft); color: var(--ink-soft); font-size: 0.65rem; font-weight: 650; letter-spacing: 0.05em; text-transform: uppercase; }
+  .result-ledger [data-state="lost"] b { background: #f4e7e9; color: var(--signal); }
+  .result-ledger [data-state="available"] b { background: #eaf0e4; color: #3e5b2b; }
+  .evidence-note { display: grid; gap: 0.2rem; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dotted var(--line-strong); }
+  .evidence-note strong { color: var(--signal); font-family: var(--display); font-size: 1.1rem; }
+  .evidence-note span { color: var(--ink-soft); font-size: 0.78rem; }
+  .evidence-grid { display: grid; grid-template-columns: 1.25fr 0.75fr; border-bottom: 1px solid var(--line); }
+  .sources, .timeline { padding: clamp(2.5rem, 5vw, 5rem) 0; }
+  .sources { padding-right: clamp(2rem, 5vw, 5rem); }
+  .timeline { padding-left: clamp(2rem, 4vw, 4rem); border-left: 1px solid var(--line); }
+  .sources ol, .timeline ol { margin: 2rem 0 0; padding: 0; list-style: none; }
+  .sources li { display: grid; grid-template-columns: minmax(15rem, 0.65fr) 1fr; gap: 2rem; padding: 1.25rem 0; border-top: 1px solid var(--line); }
+  .sources li > div { display: grid; grid-template-columns: auto 1fr; gap: 0.2rem 0.7rem; }
+  .source-number { grid-row: 1 / 3; display: grid; width: 1.6rem; height: 1.6rem; place-items: center; background: var(--signal); color: white; font-size: 0.65rem; }
+  .sources a { color: var(--signal); text-decoration: underline; text-underline-offset: 0.2em; }
+  .sources small { color: var(--ink-soft); font-size: 0.7rem; }
+  .sources p { margin: 0; color: var(--ink-soft); font-size: 0.82rem; }
+  .timeline li { display: grid; grid-template-columns: 6.5rem 1fr; gap: 1rem; padding: 0 0 1.7rem 1rem; border-left: 1px solid var(--line-strong); }
+  .timeline time { color: var(--signal); font-size: 0.74rem; }
+  .timeline strong { font-family: var(--display); font-size: 1.1rem; }
+  .timeline p { margin: 0.25rem 0 0; color: var(--ink-soft); font-size: 0.78rem; }
+  .boundary { display: grid; grid-template-columns: 1fr auto; gap: 3rem; align-items: end; padding: clamp(2.5rem, 5vw, 4.5rem) 0; }
+  .boundary > div:first-child { max-width: 58rem; }
+  .boundary p { margin: 0; }
+  .boundary p:not(.mono) { margin-top: 0.55rem; color: var(--ink-soft); }
+  .boundary .scope { font-size: 0.78rem; }
+  .boundary__links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 1.2rem; }
+  .boundary .quiet { color: var(--ink-soft); }
+  .explorer--compact .case-answer { padding-block: 3.5rem; }
+  .explorer--compact .boundary { border-top: 0; }
+  @media (max-width: 980px) {
+    .workbench, .evidence-grid { grid-template-columns: 1fr; }
+    .map-column, .sources { padding-right: 0; }
+    .result-ledger, .timeline { padding-left: 0; border-top: 1px solid var(--line); border-left: 0; }
+  }
+  @media (max-width: 760px) {
+    .case-switcher, .case-answer, .boundary { grid-template-columns: 1fr; gap: 1.5rem; }
+    .case-switcher__options { grid-template-columns: 1fr; }
+    .case-switcher__options a + a { border-top: 1px solid var(--line); border-left: 0; }
+    .map-chain { grid-template-columns: 1fr; gap: 0.55rem; }
+    .connector { display: none; }
+    .map-outcomes { grid-template-columns: 1fr; margin: 1rem 0 0; }
+    .map-outcomes::before { display: none; }
+    .simulator__controls { grid-template-columns: 1fr 1fr; }
+    .simulator label + label { border-left: 0; }
+    .simulator label:nth-child(even) { border-left: 1px solid var(--line); }
+    .simulator label:nth-child(n+3) { border-top: 1px solid var(--line); }
+    .sources li { grid-template-columns: 1fr; gap: 0.7rem; }
+    .boundary__links { justify-content: flex-start; }
+  }
+  @media (max-width: 440px) {
+    .simulator__controls { grid-template-columns: 1fr; }
+    .simulator label:nth-child(even) { border-left: 0; }
+    .simulator label + label { border-top: 1px solid var(--line); }
+  }
+</style>

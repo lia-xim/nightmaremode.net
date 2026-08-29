@@ -163,6 +163,16 @@ assert(caseStudySource.includes("A measurement baseline, not a success story"), 
 assert(caseStudySource.includes("A second study personally conducted by Matthias does not yet exist"), "case study does not fabricate the second human-led study");
 assert(caseStudySource.includes('rel="external nofollow"'), "case study marks the same-owner Contextter link nofollow");
 
+const survivalDataSource = readFileSync(join(root, "src", "data", "survival-atlas.ts"), "utf8");
+const survivalExplorerSource = readFileSync(join(root, "src", "components", "SurvivalExplorer.astro"), "utf8");
+assert((survivalDataSource.match(/id: "the-crew(?:-2)?"/g) ?? []).length === 2, "survival atlas starts with exactly two reviewed contrast cases");
+assert(survivalDataSource.includes("This record relies on Ubisoft's shutdown notice"), "The Crew record discloses its publisher-source boundary");
+assert(survivalDataSource.includes("not by our own long-term platform test"), "The Crew 2 record does not fabricate an independent platform test");
+assert(!survivalDataSource.includes("The game will not be accessible"), "survival atlas paraphrases sources instead of inventing direct quotations");
+assert(survivalExplorerSource.includes("Evidence, not a permanence score"), "survival atlas rejects a false universal permanence score");
+assert(survivalExplorerSource.includes('data-failure="game-server"'), "survival atlas exposes a game-server failure simulation");
+assert(survivalExplorerSource.includes('data-result="${key}"'), "survival atlas binds simulated failures to visible outcomes");
+
 const studyRecord = JSON.parse(readFileSync(join(root, "src", "data", "studies", "a-dark-room-session.json"), "utf8"));
 assert(studyRecord.studyId === "adr-web-2026-08-23-01", "play-study record has a stable public identifier");
 assert(studyRecord.durationSeconds === 257, "play-study duration matches the recorded stop boundary");

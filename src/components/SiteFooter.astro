@@ -10,7 +10,7 @@ const footerLinks = footerNavigation[locale];
   <div class="site-footer__inner shell">
     <div>
       <a class="footer-brand" href={locale === "de" ? "/de/" : "/"}>Nightmare Mode</a>
-      <p>{locale === "de" ? "Offene Fallstudie eines rechtssicheren Domain-Neuaufbaus – mit Games-Essays und Play Studies als redaktioneller Probe." : "An open case study in rebuilding an editorial domain safely, with games essays and play studies as the editorial test."}</p>
+      <p>{locale === "de" ? "Ein unabhängiger, evidenzbasierter Atlas darüber, welche Spiele nach Store-, Login- und Serverausfällen weiterbestehen." : "An independent, evidence-led atlas of which games remain after stores, logins and servers fail."}</p>
     </div>
     <nav aria-label="Footer navigation">
       {footerLinks.map(([label, href]) => <a href={href}>{label}</a>)}

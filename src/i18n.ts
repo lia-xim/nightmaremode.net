@@ -12,6 +12,10 @@ const englishToGerman = new Map<string, string>([
   ["/editorial-policy/", "/de/redaktionsregeln/"],
   ["/essays/", "/de/essays/"],
   ["/essays/a-game-is-more-than-its-files/", "/de/essays/ein-spiel-ist-mehr-als-seine-dateien/"],
+  ["/survival-atlas/", "/de/survival-atlas/"],
+  ["/survival-atlas/methodology/", "/de/survival-atlas/methodik/"],
+  ["/survival-atlas/games/the-crew/", "/de/survival-atlas/spiele/the-crew/"],
+  ["/survival-atlas/games/the-crew-2/", "/de/survival-atlas/spiele/the-crew-2/"],
   ["/field-notes/", "/de/play-studies/"],
   ["/field-notes/worksheet/", "/de/play-studies/arbeitsblatt/"],
   ["/field-notes/a-dark-room-first-four-minutes/", "/de/play-studies/a-dark-room-die-ersten-vier-minuten/"],
@@ -42,14 +46,14 @@ export function pathFor(locale: Locale, englishPath: string): string {
 
 export const navigation = {
   en: [
-    { label: "Case study", href: "/case-study/rebuilding-nightmare-mode/" },
+    { label: "Survival Atlas", href: "/survival-atlas/" },
     { label: "Essays", href: "/essays/" },
-    { label: "Play studies", href: "/field-notes/" },
+    { label: "Case study", href: "/case-study/rebuilding-nightmare-mode/" },
   ],
   de: [
-    { label: "Fallstudie", href: "/de/fallstudie/nightmare-mode-neuaufbau/" },
+    { label: "Survival Atlas", href: "/de/survival-atlas/" },
     { label: "Essays", href: "/de/essays/" },
-    { label: "Play Studies", href: "/de/play-studies/" },
+    { label: "Fallstudie", href: "/de/fallstudie/nightmare-mode-neuaufbau/" },
   ],
 } as const;
 

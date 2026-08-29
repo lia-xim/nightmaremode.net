@@ -1,140 +1,116 @@
 ---
-import { Image } from "astro:assets";
 import BaseLayout from "@/components/BaseLayout.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
 import { pathFor, type Locale } from "@/i18n";
-import crossroads from "@/assets/editorial-crossroads.png";
-import fieldStudy from "@/assets/nightmare-field-study.png";
 
 interface Props { locale: Locale }
 const { locale } = Astro.props;
-
 const copy = locale === "de" ? {
-  title: "Eine alte Domain. Ein offener Neuaufbau.",
-  description: "Nightmare Mode dokumentiert, wie aus einer erworbenen früheren Games-Domain ein neues, rechtssicheres Projekt entsteht – einschließlich Fehlentscheidungen, Belegen und offener Fragen.",
-  primary: "Die vollständige Fallstudie lesen",
-  secondary: "Die ersten vier Minuten entdecken",
-  latest: "Offene Fallstudie · Stand 29. August 2026",
-  studyTitle: "Nightmare Mode neu aufbauen",
-  studyText: "Warum wir die alte Redaktion nicht nachspielen, welche erste Idee zu oberflächlich war und welche Gates vor einer Indexierung wirklich erfüllt sein müssen.",
-  readStudy: "Fallstudie öffnen",
-  essayTitle: "Die ersten vier Minuten",
-  essayText: "Ein vergleichbares Format darüber, wie Spiele zu Beginn Regeln, Entscheidungen und Erwartungen vermitteln – mit offenem Protokoll und lokalem Worksheet.",
-  readEssay: "Format und Werkzeug öffnen",
-  formatsTitle: "Was dieser Fall zeigt",
-  formats: [["01", "Rechte vor Reichweite", "Eine erworbene Domain überträgt keine alte Redaktion, Texte oder Autorität."], ["02", "Neue Belege", "Eigene Essays und protokollierte Play Studies bilden die neue Substanz."], ["03", "Technische Gates", "Indexierung bleibt gesperrt, bis Rechte, URLs, GSC und Live-QA belegt sind."]],
-  ownershipTitle: "Kein Revival. Kein Erfolgsmärchen.",
-  ownership: "Die frühere Publikation endete. Der heutige Betreiber besitzt die Domain, nicht automatisch ihre Artikel, Identitäten oder Empfehlungen. Auch ein SEO-Erfolg ist bisher nicht belegt.",
-  ownershipLink: "Die Eigentumsgrenze lesen",
-  operationsTitle: "Wo Contextter hineinpasst.",
-  operations: "Contextter ist das zweite Projekt desselben Betreibers und strukturiert Teile der Recherche, Seitenrollen und technischen Prüfungen. Die Fallstudie trennt offen zwischen Methode, Produkt und noch unbewiesenem Ergebnis.",
-  contextter: "Zusammenarbeit in der Fallstudie",
+  title: "Welche Spiele bleiben, wenn ihre Dienste verschwinden?",
+  description: "Nightmare Mode baut einen evidenzbasierten Atlas darüber, welche Spiele nach Store-, Login- und Serverausfällen weiter funktionieren – und welche nicht.",
+  eyebrow: "Unabhängige Games-Publikation · Survival Atlas",
+  intro: "Wir zerlegen Spiele in die Abhängigkeiten, die sie spielbar halten: Dateien, Lizenzen, Konten, Server und lokale Spielstände.",
+  primary: "Survival Atlas öffnen", secondary: "Die Methodik lesen",
+  live: "MVP · zwei geprüfte Kontrastfälle · Stand 29. August 2026",
+  contrastTitle: "The Crew / The Crew 2",
+  contrastText: "Dasselbe Franchise, zwei völlig verschiedene Antworten. Der erste Teil wurde mit seinen Servern unzugänglich. Der zweite bekam nachträglich einen offiziellen Offline-Weg.",
+  openContrast: "Den Vergleich untersuchen",
+  mapTitle: "Nicht „online oder offline“. Eine Abhängigkeitskette.",
+  nodes: ["Dateien", "Store-Lizenz", "Publisher-Login", "Spielserver", "Kernspiel"],
+  mapText: "Ein einzelnes Label verschweigt, wo ein Spiel tatsächlich brechen kann. Der Atlas macht diese Stellen sichtbar und lässt Ausfälle durchspielen.",
+  purposeTitle: "Ein kleines Archiv mit überprüfbaren Antworten.",
+  purposeText: "Der MVP beginnt nicht mit Tausenden Profilen. Er beginnt mit belastbaren Kontrastfällen, klarer Unsicherheit, Primärquellen und einem öffentlichen Änderungsverlauf.",
+  pillars: [["01", "Klare Antwort", "Direkt oben: Was bleibt für Besitzer einer installierten Kopie tatsächlich spielbar?"], ["02", "Interaktive Karte", "Jede Abhängigkeit ist sichtbar und kann als Ausfallbedingung simuliert werden."], ["03", "Belege und Verlauf", "Quellen, Prüfdatum, historische Änderungen und offene Lücken bleiben am Fall."], ["04", "Deutsch und Englisch", "Jeder geprüfte Fall erhält eigenständige URLs und vollständige Sprachfassungen."]],
+  essayTitle: "Warum Dateien allein kein Spiel erhalten",
+  essayText: "Der erste Essay bildet den redaktionellen Ausgangspunkt: Erhaltung umfasst Technik, Kontext, Rechte und die Systeme, die Zugang überhaupt ermöglichen.", essayLink: "Essay lesen",
+  caseTitle: "Wie dieses Projekt entstanden ist",
+  caseText: "Die offene Fallstudie dokumentiert den rechtssicheren Neuaufbau der erworbenen Domain und trennt Experiment, Methode und noch nicht bewiesenen SEO-Erfolg.", caseLink: "Fallstudie lesen",
 } : {
-  title: "An old domain. An open rebuild.",
-  description: "Nightmare Mode documents how an acquired former games domain becomes a new, rights-safe project — including wrong turns, evidence and unanswered questions.",
-  primary: "Read the full case study",
-  secondary: "Explore The First Four Minutes",
-  latest: "Open case study · Updated 29 August 2026",
-  studyTitle: "Rebuilding Nightmare Mode",
-  studyText: "Why we will not imitate the former newsroom, why our first idea was too shallow, and which gates must actually pass before indexing.",
-  readStudy: "Open the case study",
-  essayTitle: "The First Four Minutes",
-  essayText: "A comparable record of how games first communicate rules, choices and expectations, supported by an open protocol and local worksheet.",
-  readEssay: "Open the format and tool",
-  formatsTitle: "What this case demonstrates",
-  formats: [["01", "Rights before reach", "Buying a domain does not transfer its former newsroom, writing or authority."], ["02", "New evidence", "Original essays and documented play studies create the new substance."], ["03", "Technical gates", "Indexing stays blocked until rights, URLs, GSC and live QA are proven."]],
-  ownershipTitle: "Not a revival. Not a success story.",
-  ownership: "The former publication ended. The current operator owns the domain, not automatically its articles, identities or endorsements. No SEO success has been demonstrated either.",
-  ownershipLink: "Read the ownership boundary",
-  operationsTitle: "Where Contextter fits.",
-  operations: "Contextter is another project of the same operator and structures parts of the research, page roles and technical checks. The case study separates method, product and unproven outcome.",
-  contextter: "See the relationship in context",
+  title: "Which games remain when their services disappear?",
+  description: "Nightmare Mode is building an evidence-led atlas of which games continue to work after stores, logins and servers fail — and which do not.",
+  eyebrow: "Independent games publication · Survival Atlas",
+  intro: "We break games into the dependencies that keep them playable: files, entitlements, accounts, servers and local saves.",
+  primary: "Open the Survival Atlas", secondary: "Read the methodology",
+  live: "MVP · two reviewed contrast cases · Updated 29 August 2026",
+  contrastTitle: "The Crew / The Crew 2",
+  contrastText: "One franchise, two radically different answers. The first game became inaccessible with its servers. The second later gained an official offline path.",
+  openContrast: "Investigate the contrast",
+  mapTitle: "Not “online or offline.” A dependency chain.",
+  nodes: ["Files", "Store entitlement", "Publisher login", "Game server", "Core game"],
+  mapText: "A single label hides where a game can actually break. The atlas makes those points visible and lets readers simulate failure.",
+  purposeTitle: "A small archive of inspectable answers.",
+  purposeText: "The MVP does not begin with thousands of profiles. It begins with defensible contrasts, explicit uncertainty, primary sources and a public change history.",
+  pillars: [["01", "A direct answer", "At the top: what remains playable for an owner of an installed copy?"], ["02", "An interactive map", "Every dependency is visible and can be applied as a failure condition."], ["03", "Evidence and history", "Sources, review dates, historical changes and open gaps stay attached to the case."], ["04", "English and German", "Every reviewed case receives distinct URLs and complete language editions."]],
+  essayTitle: "Why files alone do not preserve a game",
+  essayText: "The opening essay is the editorial premise: preservation includes technology, context, rights and the systems that make access possible in the first place.", essayLink: "Read the essay",
+  caseTitle: "How this project came to exist",
+  caseText: "The open case study documents the rights-safe rebuild of the acquired domain and separates experiment, method and SEO outcomes that remain unproven.", caseLink: "Read the case study",
 };
+const atlasPath = pathFor(locale, "/survival-atlas/");
+const methodPath = pathFor(locale, "/survival-atlas/methodology/");
 ---
 
 <BaseLayout lang={locale} title={copy.title} description={copy.description}>
-  <section class="hero shell" aria-labelledby="hero-title">
-    <div class="hero__copy">
-      <h1 id="hero-title" class="display">{copy.title}</h1>
-      <p>{copy.description}</p>
-      <div class="links">
-        <a class="action" href={pathFor(locale, "/case-study/rebuilding-nightmare-mode/")} data-umami-event="content-open" data-umami-event-target="case-study" data-umami-event-placement="home-hero">{copy.primary} <span aria-hidden="true">→</span></a>
-        <a class="action quiet" href={pathFor(locale, "/field-notes/")} data-umami-event="content-open" data-umami-event-target="play-study-series" data-umami-event-placement="home-hero">{copy.secondary}</a>
-      </div>
+  <section class="home-hero shell">
+    <div class="hero-copy">
+      <p class="mono">{copy.eyebrow}</p><h1 class="display">{copy.title}</h1><p class="intro">{copy.intro}</p>
+      <div class="hero-actions"><a class="action" href={atlasPath} data-umami-event="survival-atlas-open" data-umami-event-placement="home-hero">{copy.primary} <span aria-hidden="true">→</span></a><a class="action quiet" href={methodPath}>{copy.secondary}</a></div>
     </div>
-    <figure>
-      <Image src={crossroads} alt={locale === "de" ? "Monochrome Illustration einer Figur zwischen sich kreuzenden Wegen" : "Monochrome illustration of a figure among intersecting paths"} widths={[720, 1080, 1440]} sizes="(max-width: 760px) 100vw, 50vw" format="webp" loading="eager" fetchpriority="high" />
-    </figure>
+    <div class="hero-model" aria-label={locale === "de" ? "Vereinfachte Abhängigkeitskarte" : "Simplified dependency map"}>
+      {copy.nodes.map((node, index) => <><span>{node}</span>{index < copy.nodes.length - 1 && <i aria-hidden="true">→</i>}</>)}
+      <p>{copy.live}</p>
+    </div>
   </section>
-
-  <section class="work shell" aria-label={locale === "de" ? "Aktuelle Texte" : "Current work"}>
-    <article class="feature feature--wide">
-      <Image src={fieldStudy} alt="" widths={[360, 620]} sizes="(max-width: 760px) 35vw, 18vw" format="webp" />
-      <div><p class="meta">{copy.latest}</p><h2 class="display"><em>{copy.studyTitle}</em></h2><p>{copy.studyText}</p><a class="action" href={pathFor(locale, "/case-study/rebuilding-nightmare-mode/")} data-umami-event="content-open" data-umami-event-target="case-study" data-umami-event-placement="home-feature">{copy.readStudy} <span aria-hidden="true">→</span></a></div>
-    </article>
-    <article class="feature"><div><p class="meta">Play Study · Method · Tool</p><h2 class="display">{copy.essayTitle}</h2><p>{copy.essayText}</p><a class="action" href={pathFor(locale, "/field-notes/")} data-umami-event="content-open" data-umami-event-target="play-study-series" data-umami-event-placement="home-feature">{copy.readEssay} <span aria-hidden="true">→</span></a></div></article>
+  <section class="feature shell"><div><p class="mono">First comparison</p><h2 class="display">{copy.contrastTitle}</h2></div><div><p>{copy.contrastText}</p><a class="action" href={atlasPath}>{copy.openContrast} <span aria-hidden="true">→</span></a></div></section>
+  <section class="map-explainer shell"><div><p class="mono">The model</p><h2 class="display">{copy.mapTitle}</h2></div><p>{copy.mapText}</p></section>
+  <section class="purpose shell">
+    <div><p class="mono">The product</p><h2 class="display">{copy.purposeTitle}</h2><p>{copy.purposeText}</p></div>
+    <ol>{copy.pillars.map(([number, title, text]) => <li><span class="mono">{number}</span><h3 class="display">{title}</h3><p>{text}</p></li>)}</ol>
   </section>
-
-  <section class="formats shell" aria-labelledby="formats-title">
-    <h2 id="formats-title" class="display">{copy.formatsTitle}</h2>
-    <ol>{copy.formats.map(([number, name, description]) => <li><span>{number}</span><strong class="display">{name}</strong><p>{description}</p></li>)}</ol>
+  <section class="supporting-work shell">
+    <article><p class="mono">Editorial premise</p><h2 class="display">{copy.essayTitle}</h2><p>{copy.essayText}</p><a class="action" href={pathFor(locale, "/essays/a-game-is-more-than-its-files/")}>{copy.essayLink} <span aria-hidden="true">→</span></a></article>
+    <article><p class="mono">Open experiment</p><h2 class="display">{copy.caseTitle}</h2><p>{copy.caseText}</p><a class="action" href={pathFor(locale, "/case-study/rebuilding-nightmare-mode/")}>{copy.caseLink} <span aria-hidden="true">→</span></a></article>
   </section>
-
-  <section class="disclosures shell">
-    <article><h2 class="display">{copy.ownershipTitle}</h2><p>{copy.ownership}</p><a class="action" href={pathFor(locale, "/about/new-ownership/")}>{copy.ownershipLink} <span aria-hidden="true">→</span></a></article>
-    <article><h2 class="display">{copy.operationsTitle}</h2><p>{copy.operations}</p><a class="action" href={pathFor(locale, "/case-study/rebuilding-nightmare-mode/")}>{copy.contextter} <span aria-hidden="true">→</span></a></article>
-  </section>
-
   <SiteFooter locale={locale} />
 </BaseLayout>
 
 <style>
-  .hero { display: grid; grid-template-columns: 1fr 1fr; min-height: min(38rem, calc(100svh - 4.75rem)); border-bottom: 1px solid var(--line); }
-  .hero__copy { display: flex; flex-direction: column; justify-content: center; padding: clamp(3.5rem, 7vw, 6.5rem) clamp(2rem, 5vw, 5rem) clamp(3.5rem, 7vw, 6.5rem) 0; }
-  .hero h1 { max-width: 8ch; font-size: clamp(4.25rem, 7vw, 7.5rem); }
-  .hero__copy > p { max-width: 34rem; margin: 1.75rem 0 0; color: var(--ink-soft); font-size: clamp(1.05rem, 1.45vw, 1.25rem); }
-  .links { display: flex; flex-direction: column; align-items: flex-start; gap: 0.9rem; margin-top: 2rem; }
-  .quiet { color: var(--ink-soft); }
-  figure { min-width: 0; margin: 0; border-left: 1px solid var(--line); overflow: hidden; }
-  figure :global(picture), figure :global(img) { width: 100%; height: 100%; }
-  figure :global(img) { object-fit: cover; }
-  .work { display: grid; grid-template-columns: 1.25fr 0.75fr; border-bottom: 1px solid var(--line); }
-  .feature { min-width: 0; padding: clamp(2rem, 4vw, 4rem); border-left: 1px solid var(--line); }
-  .feature:first-child { padding-left: 0; border-left: 0; }
-  .feature--wide { display: grid; grid-template-columns: minmax(10rem, 0.42fr) 1fr; gap: clamp(1.5rem, 3vw, 3rem); }
-  .feature img { width: 100%; height: 100%; object-fit: cover; }
-  .feature .meta { margin: 0 0 0.8rem; color: var(--signal); font-size: 0.82rem; }
-  .feature h2 { margin: 0; font-size: clamp(2rem, 3.4vw, 3.5rem); }
-  .feature p:not(.meta) { max-width: 36rem; color: var(--ink-soft); }
-  .feature .action { margin-top: 0.65rem; }
-  .formats { display: grid; grid-template-columns: 0.42fr 1fr; gap: clamp(3rem, 7vw, 8rem); padding-block: clamp(3.25rem, 6vw, 6rem); border-bottom: 1px solid var(--line); }
-  .formats > h2 { font-size: clamp(2.5rem, 4vw, 4rem); }
-  .formats ol { display: grid; grid-template-columns: repeat(3, 1fr); margin: 0; padding: 0; list-style: none; }
-  .formats li { padding: 0 clamp(1.25rem, 3vw, 2.5rem); border-left: 1px solid var(--line); }
-  .formats li:first-child { padding-left: 0; border-left: 0; }
-  .formats li > span { color: var(--signal); font-size: 0.78rem; }
-  .formats strong { display: block; margin-top: 0.35rem; font-size: 1.65rem; font-weight: 500; }
-  .formats p { margin: 0.45rem 0 0; color: var(--ink-soft); font-size: 0.92rem; }
-  .disclosures { display: grid; grid-template-columns: 1fr 1fr; padding-block: clamp(3.25rem, 6vw, 6rem); }
-  .disclosures article { padding-right: clamp(2rem, 5vw, 5rem); }
-  .disclosures article + article { padding-left: clamp(2rem, 5vw, 5rem); border-left: 1px solid var(--line); }
-  .disclosures h2 { margin: 0; font-size: clamp(2.2rem, 3.7vw, 3.6rem); }
-  .disclosures p { max-width: 38rem; color: var(--ink-soft); }
-  .disclosures .action { margin-top: 0.6rem; }
-  @media (max-width: 840px) {
-    .hero, .work, .formats, .disclosures { grid-template-columns: 1fr; }
-    .hero { min-height: auto; }
-    .hero__copy { padding: 4.5rem 0 3.5rem; }
-    figure { min-height: 24rem; border-top: 1px solid var(--line); border-left: 0; }
-    .feature { padding-inline: 0; border-top: 1px solid var(--line); border-left: 0; }
-    .formats ol { grid-template-columns: 1fr; }
-    .formats li { padding: 1.25rem 0; border-top: 1px solid var(--line); border-left: 0; }
-    .disclosures article { padding: 0 0 3rem; }
-    .disclosures article + article { padding: 3rem 0 0; border-top: 1px solid var(--line); border-left: 0; }
-  }
-  @media (max-width: 560px) {
-    .hero h1 { font-size: clamp(3.7rem, 17vw, 5rem); }
-    .feature--wide { grid-template-columns: 1fr; }
-    .feature--wide :global(img) { aspect-ratio: 16 / 9; }
+  .home-hero { display: grid; grid-template-columns: minmax(0, 1.32fr) minmax(20rem, 0.68fr); gap: clamp(3rem, 8vw, 9rem); min-height: min(47rem, calc(100svh - 4.75rem)); align-items: center; padding-block: clamp(4.5rem, 8vw, 8rem); border-bottom: 1px solid var(--line); }
+  .home-hero .mono { margin: 0 0 1.25rem; color: var(--signal); }
+  .home-hero h1 { max-width: 11ch; font-size: clamp(4.7rem, 8.4vw, 8.7rem); }
+  .intro { max-width: 44rem; margin: 1.7rem 0 0; color: var(--ink-soft); font-size: clamp(1.1rem, 1.7vw, 1.4rem); }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 2rem; }
+  .hero-actions .quiet { color: var(--ink-soft); }
+  .hero-model { display: grid; padding: 1.5rem; border: 1px solid var(--line); }
+  .hero-model span { padding: 0.9rem 1rem; border: 1px solid var(--line-strong); font-size: 0.85rem; }
+  .hero-model span:last-of-type { border-color: var(--signal); color: var(--signal); font-family: var(--display); font-size: 1.25rem; }
+  .hero-model i { padding: 0.25rem 1rem; color: var(--signal); font-style: normal; }
+  .hero-model p { margin: 1.5rem 0 0; padding-top: 1rem; border-top: 1px dotted var(--line-strong); color: var(--ink-soft); font-size: 0.72rem; }
+  .feature, .map-explainer { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(3rem, 8vw, 9rem); padding-block: var(--section); border-bottom: 1px solid var(--line); }
+  .feature .mono, .map-explainer .mono, .purpose .mono, .supporting-work .mono { margin: 0 0 1rem; color: var(--signal); }
+  .feature h2, .map-explainer h2 { max-width: 11ch; font-size: clamp(3.4rem, 6vw, 6rem); }
+  .feature > div:last-child p, .map-explainer > p { max-width: 42rem; margin: 0; color: var(--ink-soft); font-family: var(--display); font-size: clamp(1.4rem, 2.4vw, 2rem); line-height: 1.35; }
+  .feature .action { margin-top: 2rem; }
+  .purpose { display: grid; grid-template-columns: minmax(18rem, 0.7fr) 1fr; gap: clamp(3rem, 8vw, 9rem); padding-block: var(--section); border-bottom: 1px solid var(--line); }
+  .purpose h2 { font-size: clamp(3rem, 5vw, 5rem); }
+  .purpose > div > p:last-child { max-width: 36rem; color: var(--ink-soft); }
+  .purpose ol { margin: 0; padding: 0; list-style: none; }
+  .purpose li { display: grid; grid-template-columns: 3rem minmax(10rem, 0.45fr) 1fr; gap: 1.5rem; padding: 1.4rem 0; border-top: 1px solid var(--line); }
+  .purpose h3 { margin: 0; font-size: 1.4rem; font-weight: 500; }
+  .purpose li p { margin: 0; color: var(--ink-soft); font-size: 0.88rem; }
+  .supporting-work { display: grid; grid-template-columns: 1fr 1fr; padding-block: var(--section); }
+  .supporting-work article { padding-right: clamp(2rem, 5vw, 5rem); }
+  .supporting-work article + article { padding-left: clamp(2rem, 5vw, 5rem); border-left: 1px solid var(--line); }
+  .supporting-work h2 { font-size: clamp(2.5rem, 4vw, 4rem); }
+  .supporting-work article > p:not(.mono) { color: var(--ink-soft); }
+  .supporting-work .action { margin-top: 1rem; }
+  @media (max-width: 820px) {
+    .home-hero, .feature, .map-explainer, .purpose, .supporting-work { grid-template-columns: 1fr; gap: 2.5rem; }
+    .home-hero { min-height: 0; }
+    .home-hero h1 { font-size: clamp(4rem, 17vw, 6.4rem); }
+    .purpose li { grid-template-columns: 2.5rem 1fr; }
+    .purpose li p { grid-column: 2; }
+    .supporting-work article { padding: 0 0 3rem; }
+    .supporting-work article + article { padding: 3rem 0 0; border-top: 1px solid var(--line); border-left: 0; }
   }
 </style>

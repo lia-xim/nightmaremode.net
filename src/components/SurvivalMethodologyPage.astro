@@ -1,0 +1,86 @@
+---
+import BaseLayout from "@/components/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import type { Locale } from "@/i18n";
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const copy = locale === "de" ? {
+  title: "Wie wir Überlebensfähigkeit prüfen.",
+  description: "Methodik des Nightmare Mode Survival Atlas: Abhängigkeiten, Quellenstufen, Ausfallszenarien, Unsicherheit und Aktualisierung.",
+  eyebrow: "Survival Atlas · Methodik",
+  intro: "Der Atlas vergibt keine magische Punktzahl. Er dokumentiert, welche Bedingung eine Funktion braucht und was bei ihrem Ausfall tatsächlich belegt ist.",
+  principles: [["01", "Die Frage begrenzen", "„Überlebt“ bedeutet hier nicht, dass jede Funktion für immer erhalten bleibt. Wir prüfen getrennt: Erwerb, Start, Kernspiel, lokaler Fortschritt und Online-Funktionen."], ["02", "Abhängigkeiten einzeln benennen", "Installationsdateien, Plattformlizenz, Publisher-Konto, Authentifizierung, Spielserver und lokale Daten werden nicht zu einem vagen Online-Label zusammengezogen."], ["03", "Ausfall statt Idealzustand", "Jeder Fall beantwortet: Was passiert, wenn Store, Login, Server oder Internet nicht mehr verfügbar sind? Ein installierter Titel und ein neu kaufbarer Titel sind verschiedene Fragen."], ["04", "Quelle und Beobachtung trennen", "Publisher-Dokumentation belegt eine offizielle Funktion. Ein eigener Test belegt nur die getestete Version, Plattform und Bedingungen. Community-Projekte werden als eigene Evidenzklasse geführt."], ["05", "Unsicherheit sichtbar lassen", "Nicht belegte Lizenzprüfungen oder Plattformunterschiede werden als nicht belegt markiert. Wir füllen Lücken nicht mit plausiblen Vermutungen."], ["06", "Änderungen protokollieren", "Jeder Fall zeigt Prüfdatum, nächste Prüfung, Timeline und Änderungsverlauf. Eine neue Serverpolitik kann die Antwort verändern."]],
+  evidenceTitle: "Evidenzstufen",
+  levels: [["Publisher-belegt", "Eine Primärquelle beschreibt Abschaltung, Offline-Modus oder Funktionsgrenzen direkt."], ["Unabhängig getestet", "Nightmare Mode hat eine benannte Version auf einer benannten Plattform unter dokumentierten Bedingungen geprüft."], ["Gestützt", "Mehrere verlässliche Quellen weisen in dieselbe Richtung, ohne den gesamten Zustand direkt zu beweisen."], ["Nicht belegt", "Die vorhandenen Quellen reichen für eine Aussage nicht aus."]],
+  publishTitle: "Wann ein Spielprofil veröffentlicht wird",
+  publishText: "Eine indexierbare Seite braucht eine direkte Antwort, eine vollständige Dependency Map, mindestens eine belastbare Primärquelle für die Kernaussage, sichtbare Evidenzgrenzen, eine Timeline, deutsche und englische Fassungen sowie ein Prüfdatum. Filter- und Simulations-URLs bleiben noindex.",
+  correctionTitle: "Korrekturen sind Teil des Datensatzes",
+  correctionText: "Wer eine Abhängigkeit, Plattformabweichung oder neue Publisher-Änderung belegen kann, kann sie über den Rechte- und Korrekturkontakt melden. Änderungen werden nicht still überschrieben.",
+} : {
+  title: "How we test whether a game can survive.",
+  description: "Methodology for the Nightmare Mode Survival Atlas: dependencies, evidence levels, failure scenarios, uncertainty and maintenance.",
+  eyebrow: "Survival Atlas · Methodology",
+  intro: "The atlas does not assign a magic score. It records which condition a function needs and what is actually established when that condition fails.",
+  principles: [["01", "Bound the question", "“Survive” does not mean every feature lasts forever. We test acquisition, launch, core game, local progress and online features separately."], ["02", "Name dependencies separately", "Installation files, platform entitlement, publisher account, authentication, game server and local data are not collapsed into one vague online label."], ["03", "Test failure, not the ideal state", "Each case asks what happens when the store, login, server or internet is unavailable. An installed title and a newly acquirable title are different questions."], ["04", "Separate sources from observation", "Publisher documentation establishes an official feature. Our own test establishes only the named build, platform and conditions. Community projects are a separate evidence class."], ["05", "Keep uncertainty visible", "Unverified entitlement checks and platform differences are marked not established. Plausible guesses do not fill the gaps."], ["06", "Record change", "Every case shows its review date, next review, timeline and change history. A new server policy can alter the answer."]],
+  evidenceTitle: "Evidence levels",
+  levels: [["Publisher-sourced", "A primary source directly describes a shutdown, offline mode or feature boundary."], ["Independently tested", "Nightmare Mode tested a named build on a named platform under documented conditions."], ["Supported", "Multiple reliable sources point in the same direction without establishing the whole state directly."], ["Not established", "The available evidence is insufficient for a claim."]],
+  publishTitle: "When a game profile is published",
+  publishText: "An indexable page requires a direct answer, complete dependency map, at least one strong primary source for the central claim, visible evidence limits, timeline, German and English editions and a review date. Filter and simulation URLs remain noindex.",
+  correctionTitle: "Corrections are part of the dataset",
+  correctionText: "Anyone who can establish a dependency, platform difference or new publisher change can report it through the rights and corrections contact. Changes are not silently overwritten.",
+};
+const correctionPath = locale === "de" ? "/de/rechte-und-korrekturen/" : "/rights-contact/";
+---
+
+<BaseLayout lang={locale} title={copy.title} description={copy.description}>
+  <section class="method-hero shell">
+    <p class="mono">{copy.eyebrow}</p>
+    <h1 class="display">{copy.title}</h1>
+    <p>{copy.intro}</p>
+  </section>
+  <section class="principles shell">
+    <ol>{copy.principles.map(([number, title, text]) => <li><span class="mono">{number}</span><h2 class="display">{title}</h2><p>{text}</p></li>)}</ol>
+  </section>
+  <section class="evidence-levels shell">
+    <div><p class="mono">Evidence model</p><h2 class="display">{copy.evidenceTitle}</h2></div>
+    <dl>{copy.levels.map(([term, description]) => <div><dt>{term}</dt><dd>{description}</dd></div>)}</dl>
+  </section>
+  <section class="publication-gate shell">
+    <article><h2 class="display">{copy.publishTitle}</h2><p>{copy.publishText}</p></article>
+    <article><h2 class="display">{copy.correctionTitle}</h2><p>{copy.correctionText}</p><a class="action" href={correctionPath}>{locale === "de" ? "Korrektur melden" : "Report a correction"} <span aria-hidden="true">→</span></a></article>
+  </section>
+  <SiteFooter locale={locale} />
+</BaseLayout>
+
+<style>
+  .method-hero { display: grid; grid-template-columns: minmax(10rem, 0.28fr) 1fr; gap: clamp(3rem, 8vw, 9rem); padding-block: clamp(5rem, 9vw, 9rem); border-bottom: 1px solid var(--line); }
+  .method-hero .mono { margin: 0.5rem 0 0; color: var(--signal); }
+  .method-hero h1 { max-width: 12ch; font-size: clamp(4rem, 8vw, 8rem); }
+  .method-hero > p:last-child { grid-column: 2; max-width: 46rem; margin: 0; color: var(--ink-soft); font-size: 1.2rem; }
+  .principles ol { margin: 0; padding: 0; list-style: none; }
+  .principles li { display: grid; grid-template-columns: minmax(4rem, 0.18fr) minmax(14rem, 0.42fr) 1fr; gap: clamp(1.5rem, 4vw, 4rem); padding-block: clamp(2rem, 4vw, 3.5rem); border-bottom: 1px solid var(--line); }
+  .principles span { color: var(--signal); }
+  .principles h2 { margin: 0; font-size: clamp(2rem, 3.5vw, 3.4rem); font-weight: 500; }
+  .principles p { max-width: 46rem; margin: 0; color: var(--ink-soft); }
+  .evidence-levels { display: grid; grid-template-columns: 0.55fr 1fr; gap: clamp(3rem, 8vw, 9rem); padding-block: var(--section); border-bottom: 1px solid var(--line); }
+  .evidence-levels .mono { margin: 0 0 1rem; color: var(--signal); }
+  .evidence-levels h2 { font-size: clamp(3rem, 5vw, 5rem); }
+  .evidence-levels dl { margin: 0; }
+  .evidence-levels dl div { display: grid; grid-template-columns: 0.42fr 1fr; gap: 2rem; padding: 1.25rem 0; border-top: 1px solid var(--line); }
+  .evidence-levels dt { font-family: var(--display); font-size: 1.25rem; }
+  .evidence-levels dd { margin: 0; color: var(--ink-soft); }
+  .publication-gate { display: grid; grid-template-columns: 1fr 1fr; padding-block: var(--section); }
+  .publication-gate article { padding-right: clamp(2rem, 5vw, 5rem); }
+  .publication-gate article + article { padding-left: clamp(2rem, 5vw, 5rem); border-left: 1px solid var(--line); }
+  .publication-gate h2 { font-size: clamp(2.5rem, 4vw, 4rem); }
+  .publication-gate p { color: var(--ink-soft); }
+  .publication-gate .action { margin-top: 1rem; }
+  @media (max-width: 760px) {
+    .method-hero, .principles li, .evidence-levels, .publication-gate { grid-template-columns: 1fr; gap: 1.5rem; }
+    .method-hero > p:last-child { grid-column: 1; }
+    .publication-gate article { padding: 0 0 3rem; }
+    .publication-gate article + article { padding: 3rem 0 0; border-top: 1px solid var(--line); border-left: 0; }
+    .evidence-levels dl div { grid-template-columns: 1fr; gap: 0.4rem; }
+  }
+</style>

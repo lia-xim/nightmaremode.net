@@ -1,0 +1,53 @@
+---
+import BaseLayout from "@/components/BaseLayout.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SurvivalExplorer from "@/components/SurvivalExplorer.astro";
+import { localize, type SurvivalCase } from "@/data/survival-atlas";
+import type { Locale } from "@/i18n";
+
+interface Props { locale: Locale; entry: SurvivalCase }
+const { locale, entry } = Astro.props;
+const copy = locale === "de" ? {
+  title: `Ist ${entry.title} offline spielbar?`,
+  eyebrow: "Survival Atlas · Geprüfter Fall",
+  intro: localize(entry.shortAnswer, locale),
+  change: "Änderungsverlauf",
+  changeText: "Erste Atlas-Fassung mit Publisher-Quellen, Abhängigkeitskarte und Ausfallsimulation.",
+  reviewed: "Redaktionell geprüft von Matthias Ramahi. Keine eigene plattformübergreifende Spielprüfung behauptet.",
+} : {
+  title: `Can ${entry.title} be played offline?`,
+  eyebrow: "Survival Atlas · Reviewed case",
+  intro: localize(entry.shortAnswer, locale),
+  change: "Change history",
+  changeText: "Initial atlas record with publisher sources, dependency map and failure simulation.",
+  reviewed: "Editorially reviewed by Matthias Ramahi. No independent cross-platform play test is claimed.",
+};
+---
+
+<BaseLayout lang={locale} title={copy.title} description={localize(entry.answer, locale)}>
+  <section class="case-hero shell">
+    <p class="mono">{copy.eyebrow}</p>
+    <h1 class="display">{copy.title}</h1>
+    <p>{copy.intro}</p>
+  </section>
+  <div class="shell"><SurvivalExplorer entry={entry} locale={locale} /></div>
+  <section id="change-history" class="change-history shell">
+    <div><p class="mono">{copy.change}</p><h2 class="display">2026-08-29</h2></div>
+    <div><p>{copy.changeText}</p><small>{copy.reviewed}</small></div>
+  </section>
+  <SiteFooter locale={locale} />
+</BaseLayout>
+
+<style>
+  .case-hero { padding-block: clamp(4.5rem, 8vw, 8rem); border-bottom: 1px solid var(--line); }
+  .case-hero .mono { margin: 0 0 1rem; color: var(--signal); }
+  .case-hero h1 { max-width: 13ch; font-size: clamp(4rem, 8vw, 8rem); }
+  .case-hero > p:last-child { max-width: 44rem; margin: 1.5rem 0 0; color: var(--ink-soft); font-size: 1.2rem; }
+  .change-history { display: grid; grid-template-columns: 0.42fr 1fr; gap: clamp(3rem, 8vw, 9rem); padding-block: clamp(3rem, 6vw, 6rem); border-top: 1px solid var(--line); }
+  .change-history .mono { margin: 0; color: var(--signal); }
+  .change-history h2 { margin-top: 0.6rem; font-size: 2.5rem; }
+  .change-history div:last-child { max-width: 45rem; }
+  .change-history p { margin: 0; }
+  .change-history small { display: block; margin-top: 1rem; color: var(--ink-soft); }
+  @media (max-width: 700px) { .change-history { grid-template-columns: 1fr; gap: 1.5rem; } }
+</style>
