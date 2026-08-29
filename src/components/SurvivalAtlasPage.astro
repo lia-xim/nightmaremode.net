@@ -1,119 +1,90 @@
 ---
 import BaseLayout from "@/components/BaseLayout.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
-import SurvivalExplorer from "@/components/SurvivalExplorer.astro";
-import { getSurvivalCase } from "@/data/survival-atlas";
+import SurvivalDatabase from "@/components/SurvivalDatabase.astro";
 import type { Locale } from "@/i18n";
 
 interface Props { locale: Locale }
 const { locale } = Astro.props;
-const entry = getSurvivalCase("the-crew");
 const copy = locale === "de" ? {
-  title: "Kann dieses Spiel überleben?",
-  description: "Der Survival Atlas zeigt, welche Teile eines Spiels übrig bleiben, wenn Stores, Logins oder Server verschwinden – mit Abhängigkeitskarten, Ausfallsimulationen und Quellen.",
-  eyebrow: "Game Dependency Atlas",
-  intro: "Sieh, was übrig bleibt, wenn Stores, Logins und Spielserver verschwinden.",
-  caveat: "Nicht jeder installierte Titel ist wirklich unabhängig. Der Atlas zerlegt Spielzugang in überprüfbare Abhängigkeiten und zeigt, welche davon ausfallen dürfen.",
-  current: "MVP · zwei geprüfte Kontrastfälle",
-  thesis: "Ein Spiel ist kein einzelnes Objekt.",
-  thesisText: "Dateien, Lizenzen, Konten, Authentifizierung, Server und lokale Spielstände bilden eine Kette. Erst wenn diese Kette sichtbar ist, lässt sich sinnvoll fragen, was nach einem Ausfall noch spielbar bleibt.",
-  compareTitle: "Ein Franchise. Zwei völlig verschiedene Zukünfte.",
-  compareText: "The Crew wurde nach der Serverabschaltung unzugänglich. The Crew 2 erhielt später einen offiziellen Offline-Modus. Der Vergleich zeigt, warum ein einzelnes Label wie „always online“ zu wenig erklärt.",
-  method: "Methodik und Evidenzmodell",
-  categories: "Die zwölf Fälle kommen erst nach Prüfung.",
-  categoriesText: "Geplant sind sorgfältige Kontrastfälle von vollständig offline bis vollständig serverseitig. Eine Seite wird erst veröffentlicht, wenn Antwort, Abhängigkeiten, Quellen, Unsicherheit und Prüfdatum zusammen vorliegen.",
-  steps: [["01", "Abhängigkeiten erfassen", "Installation, Kaufrecht, Login, Authentifizierung, Server, Spielstand und Community-Systeme getrennt dokumentieren."], ["02", "Ausfälle simulieren", "Nicht mit einem Score raten, sondern für jeden Ausfall zeigen, welche Funktionen weiterlaufen."], ["03", "Änderungen nachführen", "Publisher-Updates, Delistings und Abschaltungen werden als Timeline und Änderungsverlauf protokolliert."]],
-  nextTitle: "Was noch nicht behauptet wird",
-  nextText: "Zwei Publisher-Quellen ergeben noch kein vollständiges Archiv. Es gibt weder einen repräsentativen Marktüberblick noch unabhängige Langzeittests auf allen Plattformen. Der MVP beweist das Modell, nicht seine Vollständigkeit.",
+  title: "Welche alten Spiele sind noch spielbar?",
+  description: "Eine quellenbasierte Datenbank zu Offline-Modi, Serverabschaltungen, Publisher-Logins und der langfristigen Spielbarkeit älterer Games.",
+  eyebrow: "Can This Game Survive? · Survival Atlas",
+  intro: "Eine überprüfbare Datenbank darüber, was von einem Spiel übrig bleibt, wenn Stores, Logins oder Server verschwinden.",
+  current: "50 ausgewählte Spiele. Zwei veröffentlichte Befunde. Keine ungeprüften Urteile.",
+  directTitle: "Eine URL pro Spiel. Eine klare Antwort.",
+  directText: "Jeder veröffentlichte Datensatz beantwortet direkt, ob das Spiel noch zugänglich ist, welche Abhängigkeit kritisch ist und was nach einem Ausfall weiter funktioniert. Suchvarianten zu Offline-Modus, Serverabschaltung und Spielbarkeit werden auf derselben kanonischen Spielseite beantwortet.",
+  method: "Methodik ansehen",
+  rulesTitle: "Wann aus einem Kandidaten ein Datensatz wird",
+  rules: [
+    ["01", "Primärquellen", "Abschaltungen, Patches, Accounts und Serverzustände brauchen einen konkreten Beleg."],
+    ["02", "Abhängigkeiten", "Installation, Berechtigung, Login, Server, lokaler Spielstand und Community-Infrastruktur werden getrennt erfasst."],
+    ["03", "Begrenzte Aussage", "Publisher-Dokumentation, eigener Test, unterstützte Schlussfolgerung und Unbekanntes bleiben sichtbar getrennt."],
+    ["04", "Pflege", "Jeder veröffentlichte Fall erhält Prüfdatum, nächste Prüfung, Quellenregister und Änderungsverlauf."],
+  ],
 } : {
-  title: "Can this game survive?",
-  description: "The Survival Atlas shows which parts of a game remain when stores, logins or servers disappear — through dependency maps, failure simulations and sources.",
-  eyebrow: "Game Dependency Atlas",
-  intro: "See what remains when stores, logins and game servers disappear.",
-  caveat: "Not every installed title is genuinely independent. The atlas breaks access into reviewable dependencies and shows which of them may fail.",
-  current: "MVP · two reviewed contrast cases",
-  thesis: "A game is not a single object.",
-  thesisText: "Files, licences, accounts, authentication, servers and local saves form a chain. Only when that chain is visible can we ask what remains playable after a failure.",
-  compareTitle: "One franchise. Two radically different futures.",
-  compareText: "The Crew became inaccessible after its servers closed. The Crew 2 later received an official offline mode. The contrast shows why a single label such as “always online” explains too little.",
-  method: "Methodology and evidence model",
-  categories: "The twelve cases come after verification.",
-  categoriesText: "The roadmap covers deliberate contrast cases, from fully offline to entirely server-side. A page is published only when its answer, dependencies, sources, uncertainty and review date are complete.",
-  steps: [["01", "Map the dependencies", "Document installation, entitlement, login, authentication, servers, saves and community systems separately."], ["02", "Simulate failures", "Do not guess with a score. Show which functions continue under each documented failure."], ["03", "Track change", "Record publisher updates, delistings and shutdowns in a timeline and public change history."]],
-  nextTitle: "What this does not claim yet",
-  nextText: "Two publisher-sourced cases are not a comprehensive archive. There is no representative market view and no independent long-term test across every platform. The MVP proves the model, not its completeness.",
+  title: "Which older games are still playable?",
+  description: "A source-led database of offline modes, server shutdowns, publisher logins and the long-term playability of older games.",
+  eyebrow: "Can This Game Survive? · Survival Atlas",
+  intro: "A reviewable database of what remains when a game's stores, logins or servers disappear.",
+  current: "50 selected games. Two published findings. No unreviewed verdicts.",
+  directTitle: "One URL per game. One clear answer.",
+  directText: "Every published record answers whether the game remains accessible, which dependency is critical and what survives a service failure. Search questions about offline mode, server shutdown and playability are answered together on the same canonical game page.",
+  method: "Read the methodology",
+  rulesTitle: "How a candidate becomes a record",
+  rules: [
+    ["01", "Primary sources", "Shutdowns, patches, accounts and server states need a specific supporting source."],
+    ["02", "Dependencies", "Installation, entitlement, login, servers, local saves and community infrastructure are recorded separately."],
+    ["03", "Bounded finding", "Publisher documentation, direct testing, supported inference and unknowns remain visibly separate."],
+    ["04", "Maintenance", "Every published case gets a review date, next review, source register and change history."],
+  ],
 };
 const methodPath = locale === "de" ? "/de/survival-atlas/methodik/" : "/survival-atlas/methodology/";
 ---
 
 <BaseLayout lang={locale} title={copy.title} description={copy.description}>
   <section class="atlas-hero shell" aria-labelledby="atlas-title">
-    <div>
-      <p class="mono">{copy.eyebrow}</p>
-      <h1 id="atlas-title" class="display">{copy.title}</h1>
-      <p class="lede">{copy.intro}</p>
-    </div>
-    <div class="hero-note">
-      <p>{copy.caveat}</p>
-      <span class="mono">{copy.current}</span>
+    <p class="mono">{copy.eyebrow}</p>
+    <div class="atlas-hero__main">
+      <div><h1 id="atlas-title" class="display">{copy.title}</h1><p class="lede">{copy.intro}</p></div>
+      <p class="current">{copy.current}</p>
     </div>
   </section>
 
-  <div class="shell">
-    <SurvivalExplorer entry={entry} locale={locale} />
-  </div>
+  <div class="shell"><SurvivalDatabase locale={locale} /></div>
 
-  <section class="editorial-argument shell">
-    <div><p class="mono">01 · Premise</p><h2 class="display">{copy.thesis}</h2></div>
-    <p>{copy.thesisText}</p>
+  <section class="answer-model shell">
+    <div><p class="mono">{locale === "de" ? "Seitenmodell" : "Page model"}</p><h2 class="display">{copy.directTitle}</h2></div>
+    <div><p>{copy.directText}</p><a class="action" href={methodPath}>{copy.method} <span aria-hidden="true">→</span></a></div>
   </section>
 
-  <section class="contrast shell">
-    <div><p class="mono">02 · Contrast</p><h2 class="display">{copy.compareTitle}</h2></div>
-    <div><p>{copy.compareText}</p><a class="action" href={methodPath}>{copy.method} <span aria-hidden="true">→</span></a></div>
-  </section>
-
-  <section class="process shell" aria-labelledby="process-title">
-    <div><p class="mono">03 · Roadmap</p><h2 id="process-title" class="display">{copy.categories}</h2><p>{copy.categoriesText}</p></div>
-    <ol>{copy.steps.map(([number, title, text]) => <li><span class="mono">{number}</span><h3 class="display">{title}</h3><p>{text}</p></li>)}</ol>
-  </section>
-
-  <section class="limits shell">
-    <p class="mono">04 · Limits</p>
-    <div><h2 class="display">{copy.nextTitle}</h2><p>{copy.nextText}</p></div>
+  <section class="record-gate shell" aria-labelledby="record-gate-title">
+    <div><p class="mono">{locale === "de" ? "Veröffentlichungsgate" : "Publication gate"}</p><h2 id="record-gate-title" class="display">{copy.rulesTitle}</h2></div>
+    <ol>{copy.rules.map(([number, title, text]) => <li><span class="mono">{number}</span><div><h3 class="display">{title}</h3><p>{text}</p></div></li>)}</ol>
   </section>
 
   <SiteFooter locale={locale} />
 </BaseLayout>
 
 <style>
-  .atlas-hero { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 0.6fr); gap: clamp(3rem, 8vw, 9rem); align-items: end; padding-block: clamp(5rem, 9vw, 9rem); border-bottom: 1px solid var(--line); }
-  .atlas-hero .mono { margin: 0 0 1rem; color: var(--signal); }
-  .atlas-hero h1 { max-width: 11ch; font-size: clamp(4.5rem, 9vw, 9rem); }
-  .lede { max-width: 43rem; margin: 1.6rem 0 0; color: var(--ink-soft); font-size: clamp(1.1rem, 1.8vw, 1.45rem); }
-  .hero-note { padding-top: 1.5rem; border-top: 1px solid var(--line); }
-  .hero-note p { margin: 0; color: var(--ink-soft); }
-  .hero-note .mono { display: block; margin: 1.5rem 0 0; color: var(--signal); }
-  .editorial-argument, .contrast, .process, .limits { border-bottom: 1px solid var(--line); }
-  .editorial-argument, .contrast { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(3rem, 8vw, 9rem); padding-block: var(--section); }
-  .editorial-argument .mono, .contrast .mono, .process .mono, .limits > .mono { margin: 0 0 1rem; color: var(--signal); }
-  .editorial-argument h2, .contrast h2 { max-width: 10ch; font-size: clamp(3rem, 6vw, 6rem); }
-  .editorial-argument > p, .contrast > div:last-child p { max-width: 43rem; margin: 0; color: var(--ink-soft); font-family: var(--display); font-size: clamp(1.4rem, 2.4vw, 2rem); line-height: 1.35; }
-  .contrast .action { margin-top: 2rem; }
-  .process { display: grid; grid-template-columns: minmax(18rem, 0.72fr) 1fr; gap: clamp(3rem, 8vw, 9rem); padding-block: var(--section); }
-  .process h2 { font-size: clamp(2.8rem, 5vw, 5rem); }
-  .process > div > p:last-child { max-width: 36rem; color: var(--ink-soft); }
-  .process ol { margin: 0; padding: 0; list-style: none; }
-  .process li { display: grid; grid-template-columns: 3.5rem minmax(10rem, 0.55fr) 1fr; gap: 1.5rem; padding: 1.5rem 0; border-top: 1px solid var(--line); }
-  .process h3 { margin: 0; font-size: 1.45rem; font-weight: 500; }
-  .process li p { margin: 0; color: var(--ink-soft); font-size: 0.9rem; }
-  .limits { display: grid; grid-template-columns: minmax(9rem, 0.28fr) 1fr; gap: clamp(3rem, 8vw, 9rem); padding-block: var(--section); }
-  .limits h2 { font-size: clamp(2.8rem, 5vw, 5rem); }
-  .limits div p { max-width: 48rem; color: var(--ink-soft); font-size: 1.05rem; }
+  .atlas-hero { padding-block: clamp(4rem, 8vw, 7rem); border-bottom: 1px solid var(--line); }
+  .atlas-hero > .mono { margin: 0 0 1rem; color: var(--signal); }
+  .atlas-hero__main { display: grid; grid-template-columns: 1fr minmax(18rem, 0.36fr); gap: clamp(2rem, 7vw, 8rem); align-items: end; }
+  .atlas-hero h1 { max-width: 12ch; font-size: clamp(3.8rem, 7.5vw, 7.5rem); }
+  .lede { max-width: 48rem; margin: 1.35rem 0 0; color: var(--ink-soft); font-size: clamp(1.1rem, 1.8vw, 1.4rem); }
+  .current { margin: 0; padding-top: 1rem; border-top: 1px solid var(--line-strong); color: var(--ink-soft); }
+  .answer-model, .record-gate { display: grid; grid-template-columns: minmax(18rem, 0.7fr) 1fr; gap: clamp(3rem, 8vw, 9rem); padding-block: var(--section); border-bottom: 1px solid var(--line); }
+  .answer-model .mono, .record-gate .mono { margin: 0 0 0.8rem; color: var(--signal); }
+  .answer-model h2, .record-gate h2 { max-width: 11ch; font-size: clamp(2.7rem, 5vw, 5rem); }
+  .answer-model > div:last-child { max-width: 45rem; }
+  .answer-model > div:last-child p { margin: 0; color: var(--ink-soft); font-family: var(--display); font-size: clamp(1.35rem, 2.2vw, 1.9rem); line-height: 1.4; }
+  .answer-model .action { margin-top: 2rem; }
+  .record-gate ol { margin: 0; padding: 0; list-style: none; }
+  .record-gate li { display: grid; grid-template-columns: 3rem 1fr; gap: 1.2rem; padding: 1.25rem 0; border-top: 1px solid var(--line); }
+  .record-gate h3 { margin: 0; font-size: 1.35rem; font-weight: 550; }
+  .record-gate li p { max-width: 42rem; margin: 0.35rem 0 0; color: var(--ink-soft); font-size: 0.9rem; }
   @media (max-width: 760px) {
-    .atlas-hero, .editorial-argument, .contrast, .process, .limits { grid-template-columns: 1fr; gap: 2rem; }
-    .atlas-hero h1 { font-size: clamp(4rem, 18vw, 6rem); }
-    .process li { grid-template-columns: 2.5rem 1fr; }
-    .process li p { grid-column: 2; }
+    .atlas-hero__main, .answer-model, .record-gate { grid-template-columns: 1fr; gap: 2rem; }
+    .atlas-hero h1 { font-size: clamp(3.6rem, 16vw, 6rem); }
   }
 </style>

@@ -8,14 +8,20 @@ import type { Locale } from "@/i18n";
 interface Props { locale: Locale; entry: SurvivalCase }
 const { locale, entry } = Astro.props;
 const copy = locale === "de" ? {
-  title: `Ist ${entry.title} offline spielbar?`,
+  title: entry.id === "the-crew"
+    ? "Ist The Crew tot? Offline-Modus, Serverabschaltung und Spielbarkeit"
+    : "Ist The Crew 2 offline spielbar? Hybrid-Modus und Serverabhängigkeiten",
+  heading: entry.id === "the-crew" ? "Ist The Crew noch spielbar?" : "Ist The Crew 2 offline spielbar?",
   eyebrow: "Survival Atlas · Geprüfter Fall",
   intro: localize(entry.shortAnswer, locale),
   change: "Änderungsverlauf",
   changeText: "Erste Atlas-Fassung mit Publisher-Quellen, Abhängigkeitskarte und Ausfallsimulation.",
   reviewed: "Redaktionell geprüft von Matthias Ramahi. Keine eigene plattformübergreifende Spielprüfung behauptet.",
 } : {
-  title: `Can ${entry.title} be played offline?`,
+  title: entry.id === "the-crew"
+    ? "Is The Crew dead? Offline mode, server shutdown and playability"
+    : "Can The Crew 2 be played offline? Hybrid Mode and server dependencies",
+  heading: entry.id === "the-crew" ? "Can The Crew still be played?" : "Can The Crew 2 be played offline?",
   eyebrow: "Survival Atlas · Reviewed case",
   intro: localize(entry.shortAnswer, locale),
   change: "Change history",
@@ -26,9 +32,8 @@ const copy = locale === "de" ? {
 
 <BaseLayout lang={locale} title={copy.title} description={localize(entry.answer, locale)}>
   <section class="case-hero shell">
-    <p class="mono">{copy.eyebrow}</p>
-    <h1 class="display">{copy.title}</h1>
-    <p>{copy.intro}</p>
+    <p class="mono"><a href={locale === "de" ? "/de/survival-atlas/" : "/survival-atlas/"}>{locale === "de" ? "Survival-Datenbank" : "Survival database"}</a> · {copy.eyebrow}</p>
+    <div><h1 class="display">{copy.heading}</h1><p>{copy.intro}</p></div>
   </section>
   <div class="shell"><SurvivalExplorer entry={entry} locale={locale} /></div>
   <section id="change-history" class="change-history shell">
@@ -39,15 +44,17 @@ const copy = locale === "de" ? {
 </BaseLayout>
 
 <style>
-  .case-hero { padding-block: clamp(4.5rem, 8vw, 8rem); border-bottom: 1px solid var(--line); }
+  .case-hero { padding-block: clamp(3.5rem, 6vw, 6rem); border-bottom: 1px solid var(--line); }
   .case-hero .mono { margin: 0 0 1rem; color: var(--signal); }
-  .case-hero h1 { max-width: 13ch; font-size: clamp(4rem, 8vw, 8rem); }
-  .case-hero > p:last-child { max-width: 44rem; margin: 1.5rem 0 0; color: var(--ink-soft); font-size: 1.2rem; }
+  .case-hero .mono a { color: inherit; text-decoration: underline; text-underline-offset: 0.2em; }
+  .case-hero > div { display: grid; grid-template-columns: 1fr minmax(18rem, 0.42fr); gap: clamp(2rem, 7vw, 8rem); align-items: end; }
+  .case-hero h1 { max-width: 15ch; font-size: clamp(3.4rem, 6.5vw, 6.5rem); }
+  .case-hero > div > p { max-width: 40rem; margin: 0; color: var(--ink-soft); font-size: 1.1rem; }
   .change-history { display: grid; grid-template-columns: 0.42fr 1fr; gap: clamp(3rem, 8vw, 9rem); padding-block: clamp(3rem, 6vw, 6rem); border-top: 1px solid var(--line); }
   .change-history .mono { margin: 0; color: var(--signal); }
   .change-history h2 { margin-top: 0.6rem; font-size: 2.5rem; }
   .change-history div:last-child { max-width: 45rem; }
   .change-history p { margin: 0; }
   .change-history small { display: block; margin-top: 1rem; color: var(--ink-soft); }
-  @media (max-width: 700px) { .change-history { grid-template-columns: 1fr; gap: 1.5rem; } }
+  @media (max-width: 700px) { .case-hero > div, .change-history { grid-template-columns: 1fr; gap: 1.5rem; } }
 </style>

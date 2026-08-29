@@ -164,8 +164,14 @@ assert(caseStudySource.includes("A second study personally conducted by Matthias
 assert(caseStudySource.includes('rel="external nofollow"'), "case study marks the same-owner Contextter link nofollow");
 
 const survivalDataSource = readFileSync(join(root, "src", "data", "survival-atlas.ts"), "utf8");
+const survivalCatalogSource = readFileSync(join(root, "src", "data", "survival-catalog.ts"), "utf8");
+const survivalDatabaseSource = readFileSync(join(root, "src", "components", "SurvivalDatabase.astro"), "utf8");
 const survivalExplorerSource = readFileSync(join(root, "src", "components", "SurvivalExplorer.astro"), "utf8");
 assert((survivalDataSource.match(/id: "the-crew(?:-2)?"/g) ?? []).length === 2, "survival atlas starts with exactly two reviewed contrast cases");
+assert((survivalCatalogSource.match(/originalRelease:/g) ?? []).length === 51, "survival database contains exactly 50 bounded candidate records plus its typed field declaration");
+assert((survivalCatalogSource.match(/recordState: "reviewed"/g) ?? []).length === 2, "only two source-complete survival cases are marked reviewed");
+assert(survivalCatalogSource.includes("They do not receive a detail route"), "pending catalog entries explicitly reject thin detail routes");
+assert(survivalDatabaseSource.includes("No published finding yet") && survivalDatabaseSource.includes("No detail page yet"), "database labels open research without inventing verdicts or pages");
 assert(survivalDataSource.includes("This record relies on Ubisoft's shutdown notice"), "The Crew record discloses its publisher-source boundary");
 assert(survivalDataSource.includes("not by our own long-term platform test"), "The Crew 2 record does not fabricate an independent platform test");
 assert(!survivalDataSource.includes("The game will not be accessible"), "survival atlas paraphrases sources instead of inventing direct quotations");

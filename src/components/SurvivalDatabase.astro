@@ -1,0 +1,191 @@
+---
+import { catalogLaneLabel, researchLaneLabels, survivalCatalog } from "@/data/survival-catalog";
+import { getSurvivalCase, localize, survivalCasePath } from "@/data/survival-atlas";
+import type { Locale } from "@/i18n";
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const copy = locale === "de" ? {
+  search: "Spiel suchen",
+  searchPlaceholder: "Titel eingeben …",
+  decade: "Zeitraum",
+  allDecades: "Alle Jahrzehnte",
+  lane: "Prüffeld",
+  allLanes: "Alle Prüffelder",
+  state: "Datensatz",
+  allStates: "Alle Zustände",
+  reviewed: "Geprüft",
+  pending: "Recherche offen",
+  game: "Spiel",
+  year: "Jahr",
+  question: "Prüffeld",
+  verdict: "Aktueller Befund",
+  record: "Datensatz",
+  open: "Öffnen",
+  queued: "Noch keine Detailseite",
+  noResults: "Keine Spiele entsprechen diesen Filtern.",
+  resultSuffix: "Spiele",
+  pendingVerdict: "Noch kein veröffentlichter Befund",
+  note: "Die 50 Titel bilden einen begrenzten Recherchekorpus. Nur vollständig belegte Fälle erhalten eine Detailseite; offene Einträge behaupten noch keinen Überlebensstatus.",
+} : {
+  search: "Search games",
+  searchPlaceholder: "Enter a title …",
+  decade: "Period",
+  allDecades: "All decades",
+  lane: "Research lane",
+  allLanes: "All research lanes",
+  state: "Record",
+  allStates: "All states",
+  reviewed: "Reviewed",
+  pending: "Research pending",
+  game: "Game",
+  year: "Year",
+  question: "Research lane",
+  verdict: "Current finding",
+  record: "Record",
+  open: "Open",
+  queued: "No detail page yet",
+  noResults: "No games match these filters.",
+  resultSuffix: "games",
+  pendingVerdict: "No published finding yet",
+  note: "These 50 titles form a bounded research corpus. Only evidence-complete cases receive a detail page; pending entries make no survival claim.",
+};
+const decades = [1990, 2000, 2010];
+---
+
+<section class="database" data-survival-database data-locale={locale} aria-labelledby="database-title">
+  <div class="database__heading">
+    <div>
+      <p class="mono">{locale === "de" ? "50 ausgewählte Spiele · 2 geprüft" : "50 selected games · 2 reviewed"}</p>
+      <h2 id="database-title" class="display">{locale === "de" ? "Die Überlebensdatenbank" : "The survival database"}</h2>
+    </div>
+    <p>{copy.note}</p>
+  </div>
+
+  <div class="filters" role="search">
+    <label>
+      <span>{copy.search}</span>
+      <input type="search" data-filter-search placeholder={copy.searchPlaceholder} autocomplete="off" />
+    </label>
+    <label>
+      <span>{copy.decade}</span>
+      <select data-filter-decade>
+        <option value="">{copy.allDecades}</option>
+        {decades.map((decade) => <option value={decade}>{decade}s</option>)}
+      </select>
+    </label>
+    <label>
+      <span>{copy.lane}</span>
+      <select data-filter-lane>
+        <option value="">{copy.allLanes}</option>
+        {Object.keys(researchLaneLabels).map((lane) => <option value={lane}>{catalogLaneLabel(lane as keyof typeof researchLaneLabels, locale)}</option>)}
+      </select>
+    </label>
+    <label>
+      <span>{copy.state}</span>
+      <select data-filter-state>
+        <option value="">{copy.allStates}</option>
+        <option value="reviewed">{copy.reviewed}</option>
+        <option value="research-pending">{copy.pending}</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="database__summary" aria-live="polite">
+    <strong data-result-count>{survivalCatalog.length}</strong> {copy.resultSuffix}
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>{copy.game}</th><th>{copy.year}</th><th>{copy.question}</th><th>{copy.verdict}</th><th><span class="sr-only">{copy.record}</span></th></tr></thead>
+      <tbody>
+        {survivalCatalog.map((item) => {
+          const reviewed = item.recordState === "reviewed" && item.reviewedCaseId;
+          const reviewedCase = reviewed ? getSurvivalCase(item.reviewedCaseId) : undefined;
+          return <tr data-catalog-row data-title={item.title.toLocaleLowerCase(locale)} data-decade={Math.floor(item.originalRelease / 10) * 10} data-lane={item.researchLane} data-state={item.recordState}>
+            <th scope="row">{reviewed ? <a href={survivalCasePath(item.reviewedCaseId, locale)} data-umami-event="survival-case-open" data-umami-event-case={item.id}>{item.title}</a> : item.title}</th>
+            <td>{item.originalRelease}</td>
+            <td><span class="lane">{catalogLaneLabel(item.researchLane, locale)}</span></td>
+            <td>{reviewedCase ? <span class:list={["verdict", `verdict--${reviewedCase.answerState}`]}>{localize(reviewedCase.shortAnswer, locale)}</span> : <span class="pending">{copy.pendingVerdict}</span>}</td>
+            <td>{reviewed ? <a class="row-action" href={survivalCasePath(item.reviewedCaseId, locale)} aria-label={`${copy.open}: ${item.title}`}>{copy.open} <span aria-hidden="true">→</span></a> : <span class="queued">{copy.queued}</span>}</td>
+          </tr>;
+        })}
+      </tbody>
+    </table>
+  </div>
+  <p class="empty" data-empty hidden>{copy.noResults}</p>
+</section>
+
+<script>
+  for (const database of document.querySelectorAll<HTMLElement>("[data-survival-database]")) {
+    const search = database.querySelector<HTMLInputElement>("[data-filter-search]");
+    const decade = database.querySelector<HTMLSelectElement>("[data-filter-decade]");
+    const lane = database.querySelector<HTMLSelectElement>("[data-filter-lane]");
+    const state = database.querySelector<HTMLSelectElement>("[data-filter-state]");
+    const rows = [...database.querySelectorAll<HTMLTableRowElement>("[data-catalog-row]")];
+    const count = database.querySelector<HTMLElement>("[data-result-count]");
+    const empty = database.querySelector<HTMLElement>("[data-empty]");
+
+    const update = () => {
+      const query = search?.value.trim().toLocaleLowerCase(database.dataset.locale ?? "en") ?? "";
+      let visible = 0;
+      for (const row of rows) {
+        const matches = (!query || row.dataset.title?.includes(query))
+          && (!decade?.value || row.dataset.decade === decade.value)
+          && (!lane?.value || row.dataset.lane === lane.value)
+          && (!state?.value || row.dataset.state === state.value);
+        row.hidden = !matches;
+        if (matches) visible += 1;
+      }
+      if (count) count.textContent = String(visible);
+      if (empty) empty.hidden = visible !== 0;
+    };
+
+    search?.addEventListener("input", update);
+    decade?.addEventListener("change", update);
+    lane?.addEventListener("change", update);
+    state?.addEventListener("change", update);
+  }
+</script>
+
+<style>
+  .database { padding-block: clamp(3rem, 6vw, 6rem); border-bottom: 1px solid var(--line); }
+  .database__heading { display: grid; grid-template-columns: 1fr minmax(18rem, 0.55fr); gap: clamp(2rem, 6vw, 7rem); align-items: end; }
+  .database__heading .mono { margin: 0 0 0.65rem; color: var(--signal); }
+  .database__heading h2 { font-size: clamp(2.7rem, 5vw, 5rem); }
+  .database__heading > p { max-width: 39rem; margin: 0; color: var(--ink-soft); }
+  .filters { display: grid; grid-template-columns: minmax(15rem, 1.4fr) repeat(3, minmax(10rem, 0.65fr)); margin-top: 3rem; border: 1px solid var(--line-strong); }
+  .filters label { display: grid; gap: 0.45rem; padding: 0.85rem 1rem; }
+  .filters label + label { border-left: 1px solid var(--line); }
+  .filters span { color: var(--ink-soft); font-size: 0.68rem; letter-spacing: 0.04em; text-transform: uppercase; }
+  .filters input, .filters select { width: 100%; min-height: 2rem; padding: 0; border: 0; outline-offset: 0.35rem; background: transparent; color: var(--ink); font: inherit; font-size: 0.88rem; }
+  .database__summary { padding: 1.3rem 0 0.8rem; color: var(--ink-soft); font-size: 0.78rem; }
+  .database__summary strong { color: var(--ink); }
+  .table-wrap { overflow-x: auto; border-top: 1px solid var(--line-strong); }
+  table { width: 100%; min-width: 58rem; border-collapse: collapse; }
+  th, td { padding: 1rem 0.8rem; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+  thead th { color: var(--ink-soft); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+  tbody th { width: 23%; font-family: var(--display); font-size: 1.1rem; font-weight: 550; }
+  tbody th a { color: var(--signal); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+  tbody td { color: var(--ink-soft); font-size: 0.78rem; }
+  tbody td:nth-child(4) { width: 32%; }
+  .lane, .queued { white-space: nowrap; }
+  .pending, .queued { color: var(--ink-soft); }
+  .verdict { color: var(--ink); }
+  .verdict--unavailable { color: var(--signal); }
+  .row-action { color: var(--signal); font-weight: 600; white-space: nowrap; }
+  .empty { margin: 2rem 0 0; color: var(--ink-soft); }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+  @media (max-width: 900px) {
+    .database__heading { grid-template-columns: 1fr; gap: 1rem; }
+    .filters { grid-template-columns: 1fr 1fr; }
+    .filters label + label { border-left: 0; }
+    .filters label:nth-child(even) { border-left: 1px solid var(--line); }
+    .filters label:nth-child(n+3) { border-top: 1px solid var(--line); }
+  }
+  @media (max-width: 520px) {
+    .filters { grid-template-columns: 1fr; }
+    .filters label:nth-child(even) { border-left: 0; }
+    .filters label + label { border-top: 1px solid var(--line); }
+  }
+</style>
