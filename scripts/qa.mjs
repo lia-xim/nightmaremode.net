@@ -191,7 +191,7 @@ await caseStudy.goto(`${base}/case-study/rebuilding-nightmare-mode/`, { waitUnti
 results.caseStudy = await caseStudy.evaluate(() => ({
   h1: document.querySelector("h1")?.textContent?.trim(),
   sections: document.querySelectorAll("main section").length,
-  contextterLinks: document.querySelectorAll('a[href^="https://contextter.com/"][rel~="nofollow"]').length,
+  contextterLinks: document.querySelectorAll('a[href^="https://crawlfoundry.com/"]:not([rel~="nofollow"])').length,
   schemaType: [...document.querySelectorAll('script[type="application/ld+json"]')].some((node) => node.textContent?.includes('"Article"')) ? "Article" : null,
   brokenImages: [...document.images].filter((image) => image.currentSrc && image.complete && image.naturalWidth === 0).length,
   scrollWidth: document.documentElement.scrollWidth,

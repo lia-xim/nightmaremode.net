@@ -74,10 +74,10 @@ if (existsSync(dist)) {
 
   for (const path of htmlFiles) {
     const html = readFileSync(path, "utf8");
-    const contextterLinks = [...html.matchAll(/<a\b[^>]*href="https:\/\/contextter\.com\/"[^>]*>/g)].map((match) => match[0]);
-    assert(contextterLinks.length <= 1, `Contextter disclosure is not repeated on one page: ${relative(dist, path).split(sep).join("/")}`);
-    assert(contextterLinks.every((link) => /rel="[^"]*nofollow[^"]*"/.test(link)), `Contextter disclosure links are nofollow: ${relative(dist, path).split(sep).join("/")}`);
-    if (contextterLinks.length) assert(!/<footer[\s\S]*href="https:\/\/contextter\.com\//.test(html), `Contextter is not linked from the footer: ${relative(dist, path).split(sep).join("/")}`);
+    const crawlFoundryLinks = [...html.matchAll(/<a\b[^>]*href="https:\/\/crawlfoundry\.com\/"[^>]*>/g)].map((match) => match[0]);
+    assert(crawlFoundryLinks.length <= 1, `Crawl Foundry disclosure is not repeated on one page: ${relative(dist, path).split(sep).join("/")}`);
+    assert(crawlFoundryLinks.every((link) => !/rel="[^"]*nofollow[^"]*"/.test(link)), `Crawl Foundry disclosure links are follow links: ${relative(dist, path).split(sep).join("/")}`);
+    if (crawlFoundryLinks.length) assert(!/<footer[\s\S]*href="https:\/\/crawlfoundry\.com\//.test(html), `Crawl Foundry is not linked from the footer: ${relative(dist, path).split(sep).join("/")}`);
   }
 
   const legacyOutputs = [
@@ -148,11 +148,12 @@ assert(playStudyHubSource.includes("not a claim about human experience"), "serie
 
 const caseStudySource = readFileSync(join(root, "src", "components", "CaseStudyPage.astro"), "utf8");
 assert(caseStudySource.includes("This is not a customer testimonial"), "case study rejects a customer-testimonial framing");
-assert(caseStudySource.includes("does not prove that every step ran through the current customer-facing Contextter application"), "case study separates operating method from product proof");
+assert(caseStudySource.includes("does not prove that every step ran through the current customer-facing Crawl Foundry application"), "case study separates operating method from product proof");
 assert(caseStudySource.includes("No SEO success has been demonstrated"), "case study states that SEO results are unproven");
 assert(caseStudySource.includes("A measurement baseline, not a success story"), "case study publishes a measurement baseline before claiming results");
 assert(caseStudySource.includes("A second study personally conducted by Matthias does not yet exist"), "case study does not fabricate the second human-led study");
-assert(caseStudySource.includes('rel="external nofollow"'), "case study marks the same-owner Contextter link nofollow");
+assert(caseStudySource.includes('href="https://crawlfoundry.com/" rel="external"'), "case study keeps the same-owner Crawl Foundry link contextual and followed");
+assert(!caseStudySource.includes('rel="external nofollow"'), "case study does not mark the owner-approved Crawl Foundry link nofollow");
 
 const survivalDataSource = readFileSync(join(root, "src", "data", "survival-atlas.ts"), "utf8");
 const survivalCatalogSource = readFileSync(join(root, "src", "data", "survival-catalog.ts"), "utf8");

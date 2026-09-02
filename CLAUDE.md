@@ -17,7 +17,7 @@ Hard rules:
 
 - Do not imply that the former newsroom continues under the current operator.
 - Do not publish or paraphrase former article bodies without documented rights.
-- Do not add partner-network, portfolio-wide, reciprocal, exact-match, footer, or undisclosed promotional links. One same-owner Contextter operating disclosure is allowed only where the page explains work that was actually performed, names Matthias Ramahi as operator of both projects, states that it is not an independent recommendation, uses a branded link with `rel="nofollow"`, and remains useful without that link.
+- Do not add partner-network, portfolio-wide, reciprocal, exact-match, footer, or undisclosed promotional links. One same-owner Crawl Foundry operating disclosure is allowed on each language version of the rebuild case study only where the page explains work that was actually performed, names Matthias Ramahi as operator of both projects, states that it is not an independent recommendation, uses a natural branded link, and remains useful without that link. The owner explicitly approved these two contextual links as normal follow links on 2 September 2026.
 - Do not redirect historical URLs to the homepage or to unrelated content.
 - Keep `src/data/legacy-url-actions.ts` authoritative for reviewed legacy actions.
 - Keep `PUBLIC_SITE_INDEXABLE` disabled until rights, governance, legacy URL actions, Search Console checks, legal details, and live verification are complete.
